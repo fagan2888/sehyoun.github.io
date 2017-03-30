@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SeHyoun's</title>
+
+  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="css/style.css" rel="stylesheet" type="text/css">
+
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/responsive.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+    });
+  </script>
+  <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+  <script>
+    $(document).ready(function(){
+      $("#research").addClass("active");
+      $("#research ul li:eq(1)").addClass("active");
+      $("#research ul li:eq(1) a").attr("href","#");
+    });
+  </script>
+</head>
+
+<body>
+<div id="javascript_banner">
+  <p>
+    Please enable javascripts for pretty navigation. Here are ugly links to make it usable:<br>
+  <ul>
+    <li> <a href="./papers.html">papers</a></li>
+    <li> <a href="./codes.html">codes</a></li>
+    <li> <a href="./cv.html">cv (html)</a></li>
+    <li> <a href="./Ahn_SeHyoun_cv.pdf">cv (pdf)</a></li>
+  </ul>
+</div>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+  <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-menu" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a class="navbar-brand" href="./index.html" >Home</a>-->
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="top-menu">
+      <ul class="nav navbar-nav">
+
+        <!-- Home -->
+        <li id="home"><a href="./index.html">Home<span class="sr-only">(current)</span></a></li>
+
+        <!-- CV -->
+        <li id="cv" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">CV<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./cv.html">html (Phone Friendly)</a></li>
+            <li><a href="./Ahn_SeHyoun_cv.pdf">pdf</a></li>
+          </ul>
+        </li>
+
+        <!-- Research -->
+        <li id="research" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Research<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./papers.html">Papers</a></li>
+            <li><a href="./codes.html">Codes</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Contacts -->
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Contacts <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a>1 Fisher Hall<br>
+              Princeton University<br>
+              Princeton, NJ 08540</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="mailto:sehyouna@princeton.edu">sehyouna@princeton.edu</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="row">
+      <div id="autodiff" class="col-lg-6 col-xs-12 col-md-6 col-sm-12">
+	<div class="clear-text">
+          <div class="blur-bg"></div>
+          <div class="row">
+            <h3>Automatic Differentiation</h3>
+          </div>
+          <div class="row codes">
+            License: BSD<br>
+            <a href="AutoDiff_2016_10_23.7z">Download</a> (7z-file, Oct 2016) <br>
+	    <a href="https://github.com/sehyoun/MATLABAutoDiff">Github</a> (Up to Date)
+          </div>
+          <div class="row">
+            <br>
+            <p class="codes"> If researchers use the result of the derivatives in a part of computer simulation, researchers should not waste their time taking derivatives by hand. This is especially the case as the complexity of the problem increases. For example, taking derivatives by hand for heterogeneous agent model by hand will require an unreasonable man-hour. Of the numerical differentiation methods, symbolic method is slow and will require a lot of coding (in matlab). Forward/backward-difference is strictly inferior to automatic differentiation in accuracy. Threrefore, automatic differentiation (by operator overloading) should be used if applicable. Since there was not an (open-source) automatic derivative package that used sparse matrix storage for matlab, I updated a pre-existing package from <a href="http://www.mathworks.com/matlabcentral/fileexchange/15235-automatic-differentiation-for-matlab">Martin Fink</a> for our use. Instruction for usage is in &lt;README.pdf&gt; file. <br><br> 
+              Examples: 
+	      <ul>
+		<li><a href="EXAMPLE_AutoDiff_Syntax.html">Examples</a></li>
+		<li><a href="EXAMPLE_test_symbolic.html">Speedtest against symbolic differentation</a></li>
+	      </ul>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      
+      
+
+      
+      <div id="autodiff2" class="col-lg-6 col-xs-12 col-md-6 col-sm-12">
+	<div class="clear-text">
+          <div class="blur-bg"></div>
+          <div class="row">
+            <h3>Automatic Differentiation 2</h3>
+          </div>
+          <div class="row codes">
+            License: BSD<br>
+            <a href="mailto:sehyouna@princeton.edu">Alpha version available on request</a> (A major overhaul in order)
+          </div>
+          <div class="row">
+            <br>
+            <p class="codes"> Implements automatic differentiation to compute 2nd order derivatives with sparse storage. This is a work-in-progress. It supports most elementwise operations, but do not support matrix operations.
+            </p>
+          </div>
+	</div>
+      </div>
+      
+      
+      
+      
+
+      <div id="PHACT" class="col-lg-6 col-xs-12 col-md-6 col-sm-12">
+	<div class="clear-text">
+          <div class="blur-bg"></div>
+          <div class="row">
+            <h3>Linearized Model Solver for Heterogeneous Agents</h3>
+          </div>
+          <div class="row codes">
+            License: BSD<br>
+            <a href="mailto:sehyouna@princeton.edu">Alpha version available on request</a>
+          </div>
+          <div class="row">
+            <br>
+            <p class="codes"> This is a collection of codes to solve heterogeneous agent models by perturbation methods. This collection of codes include:
+              <ul>
+		<li> Linear solver based on schur decomposition</li>
+		<li> Systematic state space reduction based on singular value decomposition of dynamics </li>
+		<li> Linear rational expectation model solver based on sparse methods (to be used after dimensionality reduciton)</li>
+		<li> Dimensionality reduction based on quadratic splines </li>
+              </ul>
+            </p>
+          </div>
+	</div>
+      </div>
+
+
+
+      <div id="sparsegrid" class="col-lg-6 col-xs-12 col-md-6 col-sm-12">
+	<div class="clear-text">
+          <div class="blur-bg"></div>
+          <div class="row">
+            <h3>Sparse Grid</h3>
+          </div>
+          <div class="row codes">
+            License: BSD<br>
+            Availability: (Still testing)
+          </div>
+          <div class="row">
+            <br>
+            <p class="codes"> If a standard uniform grid method is used the number of grid points increases as $O(N^d)$ for a problem with d-dimensional state space and N grid points per dimension. This curse of dimensionality forces people to make (sometimes arbitrary) assumptions to reduce the dimensionality of the state space. However, there is a different solution to the curse of dimensionality. Using sparse grids (Smolyak grid), grid points scale at $O(N \log(N)^{d-1})$, and using adaptive sparse grids will further reduce the number of necessary grid points. This is still work in progress, but here are some example of sparse grids in action.<br><br>
+             Examples:
+	     <ul>
+	       <li><a href="./EXAMPLE_diff_operator_for_sparse_grid_web.html"> Test of Difference Operator on Sparse Grids</a></li>
+	       <li><a href="./EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web.html">HJB for Aiyagari Model with Adaptive Sparse Grid</a></li>
+	     </ul>
+            </p>
+          </div>
+	</div>
+      </div>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</body>
+</html>

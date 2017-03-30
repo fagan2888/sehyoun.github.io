@@ -1,0 +1,208 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Examples of Using Automatic Differentiation</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-10-08"><meta name="DC.source" content="EXAMPLE_AutoDiff_syntax.m">
+  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="css/style.css" rel="stylesheet" type="text/css">
+  <link href="css/matlab.css" rel="stylesheet" type="text/css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/responsive.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+  </script>
+  <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+</head><body>
+<div id="javascript_banner">
+  <p>
+    Please enable javascripts for pretty navigation. Here are ugly links to make it usable:<br>
+  <ul>
+    <li> <a href="./papers.html">papers</a></li>
+    <li> <a href="./codes.html">codes</a></li>
+    <li> <a href="./cv.html">cv (html)</a></li>
+    <li> <a href="./Ahn_SeHyoun_cv.pdf">cv (pdf)</a></li>
+  </ul>
+</div>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+  <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-menu" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a class="navbar-brand" href="./index.html" >Home</a>-->
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="top-menu">
+      <ul class="nav navbar-nav">
+
+        <!-- Home -->
+        <li id="home"><a href="./index.html">Home<span class="sr-only">(current)</span></a></li>
+
+        <!-- CV -->
+        <li id="cv" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">CV<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./cv.html">html (Phone Friendly)</a></li>
+            <li><a href="./Ahn_SeHyoun_cv.pdf">pdf</a></li>
+          </ul>
+        </li>
+
+        <!-- Research -->
+        <li id="research" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Research<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./papers.html">Papers</a></li>
+            <li><a href="./codes.html">Codes</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Contacts -->
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Contacts <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a>1 Fisher Hall<br>
+              Princeton University<br>
+              Princeton, NJ 08540</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="mailto:sehyouna@princeton.edu">sehyouna@princeton.edu</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div class="content"><h1>Examples of Using Automatic Differentiation</h1><!--introduction--><p>by SeHyoun Ahn, June 2016</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Simple Example</a></li><li><a href="#3">Example of Matrix Vector Multiplication</a></li><li><a href="#5">Example of Using fsolve</a></li></ul></div><p>An html file properly marked up comments is avaiable at <a href="http://www.princeton.edu/~sehyouna/EXAMPLE_AutoDiff_Syntax.html">http://www.princeton.edu/~sehyouna/EXAMPLE_AutoDiff_Syntax.html</a></p><pre class="codeinput"><span class="comment">% Add folder containing &lt;@myAD&gt;. In this case, it is in the parent folder.</span>
+addpath(<span class="string">'../'</span>);
+</pre><h2>Simple Example<a name="2"></a></h2><p>$$f_1(x,y,z) = x^2+cos(y)*(x+z)+e^z$$ $$f_2(x,y,z) = yz$$ at $(x,y,z) = (1,2,3)$</p><pre class="codeinput">v = myAD([1;2;3]);
+x=v(1); y=v(2); z=v(3);
+f=[x^2+cos(y)*(x+z)+exp(z);
+    y*z];
+disp(<span class="string">'The function evaluated at (1,2,3) is'</span>);
+disp(getvalues(f));
+disp(<span class="string">'the derivatives evaluated at (1,2,3) are'</span>);
+disp(full(getderivs(f)));
+</pre><pre class="codeoutput">The function evaluated at (1,2,3) is
+   19.4209
+    6.0000
+
+the derivatives evaluated at (1,2,3) are
+    1.5839   -3.6372   19.6694
+         0    3.0000    2.0000
+
+</pre><h2>Example of Matrix Vector Multiplication<a name="3"></a></h2><p>$$ f = \begin{bmatrix} x &amp; y &amp; 0 \\ y&amp; y&amp; z \\ 0 &amp; z &amp; z \end{bmatrix} \begin{bmatrix}x\\y\\z \end{bmatrix} = \begin{bmatrix} x^2+y^2\\  xy+y^2+z^2 \\ yz+z^2\end{bmatrix} $$ evaluated at $(x,y,z)=(1,2,3)$</p><pre class="codeinput">v=myAD([1:3]');
+A=spdiags(v,0,3,3)+spdiags(v(2:3),-1,3,3)+spdiags(v,1,3,3);
+f=A*v;
+disp(<span class="string">'f is'</span>);
+disp(getvalues(f));
+disp(<span class="string">'The Jacobian of f evaluated at (1,2,3) is'</span>)
+disp(full(getderivs(f)));
+</pre><pre class="codeoutput">f is
+     5
+    15
+    15
+
+The Jacobian of f evaluated at (1,2,3) is
+     2     4     0
+     2     5     6
+     0     3     8
+
+</pre><p>If you plan to use matrix multiplication in high dimensions, refer to the documentation to compile c-files for speed gains</p><h2>Example of Using fsolve<a name="5"></a></h2><p>Given an implicitly defined variable $z$ from the relationship $$x^2+y^4+x\cdot (z-0.2)\cdot e^z=5 $$ solving for $\frac{dz}{dx}$ and $\frac{dz}{dy}$ evaluated at $(x,y)=(1,1)$</p><pre class="codeinput"><span class="comment">% Refer to README.pdf for syntactic requirement on definition of functions.</span>
+<span class="comment">% x = v(2), y = v(3), z = v(1)</span>
+func = @(v) v(2).^2+v(3).^4+v(2)*(v(1)-0.2)*exp(v(1))-5;
+v0 = myAD([1;1]);            <span class="comment">% Initialize x and y</span>
+z=fsolve(func, 0.5 ,v0);     <span class="comment">% Refer to documentation for syntax</span>
+disp(<span class="string">'Solution of z is given by'</span>);
+disp(getvalues(z));
+disp(<span class="string">'The derivatives at (x,y)=(1,1) are'</span>);
+disp(getderivs(z));
+</pre><pre class="codeoutput">
+Equation solved.
+
+fsolve completed because the vector of function values is near zero
+as measured by the default value of the function tolerance, and
+the problem appears regular as measured by the gradient.
+
+
+
+Solution of z is given by
+    1.1500
+
+The derivatives at (x,y)=(1,1) are
+   (1,1)      -0.8119
+   (1,2)      -0.6496
+
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br> (and adjusted not to clash with Bootstrap)</p></div><!--
+##### SOURCE BEGIN #####
+%% Examples of Using Automatic Differentiation
+% by SeHyoun Ahn, June 2016
+%%
+
+%%
+% An html file properly marked up comments is avaiable at <http://www.princeton.edu/~sehyouna/EXAMPLE_AutoDiff_Syntax.html>
+
+% Add folder containing <@myAD>. In this case, it is in the parent folder.
+addpath('../');
+
+%% Simple Example
+% $$f_1(x,y,z) = x^2+cos(y)*(x+z)+e^z$$
+% $$f_2(x,y,z) = yz$$
+% at $(x,y,z) = (1,2,3)$
+
+v = myAD([1;2;3]);
+x=v(1); y=v(2); z=v(3);
+f=[x^2+cos(y)*(x+z)+exp(z);
+    y*z];
+disp('The function evaluated at (1,2,3) is');
+disp(getvalues(f));
+disp('the derivatives evaluated at (1,2,3) are');
+disp(full(getderivs(f)));
+
+%% Example of Matrix Vector Multiplication
+% $$ f = \begin{bmatrix} x & y & 0 \\ y& y& z \\ 0 & z & z
+% \end{bmatrix} \begin{bmatrix}x\\y\\z \end{bmatrix} = 
+% \begin{bmatrix} x^2+y^2\\  xy+y^2+z^2 \\ yz+z^2\end{bmatrix} $$
+% evaluated at $(x,y,z)=(1,2,3)$
+
+v=myAD([1:3]');
+A=spdiags(v,0,3,3)+spdiags(v(2:3),-1,3,3)+spdiags(v,1,3,3);
+f=A*v;
+disp('f is');
+disp(getvalues(f));
+disp('The Jacobian of f evaluated at (1,2,3) is')
+disp(full(getderivs(f)));
+
+%%
+% If you plan to use matrix multiplication in high dimensions,
+% refer to the documentation to compile c-files for speed gains
+
+
+%% Example of Using fsolve
+% Given an implicitly defined variable $z$ from the relationship
+% $$x^2+y^4+x\cdot (z-0.2)\cdot e^z=5 $$ solving for $\frac{dz}{dx}$ and $\frac{dz}{dy}$ evaluated at $(x,y)=(1,1)$
+
+% Refer to README.pdf for syntactic requirement on definition of functions.
+% x = v(2), y = v(3), z = v(1)
+func = @(v) v(2).^2+v(3).^4+v(2)*(v(1)-0.2)*exp(v(1))-5;
+v0 = myAD([1;1]);            % Initialize x and y
+z=fsolve(func, 0.5 ,v0);     % Refer to documentation for syntax
+disp('Solution of z is given by');
+disp(getvalues(z));
+disp('The derivatives at (x,y)=(1,1) are');
+disp(getderivs(z));
+
+##### SOURCE END #####
+--></body></html>

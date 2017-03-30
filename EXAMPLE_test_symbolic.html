@@ -1,0 +1,227 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Speed Test of Using Symbolic VS Automatic Differentiation</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-10-08"><meta name="DC.source" content="EXAMPLE_test_symbolic.m">
+  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="css/style.css" rel="stylesheet" type="text/css">
+  <link href="css/matlab.css" rel="stylesheet" type="text/css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/responsive.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+  </script>
+  <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+</head><body>
+<div id="javascript_banner">
+  <p>
+    Please enable javascripts for pretty navigation. Here are ugly links to make it usable:<br>
+  <ul>
+    <li> <a href="./papers.html">papers</a></li>
+    <li> <a href="./codes.html">codes</a></li>
+    <li> <a href="./cv.html">cv (html)</a></li>
+    <li> <a href="./Ahn_SeHyoun_cv.pdf">cv (pdf)</a></li>
+  </ul>
+</div>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+  <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-menu" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a class="navbar-brand" href="./index.html" >Home</a>-->
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="top-menu">
+      <ul class="nav navbar-nav">
+
+        <!-- Home -->
+        <li id="home"><a href="./index.html">Home<span class="sr-only">(current)</span></a></li>
+
+        <!-- CV -->
+        <li id="cv" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">CV<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./cv.html">html (Phone Friendly)</a></li>
+            <li><a href="./Ahn_SeHyoun_cv.pdf">pdf</a></li>
+          </ul>
+        </li>
+
+        <!-- Research -->
+        <li id="research" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Research<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./papers.html">Papers</a></li>
+            <li><a href="./codes.html">Codes</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Contacts -->
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Contacts <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a>1 Fisher Hall<br>
+              Princeton University<br>
+              Princeton, NJ 08540</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="mailto:sehyouna@princeton.edu">sehyouna@princeton.edu</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div class="content"><h1>Speed Test of Using Symbolic VS Automatic Differentiation</h1><!--introduction--><p>by SeHyoun Ahn, Sept 2016</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Automatic Differentiation</a></li><li><a href="#4">Symbolic Differentiation</a></li></ul></div><p>An html file properly marked up comments is avaiable at <a href="http://www.princeton.edu/~sehyouna/EXAMPLE_test_Syntax.html">http://www.princeton.edu/~sehyouna/EXAMPLE_test_Syntax.html</a></p><p>Evaluates the Jacobian of</p><p>$$ y = \begin{bmatrix} x_1 &amp; 0 &amp; 0 &amp; ... &amp; 0 \\                     0 &amp; x_2 &amp; 0 &amp; ... &amp; 0\\                      0 &amp; ... &amp; ... &amp;...&amp; 0\\    0 &amp; 0 &amp; ... &amp; 0 &amp; x_n\end{bmatrix}     \begin{bmatrix} x_1\\ x_2\\ ...\\ x_n\end{bmatrix} $$     at $(x_1, x_2 , ... , x_n) = (1,2,...,n)$</p><pre class="codeinput">n = 200;
+</pre><h2>Automatic Differentiation<a name="3"></a></h2><pre class="codeinput">fprintf(<span class="string">'n = %d\n'</span>,n);
+addpath(<span class="string">'../'</span>);
+fprintf(<span class="string">'\n\nAUTOMATIC DIFFERENTIATION\n'</span>);
+tAD = tic;
+x = myAD((1:n)');
+A = spdiags(x,0,n,n);
+y = A*x;
+dydx_val_AD = getderivs(y);
+tAD = toc(tAD);
+fprintf(<span class="string">'   Done!\n\n'</span>);
+</pre><pre class="codeoutput">n = 200
+
+
+AUTOMATIC DIFFERENTIATION
+   Done!
+
+</pre><h2>Symbolic Differentiation<a name="4"></a></h2><pre class="codeinput">disp(<span class="string">'SYMBOLIC'</span>)
+tSymb = tic;
+
+tSetup = tic;
+vector = sym(<span class="string">'x_%d'</span>,[1 n])';
+A      = diag(vector);
+y      = A*vector;
+fprintf(<span class="string">'  Initialize Symbolic Variables: %2.6f secs\n'</span>,toc(tSetup));
+
+tDeriv = tic;
+dydx   = jacobian(y,vector');
+fprintf(<span class="string">'  Time to Differentiate: %2.6f secs\n'</span>,toc(tDeriv));
+
+tConvert  = tic;
+dydx_eval = matlabFunction(dydx);
+fprintf(<span class="string">'  Time to Convert to Function: %2.6f secs\n'</span>,toc(tConvert));
+fprintf(<span class="string">'     You would only need to do this conversion once to evaluate \n'</span>);
+fprintf(<span class="string">'     derivatives at different values of x_n.\n'</span>);
+tEval     = tic;
+x = num2cell(1:n);
+dydx_val = dydx_eval(x{:});
+fprintf(<span class="string">'  Time to Calculate Numerical Values: %2.6f secs\n\n\n'</span>,toc(tEval));
+<span class="comment">% Uncomment the following and comment above block to Test evaluation</span>
+<span class="comment">%     by using &lt;subs&gt;, but using matlabFunction is faster than subs</span>
+<span class="comment">%{
+</span><span class="comment">tSubs    = tic;
+</span><span class="comment">dydx_val = subs(dydx,vector',1:n);
+</span><span class="comment">fprintf('Time to Calculate Numerical Values (Subs): %2.6f\n\n\n',toc(tSubs));
+</span><span class="comment">%}
+</span>
+tSymb = toc(tSymb);
+
+fprintf(<span class="string">'Total time using Automatic Differentiation: %2.6f secs\n'</span>,tAD);
+fprintf(<span class="string">'Total time using Symbolic: %2.6f secs\n'</span>,tSymb);
+fprintf(<span class="string">'   Note that just the evaluation of derivatives using symbolic\n'</span>);
+fprintf(<span class="string">'      is comparable to the entire computation of values and derivatives using AD.\n'</span>);
+</pre><pre class="codeoutput">SYMBOLIC
+  Initialize Symbolic Variables: 0.617267 secs
+  Time to Differentiate: 0.892557 secs
+  Time to Convert to Function: 35.616070 secs
+     You would only need to do this conversion once to evaluate 
+     derivatives at different values of x_n.
+  Time to Calculate Numerical Values: 0.015227 secs
+
+
+Total time using Automatic Differentiation: 0.070309 secs
+Total time using Symbolic: 37.142685 secs
+   Note that just the evaluation of derivatives using symbolic
+      is comparable to the entire computation of values and derivatives using AD.
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br> (and adjusted not to clash with Bootstrap)</p></div><!--
+##### SOURCE BEGIN #####
+%% Speed Test of Using Symbolic VS Automatic Differentiation
+% by SeHyoun Ahn, Sept 2016
+%%
+
+%%
+% An html file properly marked up comments is avaiable at <http://www.princeton.edu/~sehyouna/EXAMPLE_test_Syntax.html>
+
+%%
+% Evaluates the Jacobian of
+%
+% $$ y = \begin{bmatrix} x_1 & 0 & 0 & ... & 0 \\
+%                     0 & x_2 & 0 & ... & 0\\
+%                      0 & ... & ... &...& 0\\
+%    0 & 0 & ... & 0 & x_n\end{bmatrix}
+%     \begin{bmatrix} x_1\\ x_2\\ ...\\ x_n\end{bmatrix} $$
+%     at $(x_1, x_2 , ... , x_n) = (1,2,...,n)$
+%
+
+n = 200;
+
+%% Automatic Differentiation
+fprintf('n = %d\n',n);
+addpath('../');
+fprintf('\n\nAUTOMATIC DIFFERENTIATION\n');
+tAD = tic;
+x = myAD((1:n)');
+A = spdiags(x,0,n,n);
+y = A*x;
+dydx_val_AD = getderivs(y);
+tAD = toc(tAD);
+fprintf('   Done!\n\n');
+
+%% Symbolic Differentiation
+disp('SYMBOLIC')
+tSymb = tic;
+
+tSetup = tic;
+vector = sym('x_%d',[1 n])';
+A      = diag(vector);
+y      = A*vector;
+fprintf('  Initialize Symbolic Variables: %2.6f secs\n',toc(tSetup));
+
+tDeriv = tic;
+dydx   = jacobian(y,vector');
+fprintf('  Time to Differentiate: %2.6f secs\n',toc(tDeriv));
+
+tConvert  = tic;
+dydx_eval = matlabFunction(dydx);
+fprintf('  Time to Convert to Function: %2.6f secs\n',toc(tConvert));
+fprintf('     You would only need to do this conversion once to evaluate \n');
+fprintf('     derivatives at different values of x_n.\n');
+tEval     = tic;
+x = num2cell(1:n);
+dydx_val = dydx_eval(x{:});
+fprintf('  Time to Calculate Numerical Values: %2.6f secs\n\n\n',toc(tEval));
+% Uncomment the following and comment above block to Test evaluation 
+%     by using <subs>, but using matlabFunction is faster than subs
+%{
+tSubs    = tic;
+dydx_val = subs(dydx,vector',1:n);
+fprintf('Time to Calculate Numerical Values (Subs): %2.6f\n\n\n',toc(tSubs));
+%}
+
+tSymb = toc(tSymb);
+
+fprintf('Total time using Automatic Differentiation: %2.6f secs\n',tAD);
+fprintf('Total time using Symbolic: %2.6f secs\n',tSymb);
+fprintf('   Note that just the evaluation of derivatives using symbolic\n');
+fprintf('      is comparable to the entire computation of values and derivatives using AD.\n');
+
+##### SOURCE END #####
+--></body></html>

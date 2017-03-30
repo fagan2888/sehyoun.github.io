@@ -1,0 +1,723 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Example file of how to use adaptive sparse grid for HJB Equation</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-10-08"><meta name="DC.source" content="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web.m">
+  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="css/style.css" rel="stylesheet" type="text/css">
+  <link href="css/matlab.css" rel="stylesheet" type="text/css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/responsive.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+  </script>
+  <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+</head><body>
+<div id="javascript_banner">
+  <p>
+    Please enable javascripts for pretty navigation. Here are ugly links to make it usable:<br>
+  <ul>
+    <li> <a href="./papers.html">papers</a></li>
+    <li> <a href="./codes.html">codes</a></li>
+    <li> <a href="./cv.html">cv (html)</a></li>
+    <li> <a href="./Ahn_SeHyoun_cv.pdf">cv (pdf)</a></li>
+  </ul>
+</div>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+  <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-menu" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a class="navbar-brand" href="./index.html" >Home</a>-->
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="top-menu">
+      <ul class="nav navbar-nav">
+
+        <!-- Home -->
+        <li id="home"><a href="./index.html">Home<span class="sr-only">(current)</span></a></li>
+
+        <!-- CV -->
+        <li id="cv" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">CV<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./cv.html">html (Phone Friendly)</a></li>
+            <li><a href="./Ahn_SeHyoun_cv.pdf">pdf</a></li>
+          </ul>
+        </li>
+
+        <!-- Research -->
+        <li id="research" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Research<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./papers.html">Papers</a></li>
+            <li><a href="./codes.html">Codes</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Contacts -->
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Contacts <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a>1 Fisher Hall<br>
+              Princeton University<br>
+              Princeton, NJ 08540</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="mailto:sehyouna@princeton.edu">sehyouna@princeton.edu</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div class="content"><h1>Example file of how to use adaptive sparse grid for HJB Equation</h1><!--introduction--><p>by SeHyoun Ahn, July 2016</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Set up Grids</a></li><li><a href="#3">Set up Model</a></li><li><a href="#4">Iterate to Solve HJB Equation Adding Nodes to Sparse Grids as Needed</a></li><li><a href="#9">Comparison Plot to Full Grid</a></li></ul></div><pre class="codeinput"><span class="comment">% Requires: &lt;generate_spgrid.m&gt;</span>
+<span class="comment">%</span>
+<span class="comment">%           &lt;gen_diff_op.m&gt;</span>
+<span class="comment">%</span>
+<span class="comment">%           &lt;grid_evaluation.m&gt;</span>
+<span class="comment">%</span>
+</pre><h2>Set up Grids<a name="2"></a></h2><pre class="codeinput">n_dim = 2;                 <span class="comment">% Dimensionality of the problem</span>
+n_levels = 4;              <span class="comment">% Level of the starting sparse grid</span>
+I = 100;                   <span class="comment">% Number of asset grid points for full grid</span>
+J = 40;                    <span class="comment">% Number of skill grid points for full grid</span>
+
+<span class="comment">% Generate sparse grid</span>
+[spgrid,spspace] = generate_spgrid(n_dim,n_levels);
+
+
+<span class="comment">% Setup Change of basis from Hierachical to Nodal</span>
+hier_to_nodal = grid_evaluation(spgrid,spgrid,spspace);
+
+<span class="comment">% Generate Difference Operators</span>
+[forward_diff_x,backward_diff_x] = gen_diff_op(1,spgrid,spspace,min(spspace(:,1)));
+[forward_diff_y,backward_diff_y] = gen_diff_op(2,spgrid,spspace,min(spspace(:,2)));
+
+<span class="comment">% Second Derivative Operator</span>
+<span class="comment">% More tests are needed to check which stencil is the best for second order</span>
+<span class="comment">% Operators</span>
+second_deriv_y = forward_diff_y*(hier_to_nodal\backward_diff_y) <span class="keyword">...</span>
+  + backward_diff_y*(hier_to_nodal\forward_diff_y);
+second_deriv_y(spgrid(:,2)==1,:) = -backward_diff_y(spgrid(:,2)==1,:);
+second_deriv_y(spgrid(:,2)==0,:) = forward_diff_y(spgrid(:,2)==0,:);
+
+<span class="comment">% Integration Weights</span>
+<span class="comment">% This does not get used here</span>
+int_weight = (prod(spspace,2)./2.^sum(spspace==1,2))';
+</pre><h2>Set up Model<a name="3"></a></h2><p>Parameters</p><pre class="codeinput">ga = 2;             <span class="comment">% CRRA utility with parameter gamma</span>
+alpha = 0.35;       <span class="comment">% Production function F = K^alpha * L^(1-alpha)</span>
+delta = 0.1;        <span class="comment">% Capital depreciation</span>
+zmean = 1.0;        <span class="comment">% mean O-U process (in levels). This parameter has to be adjusted to ensure that the mean of z (truncated gaussian) is 1.</span>
+sig2 = (0.10)^2;    <span class="comment">% sigma^2 O-U</span>
+Corr = exp(-0.3);   <span class="comment">% persistence -log(Corr)  O-U</span>
+rho = 0.05;         <span class="comment">% discount rate</span>
+TFP = 1;
+
+K = 3.8;            <span class="comment">% initial aggregate capital. It is important to guess a value close to the solution for the algorithm to converge</span>
+
+zmin = 0.5;   <span class="comment">% Range z</span>
+zmax = 1.5;
+amin = -1;    <span class="comment">% borrowing constraint</span>
+amax = 30;    <span class="comment">% range a</span>
+
+<span class="comment">%simulation parameters</span>
+maxit  = 100;       <span class="comment">%maximum number of iterations in the HJB loop</span>
+maxitK = 100;       <span class="comment">%maximum number of iterations in the K loop</span>
+crit = 10^(-10);    <span class="comment">%criterion HJB loop</span>
+critK = 1e-7;       <span class="comment">%criterion K loop</span>
+Delta = 1000;       <span class="comment">%delta in HJB algorithm</span>
+
+<span class="comment">% Ornstein-Uhlenbeck</span>
+the = -log(Corr);
+Var = sig2/(2*the);
+
+<span class="comment">% Evalute asset and skill values for grid points</span>
+aa = spgrid(:,1)*(amax-amin)+amin;
+zz = spgrid(:,2)*(zmax-zmin)+zmin;
+mu = the*(zmean-zz);
+s2 = sig2;
+
+<span class="comment">% Differential operator for skill</span>
+Aswitch = bsxfun(@times,mu.*(mu&gt;=0),forward_diff_y)/(zmax-zmin) <span class="keyword">...</span>
+  + bsxfun(@times,mu.*(mu&lt;0),backward_diff_y)/(zmax-zmin) <span class="keyword">...</span>
+  + s2/2*second_deriv_y/(zmax-zmin)^2;
+
+<span class="comment">% Initial guess</span>
+r = alpha     * TFP * K^(alpha-1) -delta; <span class="comment">%interest rates</span>
+w = (1-alpha) * TFP * K^(alpha);          <span class="comment">%wages</span>
+v0 = (w.*zz + r.*aa).^(1-ga)/(1-ga)/rho;
+v = hier_to_nodal\v0;
+dist = zeros(1,maxit);
+V=v;
+
+number_of_points=0;
+</pre><h2>Iterate to Solve HJB Equation Adding Nodes to Sparse Grids as Needed<a name="4"></a></h2><p>Note that the Iteration Part of the Code is the same except for difference operator</p><pre class="codeinput"><span class="keyword">while</span> true
+</pre><pre class="codeinput">  <span class="keyword">for</span> n=1:maxit
+    Vaf = forward_diff_x*V/(amax-amin);
+    Vab = backward_diff_x*V/(amax-amin);
+
+    c0 = w*zz + r.*aa;
+    cf = Vaf.^(-1/ga);
+    sf = w*zz + r.*aa - cf;
+    cb = Vab.^(-1/ga);
+    sb = w*zz + r.*aa - cb;
+
+    If = (sf &gt;  0).*(spgrid(:,1)&lt;1);
+    Ib = (sb &lt; 0).*(If==0).*(spgrid(:,1)&gt;0);
+    I0 = (1-If-Ib);
+
+    c = cf.*If + cb.*Ib + c0.*I0;
+    u = c.^(1-ga)/(1-ga);
+
+    AA = bsxfun(@times,If.*sf,forward_diff_x)/(amax-amin) + bsxfun(@times,Ib.*sb,backward_diff_x)/(amax-amin);
+
+    B = (1/Delta + rho)*hier_to_nodal - AA - Aswitch;
+
+    b = u + hier_to_nodal*V/Delta;
+
+    V_new = B\b;
+
+    Vchange = V_new - V;
+    V = V_new;
+
+    dist = max(max(abs(Vchange)));
+    <span class="keyword">if</span> dist&lt;crit
+      disp(<span class="string">'Value Function Converged, Iteration = '</span>)
+      disp(n)
+      <span class="keyword">break</span>
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+
+  <span class="comment">% Plot Value function given the grid</span>
+  figure(1);
+  scatter3(aa,zz,hier_to_nodal*V);
+  drawnow;
+
+  V_nodal = hier_to_nodal*V;
+</pre><pre class="codeoutput">Value Function Converged, Iteration = 
+     9
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_01.png" alt="">
+
+<p>Add new nodes to sparse grid if needed</p><pre class="codeinput">  <span class="comment">% Find Position to Expand</span>
+  loc = abs(V)&gt;1e-4*(max(V_nodal)-min(V_nodal));
+
+  <span class="comment">% Compute New Grid Points from active grid points</span>
+  [new_points,new_spaces] = gen_new_points(spgrid(loc,:),spspace(loc,:));
+
+  <span class="comment">% Find Positions to Compress Away</span>
+  loc_keep = abs(V)&gt;8e-5*(max(V_nodal)-min(V_nodal));
+  [xx,loc] = unique([spgrid(loc_keep,:);new_points],<span class="string">'rows'</span>);
+
+  <span class="comment">% Break if no new grid points are added</span>
+  <span class="keyword">if</span> number_of_points &gt;= size(xx,1)
+    <span class="keyword">break</span>;
+  <span class="keyword">end</span>
+  number_of_points = size(xx,1);
+
+  <span class="comment">% Update interpolation operator</span>
+  x_eval = grid_evaluation(xx,spgrid,spspace);
+  v_nodal = x_eval*V;
+  spgrid = xx;
+  spspace = [spspace(loc_keep,:);new_spaces];
+  spspace = spspace(loc,:);
+  hier_to_nodal = grid_evaluation(xx,spgrid,spspace);
+
+  <span class="comment">% Correct the basis function for the new bases</span>
+  V = hier_to_nodal\v_nodal;
+
+  <span class="comment">% Update Difference Operators for the new grid</span>
+  [forward_diff_x,backward_diff_x] = gen_diff_op(1,spgrid,spspace,min(spspace(:,1)));
+  [forward_diff_y,backward_diff_y] = gen_diff_op(2,spgrid,spspace,min(spspace(:,2)));
+  second_deriv_y = forward_diff_y*(hier_to_nodal\backward_diff_y) <span class="keyword">...</span>
+    + backward_diff_y*(hier_to_nodal\forward_diff_y);
+  second_deriv_y(spgrid(:,2)==1,:) = -backward_diff_y(spgrid(:,2)==1,:);
+  second_deriv_y(spgrid(:,2)==0,:) = forward_diff_y(spgrid(:,2)==0,:);
+
+  <span class="comment">% Update Nodal Values for new grid</span>
+  aa = spgrid(:,1)*(amax-amin)+amin;
+  zz = spgrid(:,2)*(zmax-zmin)+zmin;
+  mu = the*(zmean-zz);
+  s2 = sig2;
+
+  Aswitch = bsxfun(@times,mu.*(mu&gt;=0),forward_diff_y)/(zmax-zmin) <span class="keyword">...</span>
+    + bsxfun(@times,mu.*(mu&lt;0),backward_diff_y)/(zmax-zmin) <span class="keyword">...</span>
+    + s2/2*second_deriv_y/(zmax-zmin)^2;
+</pre><pre class="codeinput"><span class="keyword">end</span></pre>
+
+<pre class="codeoutput"> <Value Function Converged, Iteration = 
+     7
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_02.png" alt=""> <pre class="codeoutput">Value Function Converged, Iteration = 
+     7
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_03.png" alt=""> <pre class="codeoutput">Value Function Converged, Iteration = 
+     8
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_04.png" alt=""> <pre class="codeoutput">Value Function Converged, Iteration = 
+     8
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_05.png" alt=""> <pre class="codeoutput">Value Function Converged, Iteration = 
+     9
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_06.png" alt=""> <pre class="codeoutput">Value Function Converged, Iteration = 
+     8
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_07.png" alt=""> <pre class="codeoutput">Value Function Converged, Iteration = 
+     8
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_08.png" alt=""> <pre class="codeoutput">Value Function Converged, Iteration = 
+     7
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_09.png" alt=""> <pre class="codeoutput">Value Function Converged, Iteration = 
+     6
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_10.png" alt=""> <pre class="codeoutput">Value Function Converged, Iteration = 
+     7
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_11.png" alt=""> 
+<pre class = "codeinput">
+figure(2);
+scatter3(aa,zz,hier_to_nodal*V);
+V_sparse = V;
+</pre>
+<img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_12.png" alt=""> <h2>Comparison Plot to Full Grid<a name="9"></a></h2><p>The following code is adapted from Ben Moll's codes available at     <a href="https://www.princeton.edu/~moll/HACTproject.htm">https://www.princeton.edu/~moll/HACTproject.htm</a></p><pre class="codeinput">a = linspace(amin,amax,I)';    <span class="comment">% wealth vector</span>
+da = (amax-amin)/(I-1);
+z = linspace(zmin,zmax,J);     <span class="comment">% productivity vector</span>
+dz = (zmax-zmin)/(J-1);
+dz2 = dz^2;
+aa = a*ones(1,J);
+zz = ones(I,1)*z;
+
+mu = the*(zmean - z);        <span class="comment">% Drift</span>
+s2 = sig2.*ones(1,J);        <span class="comment">% Variance</span>
+
+<span class="comment">% Preallocation</span>
+Vaf = zeros(I,J);
+Vab = zeros(I,J);
+Vzf = zeros(I,J);
+Vzb = zeros(I,J);
+Vzz = zeros(I,J);
+c = zeros(I,J);
+
+yy = - s2/dz2 - mu/dz;
+chi =  s2/(2*dz2);
+zeta = mu/dz + s2/(2*dz2);
+
+updiag=zeros(I*J,1); <span class="comment">%This is necessary because of the peculiar way spdiags is defined.</span>
+updiag(I+1:I*J)=reshape(repmat(zeta(1:J-1),I,1),I*(J-1),1);
+
+centdiag=zeros(I*J,1);
+centdiag(1:I)=repmat(chi(1)+yy(1),I,1);
+centdiag(I+1:I*(J-1))=reshape(repmat(yy(2:J-1),I,1),I*(J-2),1);
+centdiag(I*J-I+1:I*J)=repmat(yy(J)+zeta(J),I,1);
+
+lowdiag=reshape(repmat(chi(2:J),I,1),I*(J-1),1);
+
+Aswitch=spdiags(centdiag,0,I*J,I*J)+spdiags(lowdiag,-I,I*J,I*J)+spdiags(updiag,I,I*J,I*J);
+
+<span class="comment">% Initial Guess</span>
+r = alpha     * TFP * K^(alpha-1) -delta; <span class="comment">%interest rates</span>
+w = (1-alpha) * TFP * K^(alpha);          <span class="comment">%wages</span>
+v0 = (w*zz + r.*aa).^(1-ga)/(1-ga)/rho;
+v = v0;
+
+<span class="keyword">for</span> n=1:maxit
+  V = v;
+
+  <span class="comment">% forward difference</span>
+  Vaf(1:I-1,:) = (V(2:I,:)-V(1:I-1,:))/da;
+  Vaf(I,:) = (w*z + r.*amax).^(-ga); <span class="comment">%will never be used, but impose state constraint a&lt;=amax just in case</span>
+
+  <span class="comment">% backward difference</span>
+  Vab(2:I,:) = (V(2:I,:)-V(1:I-1,:))/da;
+  Vab(1,:) = (w*z + r.*amin).^(-ga);  <span class="comment">%state constraint boundary condition</span>
+
+  <span class="comment">%consumption and savings with forward difference</span>
+  cf = Vaf.^(-1/ga);
+  sf = w*zz + r.*aa - cf;
+  <span class="comment">%consumption and savings with backward difference</span>
+  cb = Vab.^(-1/ga);
+  sb = w*zz + r.*aa - cb;
+  <span class="comment">%consumption and derivative of value function at steady state</span>
+  c0 = w*zz + r.*aa;
+  Va0 = c0.^(-ga);
+
+  If = sf &gt; 0; <span class="comment">%positive drift --&gt; forward difference</span>
+  Ib = sb &lt; 0; <span class="comment">%negative drift --&gt; backward difference</span>
+  I0 = (1-If-Ib); <span class="comment">%at steady state</span>
+
+  Va_Upwind = Vaf.*If + Vab.*Ib + Va0.*I0; <span class="comment">%important to include third term</span>
+
+  c = Va_Upwind.^(-1/ga);
+  u = c.^(1-ga)/(1-ga);
+
+  X = - min(sb,0)/da;
+  Y = - max(sf,0)/da + min(sb,0)/da;
+  Z = max(sf,0)/da;
+
+  Z(I,:)=0;
+  X(1,:)=0;
+  updiag=[0;reshape(Z,I*J,1)];
+  centdiag=reshape(Y,I*J,1);
+  lowdiag=reshape(X,I*J,1);
+
+  AA=spdiags(centdiag,0,I*J,I*J)+spdiags([updiag;0],1,I*J,I*J)+spdiags(lowdiag(2:I*J),-1,I*J,I*J);
+  A = AA + Aswitch;
+  B = (1/Delta + rho)*speye(I*J) - A;
+
+  u_stacked = reshape(u,I*J,1);
+  V_stacked = reshape(V,I*J,1);
+
+  b = u_stacked + V_stacked/Delta;
+
+  V_stacked = B\b;
+
+  V = reshape(V_stacked,I,J);
+
+  Vchange = V - v;
+  v = V;
+
+  dist = max(max(abs(Vchange)));
+  <span class="keyword">if</span> dist&lt;crit
+    disp(<span class="string">'Value Function Converged with Full Grid, Iteration = '</span>);
+    disp(n);
+    <span class="keyword">break</span>;
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+h = figure(2);
+hold <span class="string">on</span>;
+surf(a,z,V');
+title(<span class="string">'Comparison to Uniform Grid'</span>);
+gif_maker_rotate(<span class="string">'comparison.gif'</span>,h);
+</pre><pre class="codeoutput">Value Function Converged with Full Grid, Iteration = 
+     8
+
+</pre><img vspace="5" hspace="5" src="EXAMPLE_Aiyagari_HJB_Adaptive_Sparse_Grid_web_comparison.gif" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br> (and adjusted not to clash with Bootstrap)</p></div><!--
+##### SOURCE BEGIN #####
+%% Example file of how to use adaptive sparse grid for HJB Equation
+%
+% by SeHyoun Ahn, July 2016
+%%
+
+% Requires: <generate_spgrid.m>
+%
+%           <gen_diff_op.m>
+%
+%           <grid_evaluation.m>
+%
+
+%% Set up Grids
+n_dim = 2;                 % Dimensionality of the problem
+n_levels = 4;              % Level of the starting sparse grid
+I = 100;                   % Number of asset grid points for full grid
+J = 40;                    % Number of skill grid points for full grid
+
+% Generate sparse grid
+[spgrid,spspace] = generate_spgrid(n_dim,n_levels);
+
+
+% Setup Change of basis from Hierachical to Nodal
+hier_to_nodal = grid_evaluation(spgrid,spgrid,spspace);
+
+% Generate Difference Operators
+[forward_diff_x,backward_diff_x] = gen_diff_op(1,spgrid,spspace,min(spspace(:,1)));
+[forward_diff_y,backward_diff_y] = gen_diff_op(2,spgrid,spspace,min(spspace(:,2)));
+
+% Second Derivative Operator
+% More tests are needed to check which stencil is the best for second order
+% Operators
+second_deriv_y = forward_diff_y*(hier_to_nodal\backward_diff_y) ...
+  + backward_diff_y*(hier_to_nodal\forward_diff_y);
+second_deriv_y(spgrid(:,2)==1,:) = -backward_diff_y(spgrid(:,2)==1,:);
+second_deriv_y(spgrid(:,2)==0,:) = forward_diff_y(spgrid(:,2)==0,:);
+
+% Integration Weights
+% This does not get used here
+int_weight = (prod(spspace,2)./2.^sum(spspace==1,2))';
+
+%% Set up Model
+% Parameters
+ga = 2;             % CRRA utility with parameter gamma
+alpha = 0.35;       % Production function F = K^alpha * L^(1-alpha)
+delta = 0.1;        % Capital depreciation
+zmean = 1.0;        % mean O-U process (in levels). This parameter has to be adjusted to ensure that the mean of z (truncated gaussian) is 1.
+sig2 = (0.10)^2;    % sigma^2 O-U
+Corr = exp(-0.3);   % persistence -log(Corr)  O-U
+rho = 0.05;         % discount rate
+TFP = 1;
+
+K = 3.8;            % initial aggregate capital. It is important to guess a value close to the solution for the algorithm to converge
+
+zmin = 0.5;   % Range z
+zmax = 1.5;
+amin = -1;    % borrowing constraint
+amax = 30;    % range a
+
+%simulation parameters
+maxit  = 100;       %maximum number of iterations in the HJB loop
+maxitK = 100;       %maximum number of iterations in the K loop
+crit = 10^(-10);    %criterion HJB loop
+critK = 1e-7;       %criterion K loop
+Delta = 1000;       %delta in HJB algorithm
+
+% Ornstein-Uhlenbeck
+the = -log(Corr);
+Var = sig2/(2*the);
+
+% Evalute asset and skill values for grid points
+aa = spgrid(:,1)*(amax-amin)+amin;
+zz = spgrid(:,2)*(zmax-zmin)+zmin;
+mu = the*(zmean-zz);
+s2 = sig2;
+
+% Differential operator for skill
+Aswitch = bsxfun(@times,mu.*(mu>=0),forward_diff_y)/(zmax-zmin) ...
+  + bsxfun(@times,mu.*(mu<0),backward_diff_y)/(zmax-zmin) ...
+  + s2/2*second_deriv_y/(zmax-zmin)^2;
+
+% Initial guess
+r = alpha     * TFP * K^(alpha-1) -delta; %interest rates
+w = (1-alpha) * TFP * K^(alpha);          %wages
+v0 = (w.*zz + r.*aa).^(1-ga)/(1-ga)/rho;
+v = hier_to_nodal\v0;
+dist = zeros(1,maxit);
+V=v;
+
+number_of_points=0;
+%% Iterate to Solve HJB Equation Adding Nodes to Sparse Grids as Needed
+
+%%
+% Note that the Iteration Part of the Code is the same except for
+% difference operator
+while true
+  for n=1:maxit
+    Vaf = forward_diff_x*V/(amax-amin);
+    Vab = backward_diff_x*V/(amax-amin);
+    
+    c0 = w*zz + r.*aa;
+    cf = Vaf.^(-1/ga);
+    sf = w*zz + r.*aa - cf;
+    cb = Vab.^(-1/ga);
+    sb = w*zz + r.*aa - cb;
+    
+    If = (sf >  0).*(spgrid(:,1)<1);
+    Ib = (sb < 0).*(If==0).*(spgrid(:,1)>0);
+    I0 = (1-If-Ib);
+    
+    c = cf.*If + cb.*Ib + c0.*I0;
+    u = c.^(1-ga)/(1-ga);
+    
+    AA = bsxfun(@times,If.*sf,forward_diff_x)/(amax-amin) + bsxfun(@times,Ib.*sb,backward_diff_x)/(amax-amin);
+    
+    B = (1/Delta + rho)*hier_to_nodal - AA - Aswitch;
+    
+    b = u + hier_to_nodal*V/Delta;
+    
+    V_new = B\b;
+    
+    Vchange = V_new - V;
+    V = V_new;
+    
+    dist = max(max(abs(Vchange)));
+    if dist<crit
+      disp('Value Function Converged, Iteration = ')
+      disp(n)
+      break
+    end
+  end
+  
+  % Plot Value function given the grid
+  figure(1);
+  scatter3(aa,zz,hier_to_nodal*V);
+  drawnow;
+  
+  V_nodal = hier_to_nodal*V;
+  
+  %%
+  % Add new nodes to sparse grid if needed
+  
+  % Find Position to Expand
+  loc = abs(V)>1e-4*(max(V_nodal)-min(V_nodal));
+  
+  % Compute New Grid Points from active grid points
+  [new_points,new_spaces] = gen_new_points(spgrid(loc,:),spspace(loc,:));
+  
+  % Find Positions to Compress Away
+  loc_keep = abs(V)>8e-5*(max(V_nodal)-min(V_nodal));
+  [xx,loc] = unique([spgrid(loc_keep,:);new_points],'rows');
+  
+  % Break if no new grid points are added
+  if number_of_points >= size(xx,1)
+    break;
+  end
+  number_of_points = size(xx,1);
+  
+  % Update interpolation operator
+  x_eval = grid_evaluation(xx,spgrid,spspace);
+  v_nodal = x_eval*V;
+  spgrid = xx;
+  spspace = [spspace(loc_keep,:);new_spaces];
+  spspace = spspace(loc,:);
+  hier_to_nodal = grid_evaluation(xx,spgrid,spspace);
+  
+  % Correct the basis function for the new bases
+  V = hier_to_nodal\v_nodal;
+  
+  % Update Difference Operators for the new grid
+  [forward_diff_x,backward_diff_x] = gen_diff_op(1,spgrid,spspace,min(spspace(:,1)));
+  [forward_diff_y,backward_diff_y] = gen_diff_op(2,spgrid,spspace,min(spspace(:,2)));
+  second_deriv_y = forward_diff_y*(hier_to_nodal\backward_diff_y) ...
+    + backward_diff_y*(hier_to_nodal\forward_diff_y);
+  second_deriv_y(spgrid(:,2)==1,:) = -backward_diff_y(spgrid(:,2)==1,:);
+  second_deriv_y(spgrid(:,2)==0,:) = forward_diff_y(spgrid(:,2)==0,:);
+  
+  % Update Nodal Values for new grid
+  aa = spgrid(:,1)*(amax-amin)+amin;
+  zz = spgrid(:,2)*(zmax-zmin)+zmin;
+  mu = the*(zmean-zz);
+  s2 = sig2;
+  
+  Aswitch = bsxfun(@times,mu.*(mu>=0),forward_diff_y)/(zmax-zmin) ...
+    + bsxfun(@times,mu.*(mu<0),backward_diff_y)/(zmax-zmin) ...
+    + s2/2*second_deriv_y/(zmax-zmin)^2;
+end
+
+figure(2);
+scatter3(aa,zz,hier_to_nodal*V);
+V_sparse = V;
+
+%% Comparison Plot to Full Grid
+
+%%
+% The following code is adapted from Ben Moll's codes available at
+%     <https://www.princeton.edu/~moll/HACTproject.htm>
+%
+
+a = linspace(amin,amax,I)';    % wealth vector
+da = (amax-amin)/(I-1);
+z = linspace(zmin,zmax,J);     % productivity vector
+dz = (zmax-zmin)/(J-1);
+dz2 = dz^2;
+aa = a*ones(1,J);
+zz = ones(I,1)*z;
+
+mu = the*(zmean - z);        % Drift
+s2 = sig2.*ones(1,J);        % Variance
+
+% Preallocation
+Vaf = zeros(I,J);
+Vab = zeros(I,J);
+Vzf = zeros(I,J);
+Vzb = zeros(I,J);
+Vzz = zeros(I,J);
+c = zeros(I,J);
+
+yy = - s2/dz2 - mu/dz;
+chi =  s2/(2*dz2);
+zeta = mu/dz + s2/(2*dz2);
+
+updiag=zeros(I*J,1); %This is necessary because of the peculiar way spdiags is defined.
+updiag(I+1:I*J)=reshape(repmat(zeta(1:J-1),I,1),I*(J-1),1);
+
+centdiag=zeros(I*J,1);
+centdiag(1:I)=repmat(chi(1)+yy(1),I,1);
+centdiag(I+1:I*(J-1))=reshape(repmat(yy(2:J-1),I,1),I*(J-2),1);
+centdiag(I*J-I+1:I*J)=repmat(yy(J)+zeta(J),I,1);
+
+lowdiag=reshape(repmat(chi(2:J),I,1),I*(J-1),1);
+
+Aswitch=spdiags(centdiag,0,I*J,I*J)+spdiags(lowdiag,-I,I*J,I*J)+spdiags(updiag,I,I*J,I*J);
+
+% Initial Guess
+r = alpha     * TFP * K^(alpha-1) -delta; %interest rates
+w = (1-alpha) * TFP * K^(alpha);          %wages
+v0 = (w*zz + r.*aa).^(1-ga)/(1-ga)/rho;
+v = v0;
+
+for n=1:maxit
+  V = v;
+  
+  % forward difference
+  Vaf(1:I-1,:) = (V(2:I,:)-V(1:I-1,:))/da;
+  Vaf(I,:) = (w*z + r.*amax).^(-ga); %will never be used, but impose state constraint a<=amax just in case
+  
+  % backward difference
+  Vab(2:I,:) = (V(2:I,:)-V(1:I-1,:))/da;
+  Vab(1,:) = (w*z + r.*amin).^(-ga);  %state constraint boundary condition
+  
+  %consumption and savings with forward difference
+  cf = Vaf.^(-1/ga);
+  sf = w*zz + r.*aa - cf;
+  %consumption and savings with backward difference
+  cb = Vab.^(-1/ga);
+  sb = w*zz + r.*aa - cb;
+  %consumption and derivative of value function at steady state
+  c0 = w*zz + r.*aa;
+  Va0 = c0.^(-ga);
+  
+  If = sf > 0; %positive drift REPLACE_WITH_DASH_DASH> forward difference
+  Ib = sb < 0; %negative drift REPLACE_WITH_DASH_DASH> backward difference
+  I0 = (1-If-Ib); %at steady state
+  
+  Va_Upwind = Vaf.*If + Vab.*Ib + Va0.*I0; %important to include third term
+  
+  c = Va_Upwind.^(-1/ga);
+  u = c.^(1-ga)/(1-ga);
+  
+  X = - min(sb,0)/da;
+  Y = - max(sf,0)/da + min(sb,0)/da;
+  Z = max(sf,0)/da;
+  
+  Z(I,:)=0;
+  X(1,:)=0;
+  updiag=[0;reshape(Z,I*J,1)];
+  centdiag=reshape(Y,I*J,1);
+  lowdiag=reshape(X,I*J,1);
+  
+  AA=spdiags(centdiag,0,I*J,I*J)+spdiags([updiag;0],1,I*J,I*J)+spdiags(lowdiag(2:I*J),-1,I*J,I*J);
+  A = AA + Aswitch;
+  B = (1/Delta + rho)*speye(I*J) - A;
+  
+  u_stacked = reshape(u,I*J,1);
+  V_stacked = reshape(V,I*J,1);
+  
+  b = u_stacked + V_stacked/Delta;
+  
+  V_stacked = B\b;
+  
+  V = reshape(V_stacked,I,J);
+  
+  Vchange = V - v;
+  v = V;
+  
+  dist = max(max(abs(Vchange)));
+  if dist<crit
+    disp('Value Function Converged with Full Grid, Iteration = ');
+    disp(n);
+    break;
+  end
+end
+
+h = figure(2);
+hold on;
+surf(a,z,V');
+title('Comparison to Uniform Grid');
+gif_maker_rotate('comparison.gif',h);
+##### SOURCE END #####
+--></body></html>

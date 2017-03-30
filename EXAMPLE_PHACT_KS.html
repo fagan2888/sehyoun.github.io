@@ -1,0 +1,805 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Solves the Krusell and Smith (1998)</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-29"><meta name="DC.source" content="mainfile_web.m">
+  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="css/style.css" rel="stylesheet" type="text/css">
+  <link href="css/matlab.css" rel="stylesheet" type="text/css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/responsive.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+  </script>
+  <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+</head><body>
+<div id="javascript_banner">
+  <p>
+    Please enable javascripts for pretty navigation. Here are ugly links to make it usable:<br>
+  <ul>
+    <li> <a href="./papers.html">papers</a></li>
+    <li> <a href="./codes.html">codes</a></li>
+    <li> <a href="./cv.html">cv (html)</a></li>
+    <li> <a href="./Ahn_SeHyoun_cv.pdf">cv (pdf)</a></li>
+  </ul>
+</div>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+  <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-menu" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a class="navbar-brand" href="./index.html" >Home</a>-->
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="top-menu">
+      <ul class="nav navbar-nav">
+
+        <!-- Home -->
+        <li id="home"><a href="./index.html">Home<span class="sr-only">(current)</span></a></li>
+
+        <!-- CV -->
+        <li id="cv" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">CV<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./cv.html">html (Phone Friendly)</a></li>
+            <li><a href="./Ahn_SeHyoun_cv.pdf">pdf</a></li>
+          </ul>
+        </li>
+
+        <!-- Research -->
+        <li id="research" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Research<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./papers.html">Papers</a></li>
+            <li><a href="./codes.html">Codes</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Contacts -->
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Contacts <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a>1 Fisher Hall<br>
+              Princeton University<br>
+              Princeton, NJ 08540</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="mailto:sehyouna@princeton.edu">sehyouna@princeton.edu</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+
+<div class="content"><h1>Solves the Krusell and Smith (1998)</h1><!--introduction--><p>Solving Krusell-Smith model using perturbation method involves simple 5 step process given by</p><div><ol><li>Solve for Steady State</li><li>Linearize Model Equations</li><li>Solve out Static Constraint (optional reduce model)</li><li>Solve Linear System</li><li>Compute Impulse Response Functions</li><li>Check for Internal Consistency (if model reduction is used) where each step just requires about one function call.</li></ol></div><p>In this example file, the entire problem will be solved total of 3 times. First, KS model will be solved without any model reduction. Second, KS model will be solved with model reduction, to compare how well the model reduction works. Lastly, different parts of observables will be introduced to compare how the model reduction works with different requirements. We have updates to Internal Consistency check coming in the future.</p><p>Estimated Runtime: 1.5 seconds</p><p>REFERENCES:</p><div><ul><li>Ahn, SeHyoun, Greg Kaplan, Benjamin Moll, Thomas Winberry, and Christian Wolf. &quot; When Inequality Matters for Macro and Macro Matters for Inequality.&quot; </li><li>Krusell, Per, and Anthony A. Smith, Jr. "Income and wealth heterogeneity in the macroeconomy." Journal of political Economy 106.5 (1998): 867-896.</li></ul></div><p>REQUIRES:</p><div><ul><li>auto diff toolbox: <a href="https://github.com/sehyoun/MATLABAutoDiff">https://github.com/sehyoun/MATLABAutoDiff</a></li><li>phact toolbox: <a href="https://github.com/gregkaplan/phact">https://github.com/gregkaplan/phact</a></li><li>compute_steady_state.m</li><li>equilibrium_conditions.m</li><li>plot_steady_state.m</li><li>plot_IRFs.m</li></ul> Relevant files except for automatic differentiation, can be found in /examples/KrusellSmith folder of phact toolbox</div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Setup the toolbox</a></li><li><a href="#2">Set options for this example run</a></li><li><a href="#3">Step 0: Set Parameters</a></li><li><a href="#4">Step 1: Solve for Steady State</a></li><li><a href="#5">Step 2: Linearize Model Equations</a></li><li><a href="#6">Step 3 (full): Solve out Static Constraints and/or Reduce Models</a></li><li><a href="#7">Step 4: Solve Linear System</a></li><li><a href="#8">Step 5: Simulate Impulse Response Functions</a></li><li><a href="#9">Step 3 (reduced): Solve Out Static Constraints and/or Reduce Models</a></li><li><a href="#12">Step 4: Solve Linear System</a></li><li><a href="#13">Step 5: Simulate Impulse Response Functions</a></li><li><a href="#14">Step 6: Internal Consistency Check</a></li><li><a href="#15">(optional) Step 7: Plot relevant values</a></li><li><a href="#16">State Space Reduction with More Observables</a></li></ul></div><h2 id="1">Setup the toolbox</h2><p>Just need to include folders containing the files in the path.</p><pre class="codeinput">addpath(<span class="string">'/example/path/to/AutoDiff'</span>);
+addpath(<span class="string">'/example/path/to/PHACT'</span>);
+</pre><h2 id="2">Set options for this example run</h2><p>example_case : 1   run full and compare with only value function reduction                2   run full and compare with only state space reduction                3   run full and compare with both reductions</p><pre class="codeinput">example_case = 3;
+reduceDist_hor = 50;        <span class="comment">% m of K_m(A,b)</span>
+
+<span class="comment">% initialize shocks for simulation</span>
+T = 200;
+N = 2000;
+vAggregateShock = zeros(1,N);
+vAggregateShock(1,1) = 1;
+<span class="comment">%vAggregateShock = randn(1,N);     % Uncomment for one realization instead</span>
+                                  <span class="comment">% of IRFs</span>
+</pre><h2 id="3">Step 0: Set Parameters</h2><p>The script sets up parameters relevant for the model</p><pre class="codeinput">set_parameters;
+</pre><h2 id="4">Step 1: Solve for Steady State</h2><p>Non-stochastic steady state can be found using any methods. In    particular, example codes can be found at    <a href="http://www.princeton.edu/%7Emoll/HACTproject.htm">http://www.princeton.edu/~moll/HACTproject.htm</a>.</p><pre class="codeinput">tStart = tic;
+fprintf(<span class="string">'Computing steady state...\n'</span>)
+<span class="keyword">global</span> IfSS IbSS I0SS varsSS A
+
+[rSS,wSS,KSS,ASS,uSS,cSS,VSS,gSS,dVUSS,dVfSS,dVbSS,IfSS,IbSS,I0SS] = <span class="keyword">...</span>
+    compute_steady_state();
+
+fprintf(<span class="string">'Time to compute steady state: %.3g seconds\n\n\n'</span>,toc(tStart));
+
+<span class="comment">% Store steady state values</span>
+varsSS = zeros(nVars,1);
+varsSS(1:2*I,1) = reshape(VSS,2*I,1);
+ggSS = reshape(gSS,2*I,1);
+varsSS(2*I+1:4*I-1,1) = ggSS(1:2*I-1);
+varsSS(4*I,1) = 0;
+varsSS(4*I+1,1) = KSS;
+varsSS(4*I+2,1) = rSS;
+varsSS(4*I+3,1) = wSS;
+varsSS(4*I+4,1) = (KSS ^ aalpha) * (zAvg ^ (1 - aalpha));
+CSS = sum(cSS(:) .* gSS(:) * da);
+varsSS(4*I+5,1) = CSS;
+varsSS(4*I+6,1) = ddelta * KSS;
+
+<span class="comment">% plot steady state results</span>
+plot_steady_state;
+</pre><pre class="codeoutput">Computing steady state...
+Steady State Found, Interest rate =
+    0.0096
+
+Time to compute steady state: 0.113 seconds
+
+
+</pre><img vspace="5" hspace="5" src="mainfile_web_01.png" alt=""> <img vspace="5" hspace="5" src="mainfile_web_02.png" alt=""> <h2 id="5">Step 2: Linearize Model Equations</h2><p>For computing derivatives, the codes written for solving for the    steady-state can be used almost verbatim using automatic    differentiation toolbox as long as only the functions supported by    automatic differentation are used. For list of supported functions and    documentation of relevant syntax check    <a href="https://github.com/sehyoun/MATLABAutoDiff">https://github.com/sehyoun/MATLABAutoDiff</a></p><pre class="codeinput">fprintf(<span class="string">'Taking derivatives of equilibrium conditions...\n'</span>)
+t0 = tic;
+
+<span class="comment">% Prepare automatic differentiation</span>
+vars = zeros(2*nVars+nEErrors+1,1);
+vars = myAD(vars);
+
+<span class="comment">% Evaluate derivatives</span>
+derivativesIntermediate = equilibrium_conditions(vars);
+
+<span class="comment">% Extract out derivative values</span>
+derivs = getderivs(derivativesIntermediate);
+
+tDerivs = toc(t0);
+fprintf(<span class="string">'...Done!\n'</span>)
+fprintf(<span class="string">'Time to compute derivatives: %2.4f seconds\n\n\n'</span>,tDerivs)
+<span class="keyword">if</span> tDerivs &gt; 1
+    warning(<span class="string">'If you compile mex files for automatics differentiation, matrix vector multiplication will be slow'</span>);
+    disp(<span class="string">'Press any key to continue...'</span>);
+    pause();
+<span class="keyword">end</span>
+
+<span class="comment">% Unpackage derivatives</span>
+mVarsDerivs = derivs(:,1:nVars);
+mVarsDotDerivs = derivs(:,nVars+1:2*nVars);
+mEErrorsDerivs = derivs(:,2*nVars+1:2*nVars+nEErrors);
+mShocksDerivs = derivs(:,2*nVars+nEErrors+1);
+</pre><pre class="codeoutput">Taking derivatives of equilibrium conditions...
+...Done!
+Time to compute derivatives: 0.0679 seconds
+
+
+</pre><h2 id="6">Step 3 (full): Solve out Static Constraints and/or Reduce Models</h2><p>For the first run, a unreduced model will be solved</p><pre class="codeinput"><span class="comment">% rename derivative matrix to match notation in paper</span>
+g0 = mVarsDotDerivs;
+g1 = -mVarsDerivs;
+c = sparse(nVars,1);
+psi = -mShocksDerivs;
+pi = -mEErrorsDerivs;
+
+<span class="comment">% Solve out static constratins</span>
+[~,inv_state_red,g0,g1,constant,pi,psi] = clean_G0_sparse(g0,g1,c,pi,psi);
+</pre><h2 id="7">Step 4: Solve Linear System</h2><pre class="codeinput">t0 = tic;
+fprintf(<span class="string">'Solving linear system...\n'</span>)
+
+[G1,~,impact,eu] = schur_solver(g0,g1,c,psi,pi,1,1,1);
+
+fprintf(<span class="string">'...Done!\n'</span>)
+fprintf(<span class="string">'Existence and uniqueness? %2.0f and %2.0f\n'</span>,eu);
+fprintf(<span class="string">'Time to solve full linear system: %2.4f seconds\n\n\n'</span>,toc(t0))
+</pre><pre class="codeoutput">Solving linear system...
+...Done!
+Existence and uniqueness?  1 and  1
+Time to solve full linear system: 0.4475 seconds
+
+
+</pre><h2 id="8">Step 5: Simulate Impulse Response Functions</h2><pre class="codeinput">t0 = tic;
+
+[simulated,~] = simulate(G1,impact,T,N,vAggregateShock,<span class="string">'implicit'</span>,inv_state_red);<span class="comment">%,4*I:4*I+6);</span>
+
+fprintf(<span class="string">'...Done!\n'</span>)
+fprintf(<span class="string">'Time to simulate model: %2.4f seconds\n\n\n'</span>,toc(t0))
+
+big_simul = simulated + varsSS;
+simulated = simulated(4*I:4*I+6,:);
+
+varsSS_small = varsSS(4*I:4*I+6,1);
+<span class="comment">% Add state-states back in to get values in levels</span>
+vAggregateTFP			= simulated(1,:) + varsSS_small(1);
+vAggregateOutput		= simulated(5,:) + varsSS_small(5);
+vAggregateConsumption	= simulated(6,:) + varsSS_small(6);
+vAggregateInvestment 	= simulated(7,:) + varsSS_small(7);
+
+<span class="comment">% Compute log differences for plotting</span>
+vAggregateTFP_full		= vAggregateTFP;
+vAggregateOutput_full	= log(vAggregateOutput) - log(varsSS_small(5));
+vAggregateConsumption_full	= log(vAggregateConsumption) - log(varsSS_small(6));
+vAggregateInvestment_full	= log(vAggregateInvestment) - log(varsSS_small(7));
+</pre><pre class="codeoutput">...Done!
+Time to simulate model: 0.3180 seconds
+
+
+</pre><h2 id="9">Step 3 (reduced): Solve Out Static Constraints and/or Reduce Models</h2><pre class="codeinput"><span class="comment">% Set relevant parameters for example cases</span>
+<span class="keyword">if</span> (example_case == 1)
+    reduceV = 1;
+    reduceDistribution = 0;
+<span class="keyword">elseif</span> (example_case == 2)
+    reduceV = 0;
+    reduceDistribution = 1;
+<span class="keyword">else</span>
+    reduceV = 1;
+    reduceDistribution = 1;
+<span class="keyword">end</span>
+
+<span class="comment">% rename derivatives to match notation in paper</span>
+g0 = mVarsDotDerivs;
+g1 = -mVarsDerivs;
+c = sparse(nVars,1);
+psi = -mShocksDerivs;
+pi = -mEErrorsDerivs;
+
+t0 = tic;
+fprintf(<span class="string">'Model Reduction ...\n'</span>)
+</pre><pre class="codeoutput">Model Reduction ...
+</pre><p><b>State space reduction using Krylov subspace method</b></p><pre class="codeinput"><span class="keyword">if</span> reduceDistribution == 1
+    <span class="comment">% State space reduction</span>
+    [state_red,inv_state_red,n_g_red] = krylov_reduction(g0,g1,n_v,n_g,reduceDist_hor);
+    [g1,psi,pi,c,g0] = change_basis(state_red,inv_state_red,g1,psi,pi,c,g0);
+<span class="keyword">else</span>
+    <span class="comment">% Clean G0</span>
+    [state_red,inv_state_red,g0,g1,c,pi,psi] = clean_G0_sparse(g0,g1,c,pi,psi);
+    n_g_red = n_g;
+<span class="keyword">end</span>
+</pre><p><b>Value function reduction using spline inspired bases</b></p><pre class="codeinput"><span class="keyword">if</span> reduceV == 1
+    <span class="comment">% Create knot points for spline (the knot points are not uniformly spaced)</span>
+    knots = linspace(amin,amax,n_knots-1)';
+    knots = (amax-amin)/(2^c_power-1)*((knots-amin)/(amax-amin)+1).^c_power+amin-(amax-amin)/(2^c_power-1);
+    <span class="comment">% Function calls to create basis reduction</span>
+    [from_spline, to_spline] = oneDquad_spline(x,knots);
+    [from_spline, to_spline] = extend_to_nd(from_spline,to_spline,n_prior,n_post);
+    n_splined = size(from_spline,2);
+    [from_spline, to_spline] = projection_for_subset(from_spline,to_spline,0,n_g_red);
+
+    <span class="comment">% Reduce the decision vector</span>
+    [g1,psi,~,c,g0] = change_basis(to_spline,from_spline,g1,psi,pi,c,g0);
+    pi = to_spline * pi * from_spline(1:n_v,1:n_splined);
+<span class="keyword">elseif</span> reduceV == 0
+    from_spline = speye(n_g_red + n_v);
+    to_spline = speye(n_g_red + n_v);
+    n_splined = n_v;
+<span class="keyword">end</span>
+fprintf(<span class="string">'...Done!\n'</span>)
+fprintf(<span class="string">'Time to reduce dimensionality: %2.4f seconds\n\n\n'</span>,toc(t0))
+</pre><pre class="codeoutput">...Done!
+Time to reduce dimensionality: 0.1517 seconds
+
+
+</pre><h2 id="12">Step 4: Solve Linear System</h2><pre class="codeinput">t0 = tic;
+fprintf(<span class="string">'Solving reduced linear system...\n'</span>)
+
+[G1,~,impact,eu,F] = schur_solver(g0,g1,c,psi,pi,1,1,1);
+
+fprintf(<span class="string">'...Done!\n'</span>)
+fprintf(<span class="string">'Existence and uniqueness? %2.0f and %2.0f\n'</span>,eu);
+fprintf(<span class="string">'Time to solve linear system: %2.4f seconds\n\n\n'</span>,toc(t0))
+</pre><pre class="codeoutput">Solving reduced linear system...
+...Done!
+Existence and uniqueness?  1 and  1
+Time to solve linear system: 0.0199 seconds
+
+
+</pre><h2 id="13">Step 5: Simulate Impulse Response Functions</h2><pre class="codeinput">fprintf(<span class="string">'Simulating Model...\n'</span>)
+t0 = tic;
+
+trans_mat = inv_state_red*from_spline;
+[simulated,vTime] = simulate(G1,impact,T,N,vAggregateShock,<span class="string">'implicit'</span>,trans_mat,4*I:4*I+6);
+
+fprintf(<span class="string">'...Done!\n'</span>)
+fprintf(<span class="string">'Time to simulate model: %2.4f seconds\n\n\n'</span>,toc(t0))
+
+<span class="comment">% Add state-states back in to get values in levels</span>
+vAggregateTFP = simulated(1,:) + varsSS_small(1);
+vAggregateOuput = simulated(5,:) + varsSS_small(5);
+vAggregateConsumption = simulated(6,:) + varsSS_small(6);
+vAggregateInvestment = simulated(7,:) + varsSS_small(7);
+
+<span class="comment">% Compute log differences for plotting</span>
+vAggregateTFP_reduced = vAggregateTFP;
+vAggregateOutput_reduced = log(vAggregateOutput) - log(varsSS_small(5));
+vAggregateConsumption_reduced = log(vAggregateConsumption) - log(varsSS_small(6));
+vAggregateInvestment_reduced = log(vAggregateInvestment) - log(varsSS_small(7));
+</pre><pre class="codeoutput">Simulating Model...
+...Done!
+Time to simulate model: 0.0499 seconds
+
+
+</pre><h2 id="14">Step 6: Internal Consistency Check</h2><p>For large problem, we are forced to take explicit update, so it can take awhile to run, but the good thing is that this only needs to be run at the end. We are currently working on this, so speed for this part might improve in the future. (For small problems, the speed is not an issue). A different consistency check is in works, and will be updated in the future.</p><pre class="codeinput">g1 = -mVarsDerivs;
+psi = -mShocksDerivs;
+from_red = inv_state_red * from_spline;
+to_red = to_spline * state_red;
+[epsilon] = internal_consistency_check(G1,impact,n_g_red,from_red,to_red,g1,psi,F,n_v,n_g,1000,varsSS,1,0);
+</pre><pre class="codeoutput">&lt;internal_consistency_check&gt;: Failed to find an approximation for the largest eigenvalue
+                              adjusting parameter k of eigs to 10
+&lt;internal_consistency_check&gt;: Failed to find an approximation for the largest eigenvalue
+                              adjusting parameter k of eigs to 15
+&lt;check_internal&gt;: Estimated simulation time is 0.057539 minutes
+&lt;internal_consistency_check&gt;: The maximum relative error is 3.260248e-05
+</pre><img vspace="5" hspace="5" src="mainfile_web_03.png" alt=""> <h2 id="15">(optional) Step 7: Plot relevant values</h2><p>Plot impulse response functions</p><pre class="codeinput">plot_IRFs;
+</pre><img vspace="5" hspace="5" src="mainfile_web_04.png" alt=""> <h2 id="16">State Space Reduction with More Observables</h2><p>It is possible to include other variables into observables. In this part,    different parts of the distribution will be included in the model    reduction to show how the Krylov subspace based model reduction    behaves. To that regard, the reduced model is solved while including    different parts of distribution as part of the observable. In this    case, a very strong requirement of knowing the probability density    value at different grid points of the distribution g is taken. In the    first case, 80th through 89th grid points were included in the parts    that we consider to be observable. For the second example, 85th    through 94th grid points were included in observable.</p><pre class="codeinput"><span class="comment">% rename derivative matrix to match notation in paper</span>
+g0 = mVarsDotDerivs;
+g1 = -mVarsDerivs;
+c = sparse(nVars,1);
+psi = -mShocksDerivs;
+pi = -mEErrorsDerivs;
+
+<span class="comment">% Solve full model</span>
+[~,inv_state_red,g0_full,g1_full,c_full,pi_full,psi_full] = clean_G0_sparse(g0,g1,c,pi,psi);
+[G1,~,impact,eu] = schur_solver(g0_full,g1_full,c_full,psi_full,pi_full,1,1,1);
+[simulated,vTime] = simulate(G1,impact,T,N,vAggregateShock,<span class="string">'implicit'</span>,inv_state_red);
+simulated_full = simulated + varsSS;
+
+<span class="comment">% Solve reduced without extra observables</span>
+[state_red,inv_state_red,n_g_red] = krylov_reduction(g0,g1,n_v,n_g,20);
+[g1_red,psi_red,pi_red,c_red,g0_red] = change_basis(state_red,inv_state_red,g1,psi,pi,c,g0);
+[G1,~,impact,eu] = schur_solver(g0_red,g1_red,c_red,psi_red,pi_red,1,1,1);
+[simulated,vTime] = simulate(G1,impact,T,N,vAggregateShock,<span class="string">'implicit'</span>,inv_state_red);
+simulated_red = simulated + varsSS;
+</pre><p>Solve reduced with extra observables for 80th through 89th grid point</p><pre class="codeinput">[state_red,inv_state_red,n_g_red] = krylov_reduction(g0,g1,n_v,n_g,20,spdiags(ones(n_g,1),79,10,n_g));
+[g1_80,psi_80,pi_80,c_80,g0_80] = change_basis(state_red,inv_state_red,g1,psi,pi,c,g0);
+[G1,~,impact,eu] = schur_solver(g0_80,g1_80,c_80,psi_80,pi_80,1,1,1);
+[simulated,vTime] = simulate(G1,impact,T,N,vAggregateShock,<span class="string">'implicit'</span>,inv_state_red);
+simulated_obs = simulated + varsSS;
+diff_red = (abs(simulated_red(n_v+1:end,:) - simulated_full(n_v+1:end,:)))./simulated_full(n_v+1:end,:);
+diff_obs80 = (abs(simulated_obs(n_v+1:end,:) - simulated_full(n_v+1:end,:)))./simulated_full(n_v+1:end,:);
+
+figure;
+plot(70:99,log(diff_red(70:99,11)));
+hold <span class="string">on</span>;
+plot(70:99,log(diff_obs80(70:99,11)));
+grid <span class="string">on</span>
+legend(<span class="string">'Location'</span>,<span class="string">'northwest'</span>);
+legend(<span class="string">'without'</span>,<span class="string">'with grid 80~89 included'</span>);
+title([<span class="string">'Error Comparison at time '</span>,num2str(vTime(11))],<span class="string">'interpreter'</span>,<span class="string">'latex'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'$\log$(relative error)'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>)
+xlabel(<span class="string">'Distribution Location'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>)
+</pre><img vspace="5" hspace="5" src="mainfile_web_05.png" alt=""> <p>Solve reduced with extra observables for 85th through 94th grid point</p><pre class="codeinput">[state_red,inv_state_red,n_g_red] = krylov_reduction(g0,g1,n_v,n_g,20,spdiags(ones(n_g,1),84,10,n_g));
+[g1,psi,pi,c,g0] = change_basis(state_red,inv_state_red,g1,psi,pi,c,g0);
+[G1,~,impact,eu] = schur_solver(g0,g1,c,psi,pi,1,1,1);
+[simulated,vTime] = simulate(G1,impact,T,N,vAggregateShock,<span class="string">'implicit'</span>,inv_state_red);
+simulated_obs = simulated + varsSS;
+diff_obs = (abs(simulated_obs(n_v+1:end,:) - simulated_full(n_v+1:end,:)))./simulated_full(n_v+1:end,:);
+
+figure;
+plot(70:99,log(diff_red(70:99,11)));
+hold <span class="string">on</span>;
+plot(70:99,log(diff_obs(70:99,11)));
+grid <span class="string">on</span>
+legend(<span class="string">'Location'</span>,<span class="string">'northwest'</span>);
+legend(<span class="string">'without'</span>,<span class="string">'with grid 85~94 included'</span>);
+title([<span class="string">'Error Comparison at time '</span>,num2str(vTime(11))],<span class="string">'interpreter'</span>,<span class="string">'latex'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'$\log$(relative error)'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>)
+xlabel(<span class="string">'Distribution Location'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>)
+</pre><img vspace="5" hspace="5" src="mainfile_web_06.png" alt=""> <p>Note how the errors decreases only for the parts that we required to be observable while the irrelevant parts were reduced away. This is the magic of Krylov subspace based reduction in action. Though we could solve the full model for the simple Krusell-Smith case, this ability to reduce away irrelevant part will be essential for bigger problems.</p><p>Lastly, some of the functions have lengthy parameters, you can always type "help function_name;" to see documentation. All functions contain the function call syntax as the last line, and thoese can be copied and pasted into the program file. For example, to use the internal_consistency_check function, you can call</p><pre class="codeinput">help <span class="string">internal_consistency_check</span>;
+</pre><pre class="codeoutput">  DOCSTRING TO BE UPDATED
+  Does an internal consistency check
+ 
+  by SeHyoun Ahn, March 2017
+ 
+  REFERENCE: &lt;Our Paper&gt;
+ 
+  PARAMETERS:
+     G1 = dynamics equation of the reduced model (usually output of
+          schur_solver)
+     impact = matrix of shock to variables (usually an output of
+              schur_solver)
+     n_g_red = number of state variables in the reduced model
+     from_red = inverse projection matrix from the reduced basis
+     to_red = projection matrix to the reduced basis
+     g1 = dynamics equation for the full model
+     psi = impact of shocks on state variables
+     F = matrix transform to get stable parts of v (usually output of
+         schur_solver)
+     n_v = number of choice variables in full model
+     n_g = number of state variables in full model
+     T = time period to check consistency with
+     steadystate = steady-state values of each variables
+     plotting = 1 to make diagnostic plots
+     IRF = 1 if compute consistency check for one a period shock
+           0 if compute simulated process
+     dt = (optional) if a good guess of dt is available the step to
+          estimate time-step can be bypassed
+ 
+  OUTPUTS:
+     epsilon = relative errors for internal consistency check
+               (check paper in reference for details)
+ 
+  EXAMPLES:
+      This file requires very specific examples. See the example given in
+      &lt;examples/KrusellSmith/mainfile.m&gt; example (provided from github at
+      &lt;&lt;https://github.com/gregpkaplan/phact&gt;&gt;
+ 
+  SYNTAX (you can copy and paste the following) :
+  [epsilon] = internal_consistency_check(G1,impact,n_g_red,from_red,to_red,g1,psi,F,n_v,n_g,T,steadystate,plotting,IRF,dt)
+
+</pre><p>and just copy the lastline of the documentation string. Alternately, you can call "doc function_name" to read the doc string in the MATLAB help browser, and "edit function_name" to see the function codes.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br> (and adjusted not to clash with Bootstrap)</p></div><!--
+##### SOURCE BEGIN #####
+%% Solves the Krusell and Smith (1998)
+% Solving Krusell-Smith model using perturbation method involves simple 5
+% step process given by 
+%
+% # Solve for Steady State
+% # Linearize Model Equations
+% # Solve out Static Constraint (optional reduce model)
+% # Solve Linear System
+% # Compute Impulse Response Functions
+% # Check for Internal Consistency (if model reduction is used)
+% where each step just requires about one function call.
+%
+% In this example file, the entire problem will be solved total of 3 times.
+% First, KS model will be solved without any model reduction. Second, KS
+% model will be solved with model reduction, to compare how well the model
+% reduction works. Lastly, different parts of observables will be
+% introduced to compare how the model reduction works with different
+% requirements. We have updates to Internal Consistency check coming in the
+% future.
+%
+% Estimated Runtime: 1.5 seconds
+%
+% REFERENCES:
+%
+% * <Our Paper>
+% * Krusell, Per, and Anthony A. Smith, Jr. "Income and wealth heterogeneity in the macroeconomy." Journal of political Economy 106.5 (1998): 867-896.
+%
+% REQUIRES:
+%
+% * auto diff toolbox: <https://github.com/sehyoun/MATLABAutoDiff>
+% * phact toolbox: <https://github.com/gregkaplan/phact>
+% * compute_steady_state.m
+% * equilibrium_conditions.m
+% * plot_steady_state.m
+% * plot_IRFs.m
+% Relevant files except for auto diff toolbox, can be found in
+%    /examples/KrusellSmith folder of phact toolbox
+%
+%%
+
+%% Setup the toolbox
+% Just need to include folders containing the files in the path.
+
+addpath('/example/path/to/AutoDiff');
+addpath('/example/path/to//PHACT');
+
+%% Set options for this example run
+% example_case : 1   run full and compare with only value function reduction
+%                2   run full and compare with only state space reduction
+%                3   run full and compare with both reductions
+example_case = 3;
+reduceDist_hor = 50;        % m of K_m(A,b)
+
+% initialize shocks for simulation
+T = 200;
+N = 2000;
+vAggregateShock = zeros(1,N);
+vAggregateShock(1,1) = 1;
+%vAggregateShock = randn(1,N);     % Uncomment for one realization instead
+                                  % of IRFs
+
+%% Step 0: Set Parameters
+% The script sets up parameters relevant for the model
+set_parameters;
+
+%% Step 1: Solve for Steady State
+% Non-stochastic steady state can be found using any methods. In
+%    particular, example codes can be found at
+%    <http://www.princeton.edu/%7Emoll/HACTproject.htm>.
+
+tStart = tic;
+fprintf('Computing steady state...\n')
+global IfSS IbSS I0SS varsSS A
+
+[rSS,wSS,KSS,ASS,uSS,cSS,VSS,gSS,dVUSS,dVfSS,dVbSS,IfSS,IbSS,I0SS] = ...
+    compute_steady_state();
+
+fprintf('Time to compute steady state: %.3g seconds\n\n\n',toc(tStart));
+
+% Store steady state values
+varsSS = zeros(nVars,1);
+varsSS(1:2*I,1) = reshape(VSS,2*I,1);
+ggSS = reshape(gSS,2*I,1);
+varsSS(2*I+1:4*I-1,1) = ggSS(1:2*I-1);
+varsSS(4*I,1) = 0;
+varsSS(4*I+1,1) = KSS;
+varsSS(4*I+2,1) = rSS;
+varsSS(4*I+3,1) = wSS;
+varsSS(4*I+4,1) = (KSS ^ aalpha) * (zAvg ^ (1 - aalpha));
+CSS = sum(cSS(:) .* gSS(:) * da);
+varsSS(4*I+5,1) = CSS;
+varsSS(4*I+6,1) = ddelta * KSS;
+
+% plot steady state results
+plot_steady_state;
+
+%% Step 2: Linearize Model Equations
+% For computing derivatives, the codes written for solving for the
+%    steady-state can be used almost verbatim using automatic
+%    differentiation toolbox as long as only the functions supported by
+%    automatic differentation are used. For list of supported functions and
+%    documentation of relevant syntax check
+%    <https://github.com/sehyoun/MATLABAutoDiff>
+fprintf('Taking derivatives of equilibrium conditions...\n')
+t0 = tic;
+
+% Prepare automatic differentiation
+vars = zeros(2*nVars+nEErrors+1,1);
+vars = myAD(vars);
+
+% Evaluate derivatives
+derivativesIntermediate = equilibrium_conditions(vars);
+
+% Extract out derivative values
+derivs = getderivs(derivativesIntermediate);
+
+tDerivs = toc(t0);
+fprintf('...Done!\n')
+fprintf('Time to compute derivatives: %2.4f seconds\n\n\n',tDerivs)
+if tDerivs > 1
+    warning('If you compile mex files for automatics differentiation, matrix vector multiplication will be slow');
+    disp('Press any key to continue...');
+    pause();
+end
+
+% Unpackage derivatives
+mVarsDerivs = derivs(:,1:nVars);
+mVarsDotDerivs = derivs(:,nVars+1:2*nVars);
+mEErrorsDerivs = derivs(:,2*nVars+1:2*nVars+nEErrors);
+mShocksDerivs = derivs(:,2*nVars+nEErrors+1);
+
+%% Step 3 (full): Solve out Static Constraints and/or Reduce Models
+% For the first run, a unreduced model will be solved
+
+% rename derivative matrix to match notation in paper
+g0 = mVarsDotDerivs;
+g1 = -mVarsDerivs;
+c = sparse(nVars,1);
+psi = -mShocksDerivs;
+pi = -mEErrorsDerivs;
+
+% Solve out static constratins
+[~,inv_state_red,g0,g1,constant,pi,psi] = clean_G0_sparse(g0,g1,c,pi,psi);
+
+%% Step 4: Solve Linear System
+t0 = tic;
+fprintf('Solving linear system...\n')
+
+[G1,~,impact,eu] = schur_solver(g0,g1,c,psi,pi,1,1,1);
+
+fprintf('...Done!\n')
+fprintf('Existence and uniqueness? %2.0f and %2.0f\n',eu);
+fprintf('Time to solve full linear system: %2.4f seconds\n\n\n',toc(t0))
+
+%% Step 5: Simulate Impulse Response Functions
+t0 = tic;
+
+[simulated,~] = simulate(G1,impact,T,N,vAggregateShock,'implicit',inv_state_red);%,4*I:4*I+6);
+
+fprintf('...Done!\n')
+fprintf('Time to simulate model: %2.4f seconds\n\n\n',toc(t0))
+
+big_simul = simulated + varsSS;
+simulated = simulated(4*I:4*I+6,:);
+
+varsSS_small = varsSS(4*I:4*I+6,1);
+% Add state-states back in to get values in levels
+vAggregateTFP			= simulated(1,:) + varsSS_small(1);
+vAggregateOutput		= simulated(5,:) + varsSS_small(5);
+vAggregateConsumption	= simulated(6,:) + varsSS_small(6);
+vAggregateInvestment 	= simulated(7,:) + varsSS_small(7);
+
+% Compute log differences for plotting
+vAggregateTFP_full		= vAggregateTFP;
+vAggregateOutput_full	= log(vAggregateOutput) - log(varsSS_small(5));
+vAggregateConsumption_full	= log(vAggregateConsumption) - log(varsSS_small(6));
+vAggregateInvestment_full	= log(vAggregateInvestment) - log(varsSS_small(7));
+
+
+%% Step 3 (reduced): Solve Out Static Constraints and/or Reduce Models
+
+% Set relevant parameters for example cases
+if (example_case == 1)
+    reduceV = 1;
+    reduceDistribution = 0;
+elseif (example_case == 2)
+    reduceV = 0;
+    reduceDistribution = 1;
+else
+    reduceV = 1;
+    reduceDistribution = 1;
+end
+
+% rename derivatives to match notation in paper
+g0 = mVarsDotDerivs;
+g1 = -mVarsDerivs;
+c = sparse(nVars,1);
+psi = -mShocksDerivs;
+pi = -mEErrorsDerivs;
+
+t0 = tic;
+fprintf('Model Reduction ...\n')
+
+%%
+% *State space reduction using Krylov subspace method*
+if reduceDistribution == 1
+    % State space reduction
+    [state_red,inv_state_red,n_g_red] = krylov_reduction(g0,g1,n_v,n_g,reduceDist_hor);
+    [g1,psi,pi,c,g0] = change_basis(state_red,inv_state_red,g1,psi,pi,c,g0);
+else
+    % Clean G0
+    [state_red,inv_state_red,g0,g1,c,pi,psi] = clean_G0_sparse(g0,g1,c,pi,psi);
+    n_g_red = n_g;
+end
+
+%%
+% *Value function reduction using spline inspired bases*
+if reduceV == 1
+    % Create knot points for spline (the knot points are not uniformly spaced)
+    knots = linspace(amin,amax,n_knots-1)';
+    knots = (amax-amin)/(2^c_power-1)*((knots-amin)/(amax-amin)+1).^c_power+amin-(amax-amin)/(2^c_power-1);
+    % Function calls to create basis reduction
+    [from_spline, to_spline] = oneDquad_spline(x,knots);
+    [from_spline, to_spline] = extend_to_nd(from_spline,to_spline,n_prior,n_post);
+    n_splined = size(from_spline,2);
+    [from_spline, to_spline] = projection_for_subset(from_spline,to_spline,0,n_g_red);
+    
+    % Reduce the decision vector
+    [g1,psi,~,c,g0] = change_basis(to_spline,from_spline,g1,psi,pi,c,g0);
+    pi = to_spline * pi * from_spline(1:n_v,1:n_splined);
+elseif reduceV == 0
+    from_spline = speye(n_g_red + n_v);
+    to_spline = speye(n_g_red + n_v);
+    n_splined = n_v;
+end
+fprintf('...Done!\n')
+fprintf('Time to reduce dimensionality: %2.4f seconds\n\n\n',toc(t0))
+
+%% Step 4: Solve Linear System
+t0 = tic;
+fprintf('Solving reduced linear system...\n')
+
+[G1,~,impact,eu,F] = schur_solver(g0,g1,c,psi,pi,1,1,1);
+
+fprintf('...Done!\n')
+fprintf('Existence and uniqueness? %2.0f and %2.0f\n',eu);
+fprintf('Time to solve linear system: %2.4f seconds\n\n\n',toc(t0))
+
+%% Step 5: Simulate Impulse Response Functions
+fprintf('Simulating Model...\n')
+t0 = tic;
+
+trans_mat = inv_state_red*from_spline;
+[simulated,vTime] = simulate(G1,impact,T,N,vAggregateShock,'implicit',trans_mat,4*I:4*I+6);
+
+fprintf('...Done!\n')
+fprintf('Time to simulate model: %2.4f seconds\n\n\n',toc(t0))
+
+% Add state-states back in to get values in levels
+vAggregateTFP = simulated(1,:) + varsSS_small(1);
+vAggregateOuput = simulated(5,:) + varsSS_small(5);
+vAggregateConsumption = simulated(6,:) + varsSS_small(6);
+vAggregateInvestment = simulated(7,:) + varsSS_small(7);
+
+% Compute log differences for plotting
+vAggregateTFP_reduced = vAggregateTFP;
+vAggregateOutput_reduced = log(vAggregateOutput) - log(varsSS_small(5));
+vAggregateConsumption_reduced = log(vAggregateConsumption) - log(varsSS_small(6));
+vAggregateInvestment_reduced = log(vAggregateInvestment) - log(varsSS_small(7));
+
+%% Step 6: Internal Consistency Check
+% For large problem, we are forced to take explicit update, so it can take
+% awhile to run, but the good thing is that this only needs to be run at
+% the end. We are currently working on this, so speed for this part might
+% improve in the future. (For small problems, the speed is not an issue). A
+% different consistency check is in works, and will be updated in the
+% future.
+
+g1 = -mVarsDerivs;
+psi = -mShocksDerivs;
+from_red = inv_state_red * from_spline;
+to_red = to_spline * state_red;
+[epsilon] = internal_consistency_check(G1,impact,n_g_red,from_red,to_red,g1,psi,F,n_v,n_g,1000,varsSS,1,0);
+
+%% (optional) Step 7: Plot relevant values
+% Plot impulse response functions
+plot_IRFs;
+
+%% State Space Reduction with More Observables
+% It is possible to include other variables into observables. In this part,
+%    different parts of the distribution will be included in the model
+%    reduction to show how the Krylov subspace based model reduction
+%    behaves. To that regard, the reduced model is solved while including
+%    different parts of distribution as part of the observable. In this
+%    case, a very strong requirement of knowing the probability density
+%    value at different grid points of the distribution g is taken. In the
+%    first case, 80th through 89th grid points were included in the parts
+%    that we consider to be observable. For the second example, 85th
+%    through 94th grid points were included in observable.
+
+% rename derivative matrix to match notation in paper
+g0 = mVarsDotDerivs;
+g1 = -mVarsDerivs;
+c = sparse(nVars,1);
+psi = -mShocksDerivs;
+pi = -mEErrorsDerivs;
+
+% Solve full model
+[~,inv_state_red,g0_full,g1_full,c_full,pi_full,psi_full] = clean_G0_sparse(g0,g1,c,pi,psi);
+[G1,~,impact,eu] = schur_solver(g0_full,g1_full,c_full,psi_full,pi_full,1,1,1);
+[simulated,vTime] = simulate(G1,impact,T,N,vAggregateShock,'implicit',inv_state_red);
+simulated_full = simulated + varsSS;
+
+% Solve reduced without extra observables
+[state_red,inv_state_red,n_g_red] = krylov_reduction(g0,g1,n_v,n_g,20);
+[g1_red,psi_red,pi_red,c_red,g0_red] = change_basis(state_red,inv_state_red,g1,psi,pi,c,g0);
+[G1,~,impact,eu] = schur_solver(g0_red,g1_red,c_red,psi_red,pi_red,1,1,1);
+[simulated,vTime] = simulate(G1,impact,T,N,vAggregateShock,'implicit',inv_state_red);
+simulated_red = simulated + varsSS;
+
+%%
+% Solve reduced with extra observables for 80th through 89th grid point
+
+[state_red,inv_state_red,n_g_red] = krylov_reduction(g0,g1,n_v,n_g,20,spdiags(ones(n_g,1),79,10,n_g));
+[g1_80,psi_80,pi_80,c_80,g0_80] = change_basis(state_red,inv_state_red,g1,psi,pi,c,g0);
+[G1,~,impact,eu] = schur_solver(g0_80,g1_80,c_80,psi_80,pi_80,1,1,1);
+[simulated,vTime] = simulate(G1,impact,T,N,vAggregateShock,'implicit',inv_state_red);
+simulated_obs = simulated + varsSS;
+diff_red = (abs(simulated_red(n_v+1:end,:) - simulated_full(n_v+1:end,:)))./simulated_full(n_v+1:end,:);
+diff_obs80 = (abs(simulated_obs(n_v+1:end,:) - simulated_full(n_v+1:end,:)))./simulated_full(n_v+1:end,:);
+
+figure;
+plot(70:99,log(diff_red(70:99,11)));
+hold on;
+plot(70:99,log(diff_obs80(70:99,11)));
+grid on
+legend('Location','northwest');
+legend('without','with grid 80~89 included');
+title(['Error Comparison at time ',num2str(vTime(11))],'interpreter','latex','fontsize',14)
+ylabel('$\log$(relative error)','interpreter','latex')
+xlabel('Distribution Location','interpreter','latex')
+
+%%
+% Solve reduced with extra observables for 85th through 94th grid point
+
+[state_red,inv_state_red,n_g_red] = krylov_reduction(g0,g1,n_v,n_g,20,spdiags(ones(n_g,1),84,10,n_g));
+[g1,psi,pi,c,g0] = change_basis(state_red,inv_state_red,g1,psi,pi,c,g0);
+[G1,~,impact,eu] = schur_solver(g0,g1,c,psi,pi,1,1,1);
+[simulated,vTime] = simulate(G1,impact,T,N,vAggregateShock,'implicit',inv_state_red);
+simulated_obs = simulated + varsSS;
+diff_obs = (abs(simulated_obs(n_v+1:end,:) - simulated_full(n_v+1:end,:)))./simulated_full(n_v+1:end,:);
+
+figure;
+plot(70:99,log(diff_red(70:99,11)));
+hold on;
+plot(70:99,log(diff_obs(70:99,11)));
+grid on
+legend('Location','northwest');
+legend('without','with grid 85~94 included');
+title(['Error Comparison at time ',num2str(vTime(11))],'interpreter','latex','fontsize',14)
+ylabel('$\log$(relative error)','interpreter','latex')
+xlabel('Distribution Location','interpreter','latex')
+
+%%
+% Note how the errors decreases only for the parts that we required to be
+% observable while the irrelevant parts were reduced away. This is the
+% magic of Krylov subspace based reduction in action. Though we could solve
+% the full model for the simple Krusell-Smith case, this ability to reduce
+% away irrelevant part will be essential for bigger problems.
+%
+
+%%
+% Lastly, some of the functions have lengthy parameters, you can always
+% type "help function_name;" to see documentation. All functions contain the
+% function call syntax as the last line, and thoese can be copied and
+% pasted into the program file. For example, to use the
+% internal_consistency_check function, you can call
+help internal_consistency_check;
+
+%%
+% and just copy the lastline of the documentation string. Alternately, you
+% can call "doc function_name" to read the doc string in the MATLAB help
+% browser, and "edit function_name" to see the function codes.
+##### SOURCE END #####
+--></body></html>

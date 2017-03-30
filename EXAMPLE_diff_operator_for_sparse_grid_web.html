@@ -1,0 +1,297 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Example file showing how the difference operators for sparse grid behave</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-10-08"><meta name="DC.source" content="EXAMPLE_diff_operator_for_sparse_grid_web.m">
+  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="css/style.css" rel="stylesheet" type="text/css">
+  <link href="css/matlab.css" rel="stylesheet" type="text/css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/responsive.js"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+  </script>
+  <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+</head><body>
+<div id="javascript_banner">
+  <p>
+    Please enable javascripts for pretty navigation. Here are ugly links to make it usable:<br>
+  <ul>
+    <li> <a href="./papers.html">papers</a></li>
+    <li> <a href="./codes.html">codes</a></li>
+    <li> <a href="./cv.html">cv (html)</a></li>
+    <li> <a href="./Ahn_SeHyoun_cv.pdf">cv (pdf)</a></li>
+  </ul>
+</div>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+  <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-menu" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a class="navbar-brand" href="./index.html" >Home</a>-->
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="top-menu">
+      <ul class="nav navbar-nav">
+
+        <!-- Home -->
+        <li id="home"><a href="./index.html">Home<span class="sr-only">(current)</span></a></li>
+
+        <!-- CV -->
+        <li id="cv" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">CV<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./cv.html">html (Phone Friendly)</a></li>
+            <li><a href="./Ahn_SeHyoun_cv.pdf">pdf</a></li>
+          </ul>
+        </li>
+
+        <!-- Research -->
+        <li id="research" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Research<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="./papers.html">Papers</a></li>
+            <li><a href="./codes.html">Codes</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Contacts -->
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Contacts <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a>1 Fisher Hall<br>
+              Princeton University<br>
+              Princeton, NJ 08540</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="mailto:sehyouna@princeton.edu">sehyouna@princeton.edu</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div class="content"><h1>Example file showing how the difference operators for sparse grid behave</h1><!--introduction--><p>by SeHyoun Ahn, July 2016</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Grid Set-up</a></li><li><a href="#3">Example 1: $ x^2 + y^2 $</a></li><li><a href="#4">Example 2: $ e^{-2\cdot (x-0.5)^2-(y-0.6)^2} $</a></li><li><a href="#5">Example 3: $ e^{-x-2\cdot y} $</a></li></ul></div><p>Requires: &lt;generate_spgrid.m&gt;           &lt;gen_diff_op.m&gt;           &lt;grid_evaluation.m&gt;</p><p>Once the grid is built and the difference operators are computed, computing the approximation for the derivative values become straight forward. The procedure become  
+<ul>
+  <li> Compute the Nodal values</li>  
+  <li> Change basis to Hierarchical Values</li>
+  <li> Apply the Difference Operators (found for the given grid) to compute Derivative Values</li>
+</ul>
+</p><h2>Grid Set-up<a name="2"></a></h2><p>Grid parameters</p><pre class="codeinput">n_dim = 2;
+n_levels =7;
+
+<span class="comment">% Generate Grid</span>
+<span class="comment">% by default the grid is set up over $ [0,1]^n $</span>
+[spgrid,spspace] = generate_spgrid(n_dim,n_levels);
+
+<span class="comment">% Setup Change of basis from Hierachical to Nodal</span>
+hier_to_nodal = grid_evaluation(spgrid,spgrid,spspace);
+
+<span class="comment">% Difference Operator</span>
+[forward_diff_x,backward_diff_x] = gen_diff_op(1,spgrid,spspace,min(spspace(:,1)));
+[forward_diff_y,backward_diff_y] = gen_diff_op(2,spgrid,spspace,min(spspace(:,2)));
+
+<span class="comment">% Second Order Difference Operator</span>
+<span class="comment">% This is one difference scheme of many to get second order difference</span>
+fb = forward_diff_y*(hier_to_nodal\backward_diff_y);
+bf = backward_diff_y*(hier_to_nodal\forward_diff_y);
+second_deriv_y = (fb+bf)/2;
+second_deriv_y(spgrid(:,2)==1,:) = fb(spgrid(:,2)==1,:);
+second_deriv_y(spgrid(:,2)==0,:) = bf(spgrid(:,2)==0,:);
+
+<span class="comment">% Integration Weights</span>
+int_weight = (prod(spspace,2)./2.^sum(spspace==1,2))';
+</pre><h2>Example 1: $ x^2 + y^2 $<a name="3"></a></h2><pre class="codeinput">close <span class="string">all</span>;
+<span class="comment">% Compute Nodal Values</span>
+v=spgrid(:,1).^2+spgrid(:,2).^2;
+<span class="comment">% Change to Hierarchical Values</span>
+v_basis = hier_to_nodal\v;
+
+figure(1);
+<span class="comment">% Use the Difference Operator to Compute forward Difference</span>
+scatter3(spgrid(:,1),spgrid(:,2),forward_diff_x*v_basis);
+hold <span class="string">on</span>;
+scatter3(spgrid(:,1),spgrid(:,2),2*spgrid(:,1),<span class="string">'.'</span>);
+title(<span class="string">'D_x of x^2+y^2'</span>);
+legend(<span class="string">'approximation'</span>,<span class="string">'actual'</span>,<span class="string">'location'</span>,<span class="string">'northoutside'</span>,<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>);
+
+figure(2);
+<span class="comment">% Use Difference Operator to Compute Second Order Difference</span>
+scatter3(spgrid(:,1),spgrid(:,2),second_deriv_y*v_basis);
+hold <span class="string">on</span>;
+scatter3(spgrid(:,1),spgrid(:,2),2.*ones(size(spgrid(:,1))),<span class="string">'.'</span>);
+title(<span class="string">'D_{yy} of x^2+y^2'</span>);
+legend(<span class="string">'approximation'</span>,<span class="string">'actual'</span>,<span class="string">'location'</span>,<span class="string">'northoutside'</span>,<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>);
+</pre><img vspace="5" hspace="5" src="EXAMPLE_diff_operator_for_sparse_grid_web_01.png" alt=""> <img vspace="5" hspace="5" src="EXAMPLE_diff_operator_for_sparse_grid_web_02.png" alt=""> <h2>Example 2: $ e^{-2\cdot (x-0.5)^2-(y-0.6)^2} $<a name="4"></a></h2><pre class="codeinput">close <span class="string">all</span>;
+v = exp(-2*(spgrid(:,1)-0.5).^2-(spgrid(:,2)-0.6).^2);
+v_basis = hier_to_nodal\v;
+true_deriv = exp(-2*(spgrid(:,1)-0.5).^2-(spgrid(:,2)-0.6).^2).*(-4).*(spgrid(:,1)-0.5);
+
+h = figure(1);
+scatter3(spgrid(:,1),spgrid(:,2),v);
+title(<span class="string">'e^{-2*(x-0.5)^2-10*(y-0.6)^2}'</span>);
+gif_maker_rotate(<span class="string">'fig2_1.gif'</span>,h);
+
+h = figure(2);
+scatter3(spgrid(:,1),spgrid(:,2),forward_diff_x*v_basis);
+hold <span class="string">on</span>;
+scatter3(spgrid(:,1),spgrid(:,2),true_deriv,<span class="string">'.'</span>);
+title(<span class="string">'D_x of e^{-2*(x-0.5)^2-10*(y-0.6)^2}'</span>);
+legend(<span class="string">'approximation'</span>,<span class="string">'actual'</span>,<span class="string">'location'</span>,<span class="string">'northoutside'</span>,<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>);
+gif_maker_rotate(<span class="string">'fig2_2.gif'</span>,h);
+</pre><img vspace="5" hspace="5" src="fig2_1.gif" alt=""> <img vspace="5" hspace="5" src="fig2_2.gif" alt=""> <h2>Example 3: $ e^{-x-2\cdot y} $<a name="5"></a></h2><pre class="codeinput">close <span class="string">all</span>;
+v = exp(-spgrid(:,1)-2*spgrid(:,2));
+v_basis = hier_to_nodal\v;
+true_deriv = exp(-spgrid(:,1)-2*spgrid(:,2))*(-2);
+true_2deriv = exp(-spgrid(:,1)-2*spgrid(:,2))*4;
+
+h = figure(1);
+scatter3(spgrid(:,1),spgrid(:,2),v);
+title(<span class="string">'e^{-x-2y}'</span>);
+gif_maker_rotate(<span class="string">'fig3_1.gif'</span>,h);
+
+h = figure(2);
+scatter3(spgrid(:,1),spgrid(:,2),forward_diff_y*v_basis);
+hold <span class="string">on</span>;
+scatter3(spgrid(:,1),spgrid(:,2),true_deriv,<span class="string">'.'</span>);
+title(<span class="string">'D_{y} of e^{-x-2y}'</span>);
+legend(<span class="string">'approximation'</span>,<span class="string">'actual'</span>,<span class="string">'location'</span>,<span class="string">'northoutside'</span>,<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>);
+gif_maker_rotate(<span class="string">'fig3_2.gif'</span>,h);
+
+h = figure(3);
+scatter3(spgrid(:,1),spgrid(:,2),second_deriv_y*v_basis);
+hold <span class="string">on</span>;
+scatter3(spgrid(:,1),spgrid(:,2),true_2deriv,<span class="string">'.'</span>);
+title(<span class="string">'D_{yy} of e^{-x-2y}'</span>);
+legend(<span class="string">'approximation'</span>,<span class="string">'actual'</span>,<span class="string">'location'</span>,<span class="string">'northoutside'</span>,<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>);
+gif_maker_rotate(<span class="string">'fig3_3.gif'</span>,h);
+</pre><img vspace="5" hspace="5" src="fig3_1.gif" alt=""> <img vspace="5" hspace="5" src="fig3_2.gif" alt=""> <img vspace="5" hspace="5" src="fig3_3.gif" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br> (and adjusted not to clash with Bootstrap)</p></div><!--
+##### SOURCE BEGIN #####
+%% Example file showing how the difference operators for sparse grid behave
+% by SeHyoun Ahn, July 2016
+%%
+%
+% Requires: \<generate_spgrid.m\>
+%           \<gen_diff_op.m\>
+%           \<grid_evaluation.m\>
+%
+% Once the grid is built and the difference operators are computed,
+% computing the approximation for the derivative values become straight
+% forward. The procedure become
+%  # Compute the Nodal values
+%  # Change basis to Hierarchical Values
+%  # Apply the Difference Operators (found for the given grid) to compute Derivative Values
+
+%% Grid Set-up
+% Grid parameters
+n_dim = 2;
+n_levels =7;
+
+% Generate Grid
+% by default the grid is set up over $ [0,1]^n $
+[spgrid,spspace] = generate_spgrid(n_dim,n_levels);
+
+% Setup Change of basis from Hierachical to Nodal
+hier_to_nodal = grid_evaluation(spgrid,spgrid,spspace);
+
+% Difference Operator
+[forward_diff_x,backward_diff_x] = gen_diff_op(1,spgrid,spspace,min(spspace(:,1)));
+[forward_diff_y,backward_diff_y] = gen_diff_op(2,spgrid,spspace,min(spspace(:,2)));
+
+% Second Order Difference Operator
+% This is one difference scheme of many to get second order difference
+fb = forward_diff_y*(hier_to_nodal\backward_diff_y);
+bf = backward_diff_y*(hier_to_nodal\forward_diff_y);
+second_deriv_y = (fb+bf)/2;
+second_deriv_y(spgrid(:,2)==1,:) = fb(spgrid(:,2)==1,:);
+second_deriv_y(spgrid(:,2)==0,:) = bf(spgrid(:,2)==0,:);
+
+% Integration Weights
+int_weight = (prod(spspace,2)./2.^sum(spspace==1,2))';
+
+%% Example 1: $ x^2 + y^2 $
+close all;
+% Compute Nodal Values
+v=spgrid(:,1).^2+spgrid(:,2).^2;
+% Change to Hierarchical Values
+v_basis = hier_to_nodal\v;
+
+figure(1);
+% Use the Difference Operator to Compute forward Difference
+scatter3(spgrid(:,1),spgrid(:,2),forward_diff_x*v_basis);
+hold on;
+scatter3(spgrid(:,1),spgrid(:,2),2*spgrid(:,1),'.');
+title('D_x of x^2+y^2');
+legend('approximation','actual','location','northoutside','Orientation','horizontal');
+
+figure(2);
+% Use Difference Operator to Compute Second Order Difference
+scatter3(spgrid(:,1),spgrid(:,2),second_deriv_y*v_basis);
+hold on;
+scatter3(spgrid(:,1),spgrid(:,2),2.*ones(size(spgrid(:,1))),'.');
+title('D_{yy} of x^2+y^2');
+legend('approximation','actual','location','northoutside','Orientation','horizontal');
+
+%% Example 2: $ e^{-2\cdot (x-0.5)^2-(y-0.6)^2} $
+close all;
+v = exp(-2*(spgrid(:,1)-0.5).^2-(spgrid(:,2)-0.6).^2);
+v_basis = hier_to_nodal\v;
+true_deriv = exp(-2*(spgrid(:,1)-0.5).^2-(spgrid(:,2)-0.6).^2).*(-4).*(spgrid(:,1)-0.5);
+
+h = figure(1);
+scatter3(spgrid(:,1),spgrid(:,2),v);
+title('e^{-2*(x-0.5)^2-10*(y-0.6)^2}');
+gif_maker_rotate('fig2_1.gif',h);
+
+h = figure(2);
+scatter3(spgrid(:,1),spgrid(:,2),forward_diff_x*v_basis);
+hold on;
+scatter3(spgrid(:,1),spgrid(:,2),true_deriv,'.');
+title('D_x of e^{-2*(x-0.5)^2-10*(y-0.6)^2}');
+legend('approximation','actual','location','northoutside','Orientation','horizontal');
+gif_maker_rotate('fig2_2.gif',h);
+
+%% Example 3: $ e^{-x-2\cdot y} $
+close all;
+v = exp(-spgrid(:,1)-2*spgrid(:,2));
+v_basis = hier_to_nodal\v;
+true_deriv = exp(-spgrid(:,1)-2*spgrid(:,2))*(-2);
+true_2deriv = exp(-spgrid(:,1)-2*spgrid(:,2))*4;
+
+h = figure(1);
+scatter3(spgrid(:,1),spgrid(:,2),v);
+title('e^{-x-2y}');
+gif_maker_rotate('fig3_1.gif',h);
+
+h = figure(2);
+scatter3(spgrid(:,1),spgrid(:,2),forward_diff_y*v_basis);
+hold on;
+scatter3(spgrid(:,1),spgrid(:,2),true_deriv,'.');
+title('D_{y} of e^{-x-2y}');
+legend('approximation','actual','location','northoutside','Orientation','horizontal');
+gif_maker_rotate('fig3_2.gif',h);
+
+h = figure(3);
+scatter3(spgrid(:,1),spgrid(:,2),second_deriv_y*v_basis);
+hold on;
+scatter3(spgrid(:,1),spgrid(:,2),true_2deriv,'.');
+title('D_{yy} of e^{-x-2y}');
+legend('approximation','actual','location','northoutside','Orientation','horizontal');
+gif_maker_rotate('fig3_3.gif',h);
+
+##### SOURCE END #####
+--></body></html>
