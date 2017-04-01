@@ -1,0 +1,146 @@
+body, .blur-bg {
+  /*padding-top: 50px;*/
+  background-image: url("../img/background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center top;
+}
+
+.blur-bg {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  left: 0%;
+  -webkit-filter: blur(0px);
+  filter: blur(0px);
+  background-color: rgba(255,255,255,0.01);
+  background-blend-mode: color;
+  border-radius:20px;
+  z-index:1;
+}
+
+.clear-text {
+  padding-left:5%;
+  padding-right:5%;
+  padding-bottom:2%;
+  padding-top:2%;
+}
+
+.clear-text:hover > .blur-bg {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  left: 0%;
+  /*-webkit-filter: blur(7px);
+  filter: blur(7px);*/
+  background-color: rgba(255,255,255,0.9);
+  background-blend-mode: color;
+  border-radius:20px;
+  z-index:5;
+  box-shadow: 10px 10px 5px #888888;
+}
+
+.clear-text:hover > .row{
+  z-index:6;
+}
+
+.clear-text-cv {
+  padding-left:3%;
+  padding-right:3%;
+  padding-bottom:3%;
+}
+
+.clear-text-cv:hover > .blur-bg {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  left: 0%;
+  /*-webkit-filter: blur(7px);
+  filter: blur(7px);*/
+  background-color: rgba(255,255,255,0.9);
+  background-blend-mode: color;
+  border-radius:20px;
+  z-index:5;
+  box-shadow: 10px 10px 5px #888888;
+}
+
+.clear-text-cv:hover > .row{
+  z-index:6;
+}
+
+
+.row {
+  position: relative;
+  z-index:6;
+}
+
+.dropdown-menu>li>a {
+  color:black;
+}
+
+#cv-picture {
+  max-width: 100%
+}
+
+#main_nav {
+  display:none;
+}
+
+#javascript_banner {
+  padding: 0px 50px 0px 50px;
+}
+
+#top-menu>ul>li>a {
+  color: black;
+}
+
+#top-menu>ul>.active>a {
+  color : black;
+  background: transparent;
+  border-bottom: solid 3px black;
+}
+
+/*
+.footer {
+  background: #FFFFFF;
+}
+*/
+
+@media only screen and (min-width : 768px) {
+  /* Make Navigation Toggle on Desktop Hover */
+  .dropdown:hover .dropdown-menu {
+      display: block;
+  }
+
+  .navbar-default{
+    color: black;
+    background-repeat : no-repeat;
+    background : transparent;
+    background-color: rgba(255,255,255,0.5);
+    background-blend-mode: color;
+    border : none; 
+  }
+
+ #top-menu>.dropdown-menu {
+    background:transparent;
+    background-color:#FFFFFF;
+    background-repeat: no-repeat;
+  }
+}
+
+@media only screen and (max-width:@screen-xs-max){
+  .navbar-default {
+    background-color : #FFFFFF;
+    background-repeat : no-repeat;
+    border : none; 
+  }
+
+  .dropdown-menu {
+    background-color:#FFFFFF;
+    background-repeat: no-repeat;
+  }
+}

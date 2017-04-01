@@ -14,6 +14,14 @@ To make changes, update the MATLAB code and republish this document.
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/responsive.js"></script>
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-69252061-1', 'auto');
+    ga('send', 'pageview');
+  </script>
   <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
@@ -136,7 +144,7 @@ hold <span class="string">on</span>;
 scatter3(spgrid(:,1),spgrid(:,2),2.*ones(size(spgrid(:,1))),<span class="string">'.'</span>);
 title(<span class="string">'D_{yy} of x^2+y^2'</span>);
 legend(<span class="string">'approximation'</span>,<span class="string">'actual'</span>,<span class="string">'location'</span>,<span class="string">'northoutside'</span>,<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>);
-</pre><img vspace="5" hspace="5" src="EXAMPLE_diff_operator_for_sparse_grid_web_01.png" alt=""> <img vspace="5" hspace="5" src="EXAMPLE_diff_operator_for_sparse_grid_web_02.png" alt=""> <h2>Example 2: $ e^{-2\cdot (x-0.5)^2-(y-0.6)^2} $<a name="4"></a></h2><pre class="codeinput">close <span class="string">all</span>;
+</pre><img vspace="5" hspace="5" src="static/img/EXAMPLE_diff_operator_for_sparse_grid_web_01.png" alt=""> <img vspace="5" hspace="5" src="static/img/EXAMPLE_diff_operator_for_sparse_grid_web_02.png" alt=""> <h2>Example 2: $ e^{-2\cdot (x-0.5)^2-(y-0.6)^2} $<a name="4"></a></h2><pre class="codeinput">close <span class="string">all</span>;
 v = exp(-2*(spgrid(:,1)-0.5).^2-(spgrid(:,2)-0.6).^2);
 v_basis = hier_to_nodal\v;
 true_deriv = exp(-2*(spgrid(:,1)-0.5).^2-(spgrid(:,2)-0.6).^2).*(-4).*(spgrid(:,1)-0.5);
@@ -153,7 +161,7 @@ scatter3(spgrid(:,1),spgrid(:,2),true_deriv,<span class="string">'.'</span>);
 title(<span class="string">'D_x of e^{-2*(x-0.5)^2-10*(y-0.6)^2}'</span>);
 legend(<span class="string">'approximation'</span>,<span class="string">'actual'</span>,<span class="string">'location'</span>,<span class="string">'northoutside'</span>,<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>);
 gif_maker_rotate(<span class="string">'fig2_2.gif'</span>,h);
-</pre><img vspace="5" hspace="5" src="fig2_1.gif" alt=""> <img vspace="5" hspace="5" src="fig2_2.gif" alt=""> <h2>Example 3: $ e^{-x-2\cdot y} $<a name="5"></a></h2><pre class="codeinput">close <span class="string">all</span>;
+</pre><img vspace="5" hspace="5" src="static/img/fig2_1.gif" alt=""> <img vspace="5" hspace="5" src="static/img/fig2_2.gif" alt=""> <h2>Example 3: $ e^{-x-2\cdot y} $<a name="5"></a></h2><pre class="codeinput">close <span class="string">all</span>;
 v = exp(-spgrid(:,1)-2*spgrid(:,2));
 v_basis = hier_to_nodal\v;
 true_deriv = exp(-spgrid(:,1)-2*spgrid(:,2))*(-2);
@@ -179,7 +187,7 @@ scatter3(spgrid(:,1),spgrid(:,2),true_2deriv,<span class="string">'.'</span>);
 title(<span class="string">'D_{yy} of e^{-x-2y}'</span>);
 legend(<span class="string">'approximation'</span>,<span class="string">'actual'</span>,<span class="string">'location'</span>,<span class="string">'northoutside'</span>,<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>);
 gif_maker_rotate(<span class="string">'fig3_3.gif'</span>,h);
-</pre><img vspace="5" hspace="5" src="fig3_1.gif" alt=""> <img vspace="5" hspace="5" src="fig3_2.gif" alt=""> <img vspace="5" hspace="5" src="fig3_3.gif" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br> (and adjusted not to clash with Bootstrap)</p></div><!--
+</pre><img vspace="5" hspace="5" src="static/img/fig3_1.gif" alt=""> <img vspace="5" hspace="5" src="static/img/fig3_2.gif" alt=""> <img vspace="5" hspace="5" src="static/img/fig3_3.gif" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br> (and adjusted not to clash with Bootstrap)</p></div><!--
 ##### SOURCE BEGIN #####
 %% Example file showing how the difference operators for sparse grid behave
 % by SeHyoun Ahn, July 2016
