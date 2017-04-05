@@ -6,16 +6,14 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Speed Test of Using Symbolic VS Automatic Differentiation</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-10-08"><meta name="DC.source" content="EXAMPLE_test_symbolic.m">
+      --><title>Speed Test of Using Symbolic VS Automatic Differentiation</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-04-04"><meta name="DC.source" content="EXAMPLE_test_symbolic.m">
   <link href="static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="static/css/style.css" rel="stylesheet" type="text/css">
-  <link href="static/css/matlab.css" rel="stylesheet" type="text/css">
-
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="static/js/bootstrap.min.js"></script>
   <script src="static/js/responsive.js"></script>
-
-    <script>
+  <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -23,13 +21,13 @@ To make changes, update the MATLAB code and republish this document.
     ga('create', 'UA-69252061-1', 'auto');
     ga('send', 'pageview');
   </script>
-  
   <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
   });
   </script>
   <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+  <link href="static/css/matlab.css" rel="stylesheet" type="text/css">
 </head><body>
 <div id="javascript_banner">
   <p>
@@ -65,7 +63,7 @@ To make changes, update the MATLAB code and republish this document.
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">CV<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="./cv.html">html (Phone Friendly)</a></li>
-            <li><a href="./Ahn_SeHyoun_cv.pdf">pdf</a></li>
+            <li><a href="static/Ahn_SeHyoun_cv.pdf">pdf</a></li>
           </ul>
         </li>
 
@@ -95,8 +93,8 @@ To make changes, update the MATLAB code and republish this document.
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-<div class="content"><h1>Speed Test of Using Symbolic VS Automatic Differentiation</h1><!--introduction--><p>by SeHyoun Ahn, Sept 2016</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Automatic Differentiation</a></li><li><a href="#4">Symbolic Differentiation</a></li></ul></div><p>An html file properly marked up comments is avaiable at <a href="http://www.princeton.edu/~sehyouna/EXAMPLE_test_Syntax.html">http://www.princeton.edu/~sehyouna/EXAMPLE_test_Syntax.html</a></p><p>Evaluates the Jacobian of</p><p>$$ y = \begin{bmatrix} x_1 &amp; 0 &amp; 0 &amp; ... &amp; 0 \\                     0 &amp; x_2 &amp; 0 &amp; ... &amp; 0\\                      0 &amp; ... &amp; ... &amp;...&amp; 0\\    0 &amp; 0 &amp; ... &amp; 0 &amp; x_n\end{bmatrix}     \begin{bmatrix} x_1\\ x_2\\ ...\\ x_n\end{bmatrix} $$     at $(x_1, x_2 , ... , x_n) = (1,2,...,n)$</p><pre class="codeinput">n = 200;
-</pre><h2>Automatic Differentiation<a name="3"></a></h2><pre class="codeinput">fprintf(<span class="string">'n = %d\n'</span>,n);
+<div class="content"><h1>Speed Test of Using Symbolic VS Automatic Differentiation</h1><!--introduction--><p>by SeHyoun Ahn, Sept 2016</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Automatic Differentiation</a></li><li><a href="#4">Symbolic Differentiation</a></li></ul></div><p>An html file properly marked up comments is avaiable at <a href="http://sehyoun.com/EXAMPLE_test_symbolic.html">http://sehyoun.com/EXAMPLE_test_symbolic.html</a></p><p>Evaluates the Jacobian of</p><p>$$ y = \begin{bmatrix} x_1 &amp; 0 &amp; 0 &amp; ... &amp; 0 \\                     0 &amp; x_2 &amp; 0 &amp; ... &amp; 0\\                      0 &amp; ... &amp; ... &amp;...&amp; 0\\    0 &amp; 0 &amp; ... &amp; 0 &amp; x_n\end{bmatrix}     \begin{bmatrix} x_1\\ x_2\\ ...\\ x_n\end{bmatrix} $$     at $(x_1, x_2 , ... , x_n) = (1,2,...,n)$</p><pre class="codeinput">n = 300;
+</pre><h2 id="3">Automatic Differentiation</h2><pre class="codeinput">fprintf(<span class="string">'n = %d\n'</span>,n);
 addpath(<span class="string">'../'</span>);
 fprintf(<span class="string">'\n\nAUTOMATIC DIFFERENTIATION\n'</span>);
 tAD = tic;
@@ -106,13 +104,13 @@ y = A*x;
 dydx_val_AD = getderivs(y);
 tAD = toc(tAD);
 fprintf(<span class="string">'   Done!\n\n'</span>);
-</pre><pre class="codeoutput">n = 200
+</pre><pre class="codeoutput">n = 300
 
 
 AUTOMATIC DIFFERENTIATION
    Done!
 
-</pre><h2>Symbolic Differentiation<a name="4"></a></h2><pre class="codeinput">disp(<span class="string">'SYMBOLIC'</span>)
+</pre><h2 id="4">Symbolic Differentiation</h2><pre class="codeinput">disp(<span class="string">'SYMBOLIC'</span>)
 tSymb = tic;
 
 tSetup = tic;
@@ -149,26 +147,52 @@ fprintf(<span class="string">'Total time using Symbolic: %2.6f secs\n'</span>,tS
 fprintf(<span class="string">'   Note that just the evaluation of derivatives using symbolic\n'</span>);
 fprintf(<span class="string">'      is comparable to the entire computation of values and derivatives using AD.\n'</span>);
 </pre><pre class="codeoutput">SYMBOLIC
-  Initialize Symbolic Variables: 0.617267 secs
-  Time to Differentiate: 0.892557 secs
-  Time to Convert to Function: 35.616070 secs
+  Initialize Symbolic Variables: 1.168734 secs
+  Time to Differentiate: 1.504292 secs
+  Time to Convert to Function: 184.486152 secs
      You would only need to do this conversion once to evaluate 
      derivatives at different values of x_n.
-  Time to Calculate Numerical Values: 0.015227 secs
+  Time to Calculate Numerical Values: 0.441781 secs
 
 
-Total time using Automatic Differentiation: 0.070309 secs
-Total time using Symbolic: 37.142685 secs
+Total time using Automatic Differentiation: 0.006623 secs
+Total time using Symbolic: 187.602057 secs
    Note that just the evaluation of derivatives using symbolic
       is comparable to the entire computation of values and derivatives using AD.
-</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br> (and adjusted not to clash with Bootstrap)</p></div><!--
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a> on 2017-04-04<br>&nbsp;&nbsp;&nbsp; (and adjusted not to clash with Bootstrap)</p> <pre>SYSTEM INFORMATION FOR REPLICATION
+Computer:
+	Version: ThinkPad X230
+
+CPU:
+	Version: Intel(R) Core(TM) i5-3320M CPU @ 2.60GHz
+
+Memory:
+	Number Of Devices: 2
+Memory Device
+	Size: 4096 MB
+	Type: DDR3
+	Speed: 1600 MHz
+	Configured Clock Speed: 1600 MHz
+Memory Device
+	Size: 4096 MB
+	Type: DDR3
+	Speed: 1600 MHz
+	Configured Clock Speed: 1600 MHz
+
+OS:
+Description:	Linux Mint 18 Sarah
+
+MATLAB:
+9.1.0.441655 (R2016b)
+
+ </pre><p></p></div><!--
 ##### SOURCE BEGIN #####
 %% Speed Test of Using Symbolic VS Automatic Differentiation
 % by SeHyoun Ahn, Sept 2016
 %%
 
 %%
-% An html file properly marked up comments is avaiable at <http://www.princeton.edu/~sehyouna/EXAMPLE_test_Syntax.html>
+% An html file properly marked up comments is avaiable at <http://sehyoun.com/EXAMPLE_test_symbolic.html>
 
 %%
 % Evaluates the Jacobian of
@@ -181,7 +205,7 @@ Total time using Symbolic: 37.142685 secs
 %     at $(x_1, x_2 , ... , x_n) = (1,2,...,n)$
 %
 
-n = 200;
+n = 300;
 
 %% Automatic Differentiation
 fprintf('n = %d\n',n);

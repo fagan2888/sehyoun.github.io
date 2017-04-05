@@ -6,15 +6,14 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Examples of Using Automatic Differentiation</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-10-08"><meta name="DC.source" content="EXAMPLE_AutoDiff_syntax.m">
+      --><title>Examples of Using Automatic Differentiation</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-04-04"><meta name="DC.source" content="EXAMPLE_AutoDiff_syntax.m">
   <link href="static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="static/css/style.css" rel="stylesheet" type="text/css">
-  <link href="static/css/matlab.css" rel="stylesheet" type="text/css">
-
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="static/js/bootstrap.min.js"></script>
   <script src="static/js/responsive.js"></script>
-    <script>
+  <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -28,6 +27,7 @@ To make changes, update the MATLAB code and republish this document.
   });
   </script>
   <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+  <link href="static/css/matlab.css" rel="stylesheet" type="text/css">
 </head><body>
 <div id="javascript_banner">
   <p>
@@ -63,7 +63,7 @@ To make changes, update the MATLAB code and republish this document.
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">CV<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="./cv.html">html (Phone Friendly)</a></li>
-            <li><a href="./Ahn_SeHyoun_cv.pdf">pdf</a></li>
+            <li><a href="static/Ahn_SeHyoun_cv.pdf">pdf</a></li>
           </ul>
         </li>
 
@@ -93,9 +93,9 @@ To make changes, update the MATLAB code and republish this document.
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-<div class="content"><h1>Examples of Using Automatic Differentiation</h1><!--introduction--><p>by SeHyoun Ahn, June 2016</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Simple Example</a></li><li><a href="#3">Example of Matrix Vector Multiplication</a></li><li><a href="#5">Example of Using fsolve</a></li></ul></div><p>An html file properly marked up comments is avaiable at <a href="http://www.princeton.edu/~sehyouna/EXAMPLE_AutoDiff_Syntax.html">http://www.princeton.edu/~sehyouna/EXAMPLE_AutoDiff_Syntax.html</a></p><pre class="codeinput"><span class="comment">% Add folder containing &lt;@myAD&gt;. In this case, it is in the parent folder.</span>
+<div class="content"><h1>Examples of Using Automatic Differentiation</h1><!--introduction--><p>by SeHyoun Ahn, June 2016</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Simple Example</a></li><li><a href="#3">Example of Matrix Vector Multiplication</a></li><li><a href="#5">Example of Using fsolve</a></li></ul></div><p>An html file properly marked up comments is avaiable at <a href="http://sehyoun.com/EXAMPLE_AutoDiff_Syntax.html">http://sehyoun.com/EXAMPLE_AutoDiff_Syntax.html</a></p><pre class="codeinput"><span class="comment">% Add folder containing &lt;@myAD&gt;. In this case, it is in the parent folder.</span>
 addpath(<span class="string">'../'</span>);
-</pre><h2>Simple Example<a name="2"></a></h2><p>$$f_1(x,y,z) = x^2+cos(y)*(x+z)+e^z$$ $$f_2(x,y,z) = yz$$ at $(x,y,z) = (1,2,3)$</p><pre class="codeinput">v = myAD([1;2;3]);
+</pre><h2 id="2">Simple Example</h2><p>$$f_1(x,y,z) = x^2+cos(y)*(x+z)+e^z$$ $$f_2(x,y,z) = yz$$ at $(x,y,z) = (1,2,3)$</p><pre class="codeinput">v = myAD([1;2;3]);
 x=v(1); y=v(2); z=v(3);
 f=[x^2+cos(y)*(x+z)+exp(z);
     y*z];
@@ -111,7 +111,7 @@ the derivatives evaluated at (1,2,3) are
     1.5839   -3.6372   19.6694
          0    3.0000    2.0000
 
-</pre><h2>Example of Matrix Vector Multiplication<a name="3"></a></h2><p>$$ f = \begin{bmatrix} x &amp; y &amp; 0 \\ y&amp; y&amp; z \\ 0 &amp; z &amp; z \end{bmatrix} \begin{bmatrix}x\\y\\z \end{bmatrix} = \begin{bmatrix} x^2+y^2\\  xy+y^2+z^2 \\ yz+z^2\end{bmatrix} $$ evaluated at $(x,y,z)=(1,2,3)$</p><pre class="codeinput">v=myAD([1:3]');
+</pre><h2 id="3">Example of Matrix Vector Multiplication</h2><p>$$ f = \begin{bmatrix} x &amp; y &amp; 0 \\ y&amp; y&amp; z \\ 0 &amp; z &amp; z \end{bmatrix} \begin{bmatrix}x\\y\\z \end{bmatrix} = \begin{bmatrix} x^2+y^2\\  xy+y^2+z^2 \\ yz+z^2\end{bmatrix} $$ evaluated at $(x,y,z)=(1,2,3)$</p><pre class="codeinput">v=myAD([1:3]');
 A=spdiags(v,0,3,3)+spdiags(v(2:3),-1,3,3)+spdiags(v,1,3,3);
 f=A*v;
 disp(<span class="string">'f is'</span>);
@@ -128,7 +128,7 @@ The Jacobian of f evaluated at (1,2,3) is
      2     5     6
      0     3     8
 
-</pre><p>If you plan to use matrix multiplication in high dimensions, refer to the documentation to compile c-files for speed gains</p><h2>Example of Using fsolve<a name="5"></a></h2><p>Given an implicitly defined variable $z$ from the relationship $$x^2+y^4+x\cdot (z-0.2)\cdot e^z=5 $$ solving for $\frac{dz}{dx}$ and $\frac{dz}{dy}$ evaluated at $(x,y)=(1,1)$</p><pre class="codeinput"><span class="comment">% Refer to README.pdf for syntactic requirement on definition of functions.</span>
+</pre><p>If you plan to use matrix multiplication in high dimensions, refer to the documentation to compile c-files for speed gains</p><h2 id="5">Example of Using fsolve</h2><p>Given an implicitly defined variable $z$ from the relationship $$x^2+y^4+x\cdot (z-0.2)\cdot e^z=5 $$ solving for $\frac{dz}{dx}$ and $\frac{dz}{dy}$ evaluated at $(x,y)=(1,1)$</p><pre class="codeinput"><span class="comment">% Refer to README.pdf for syntactic requirement on definition of functions.</span>
 <span class="comment">% x = v(2), y = v(3), z = v(1)</span>
 func = @(v) v(2).^2+v(3).^4+v(2)*(v(1)-0.2)*exp(v(1))-5;
 v0 = myAD([1;1]);            <span class="comment">% Initialize x and y</span>
@@ -153,14 +153,40 @@ The derivatives at (x,y)=(1,1) are
    (1,1)      -0.8119
    (1,2)      -0.6496
 
-</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br> (and adjusted not to clash with Bootstrap)</p></div><!--
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a> on 2017-04-04<br>&nbsp;&nbsp;&nbsp; (and adjusted not to clash with Bootstrap)</p> <pre>SYSTEM INFORMATION FOR REPLICATION
+Computer:
+	Version: ThinkPad X230
+
+CPU:
+	Version: Intel(R) Core(TM) i5-3320M CPU @ 2.60GHz
+
+Memory:
+	Number Of Devices: 2
+Memory Device
+	Size: 4096 MB
+	Type: DDR3
+	Speed: 1600 MHz
+	Configured Clock Speed: 1600 MHz
+Memory Device
+	Size: 4096 MB
+	Type: DDR3
+	Speed: 1600 MHz
+	Configured Clock Speed: 1600 MHz
+
+OS:
+Description:	Linux Mint 18 Sarah
+
+MATLAB:
+9.1.0.441655 (R2016b)
+
+ </pre><p></p></div><!--
 ##### SOURCE BEGIN #####
 %% Examples of Using Automatic Differentiation
 % by SeHyoun Ahn, June 2016
 %%
 
 %%
-% An html file properly marked up comments is avaiable at <http://www.princeton.edu/~sehyouna/EXAMPLE_AutoDiff_Syntax.html>
+% An html file properly marked up comments is avaiable at <http://sehyoun.com/EXAMPLE_AutoDiff_Syntax.html>
 
 % Add folder containing <@myAD>. In this case, it is in the parent folder.
 addpath('../');
