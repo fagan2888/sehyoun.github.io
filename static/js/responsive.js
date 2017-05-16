@@ -1,5 +1,4 @@
 $(document).ready(function(){
-  $("#javascript_banner").css("display","none");
   $("#main_nav").css("display","block");
   $("body").css("padding-top","50px");
   if ( $(window).width() < 800) {

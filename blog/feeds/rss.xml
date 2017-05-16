@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>SeHyoun's Blog</title><link>https://sehyoun.com/blog/</link><description></description><lastBuildDate>Sun, 01 Jan 2017 23:39:00 -0500</lastBuildDate><item><title>TEST NOTEBOOK</title><link>https://sehyoun.com/blog/test-test.html</link><description>
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;This is a jupyter notebook&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;$\frac{1}{2}$&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">SeHyoun Ahn</dc:creator><pubDate>Sun, 01 Jan 2017 23:39:00 -0500</pubDate><guid isPermaLink="false">tag:sehyoun.com,2017-01-01:/blog/test-test.html</guid><category>Pelican</category><category>Jupyter</category></item></channel></rss>
