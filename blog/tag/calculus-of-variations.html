@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>SeHyoun's Blog - Other Programming</title>
+        <title>SeHyoun's Blog - Calculus of Variations</title>
 <link href="https://sehyoun.com/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://sehyoun.com/static/js/bootstrap.min.js"></script>
@@ -92,7 +92,7 @@
 
 	  <nav><ul>
 	        <li><a href="#">Blog</a></li>
-                    <li class="active"><a href="https://sehyoun.com/blog/category/other-programming.html">Other Programming</a></li>
+                    <li><a href="https://sehyoun.com/blog/category/calculations.html">Calculations</a></li>
            </ul></nav>
 	   
         </header><!-- /#banner -->
@@ -102,16 +102,16 @@
     <div class="col-md-6 col-sm-12">
     <aside id="featured" class="body">
     <article>
-      <h1 class="entry-title"><a href="https://sehyoun.com/blog/test-test.html">TEST NOTEBOOK</a></h1>
+      <h1 class="entry-title"><a href="https://sehyoun.com/blog/20170710_ces-production.html">CES Production Function</a></h1>
 <div class="post-info">
-	<abbr class="published" title="2017-01-01T23:39:00-05:00">
-	  Published: Sun 01 January 2017
+	<abbr class="published" title="2017-07-10T18:25:00-04:00">
+	  Published: Mon 10 July 2017
     </abbr>
 
     <address class="vcard author">
       By          <a class="url fn" href="https://sehyoun.com/blog/author/sehyoun-ahn.html">SeHyoun Ahn</a
     </address>
-<p>Tags: <a href="https://sehyoun.com/blog/tag/pelican.html">Pelican</a> <a href="https://sehyoun.com/blog/tag/jupyter.html">Jupyter</a> </p></div><style type="text/css">/*!
+<p>Tags: <a href="https://sehyoun.com/blog/tag/ces.html">CES</a> <a href="https://sehyoun.com/blog/tag/production.html">Production</a> <a href="https://sehyoun.com/blog/tag/calculus-of-variations.html">Calculus of Variations</a> </p></div><style type="text/css">/*!
 *
 * IPython notebook
 *
@@ -268,7 +268,6 @@ div.cell.selected.jupyter-soft-selected {
   }
 }
 div.inner_cell {
-  min-width: 0;
   /* Old browsers */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -289,6 +288,11 @@ div.inner_cell {
   box-flex: 1;
   /* Modern browsers */
   flex: 1;
+}
+@-moz-document url-prefix() {
+  div.inner_cell {
+    overflow-x: hidden;
+  }
 }
 /* input_area and input_prompt must match in top border and margin for alignment */
 div.input_area {
@@ -1088,7 +1092,7 @@ h6:hover .anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is a jupyter notebook</p>
+<h1 id="Calculation-for-CES-Production-Function">Calculation for CES Production Function<a class="anchor-link" href="#Calculation-for-CES-Production-Function">¶</a></h1><p>I found myself doing this calculation over and over again, so I am just writing the post so that it might save people some time in not repeating the calculation.</p>
 </div>
 </div>
 </div>
@@ -1097,43 +1101,225 @@ h6:hover .anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>$\frac{1}{2}$</p>
+<p>A firm can produce using production function using differentiated input of</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [1]:</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span>
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+$$Y = \left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}$$
 </div>
 </div>
 </div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area">
-<div class="prompt output_prompt">Out[1]:</div>
-<div class="output_text output_subarea output_execute_result">
-<pre>2</pre>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><span id="main_text"></span> When each differentiate intermediate inputs are priced at $p_j$, then the firm will solve a cost minimization problem of</p>
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
 </div>
-
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+\begin{align*}
+  \min_{y_j} & \int p_jy_j\,dj\\
+  & \text{s.t.  } Y=\underline{Y}
+\end{align*}
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>(Aside: you can equivalently solve the output maximization given price)</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Letting $\lambda$ be the Lagrange multiplier on $Y=\underline{Y}$, we get the Lagrangian
+$$\begin{align*}
+    \mathcal{L} = \int p_jy_j\,dj + \lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}}
+\end{align*}$$</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Leading to the first order condition of 
+$$\begin{align*}
+    p_j + \lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}y_j^{-\frac{1}{\varepsilon}} = 0
+\end{align*}$$
+(This is not the "standard" derivative, but the first variation. There are notes below about how to work only with only the standard definition of derivatives. <a href="#Review-of-the-Calculus-of-Variations"> Notes</a>)</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Rearranging side and letting $C = \lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}$, we get  that
+$$\begin{align*}
+    y_j = \left(\frac{C}{p_j}\right)^\varepsilon
+\end{align*}$$</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To solve for the normalization constant, we can just plug the first order condition into the production function to get
+$$\begin{align*}
+    \underline{Y} & = \left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}\\
+    & = \left(\int \left(\frac{C}{p_j}\right)^{\varepsilon -1} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}\\
+    & = C^\varepsilon\left(\int p_j^{1-\varepsilon}\, dj\right)^{\frac{\varepsilon}{\varepsilon-1}}\\
+    & = C^\varepsilon P^{-\varepsilon}
+\end{align*}$$
+where
+$$ P:=\left(\int p_j^{1-\varepsilon}\, dj\right)^{\frac{1}{1-\varepsilon}}$$</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Plugging $C$ back in, we end up with the expression
+$$\begin{align*}
+    y_j = \underline{Y} \left(\frac{p_j}{P}\right)^{-\varepsilon}
+\end{align*}$$</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To summarize, given the above production function form, the final good producer/consumer demands
+$$\begin{align*}
+    & y_j = \underline{Y} \left(\frac{p_j}{P}\right)^{-\varepsilon}\\
+    & P = \left(\int p_j^{1-\varepsilon}\, dj\right)^{\frac{1}{1-\varepsilon}}
+\end{align*}$$</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Review-of-the-Calculus-of-Variations">Review of the Calculus of Variations<a class="anchor-link" href="#Review-of-the-Calculus-of-Variations">¶</a></h2><p><a href="#main_text">(go back to main text)</a></p>
+<p>This last part is optional, but it is included to make it as "self-contained" as possible. Now, we are going to introduce just as much calculus of variations as necessary for this calculation. To do so, let $\phi(j)$ be some test function, and consider a function defined by
+$$\begin{align*}
+    \mathcal{L}(\alpha) = \int p_j(y_j+\alpha\phi)\,dj + \lambda\left(\int (y_j+\alpha\phi)^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}}
+\end{align*}$$</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If $y_j$'s minimize $\mathcal{L}$ over all functions, then $\mathcal{L}(\alpha)>\mathcal{L}(0)$ for any $\alpha$. Hence, 
+$$\left.\frac{d}{d\alpha}\mathcal{L}(\alpha)\right|_{\alpha=0} = 0$$
+Now, this derivative with respect to $\alpha$ is a standard derivative (not variational). Intuitively, optimization is being done in a given test function direction, and given a direction, the usual calculus applies.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Taking the standard derivative with chain rule, we get
+$$\begin{align*}
+\frac{d}{d\alpha}\mathcal{L}(\alpha) = \int p_j\phi\,dj +  \lambda\left(\int (y_j+\alpha\phi)^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}\cdot \int (y_j+\alpha\phi)^{-\frac{1}{\varepsilon}} \phi\,dj
+\end{align*}$$</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Hence,
+$$\begin{align*}
+    \left.\frac{d}{d\alpha}\mathcal{L}(\alpha)\right|_{\alpha=0} & = \int p_j\phi\,dj +  \lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}\cdot \int y_j^{-\frac{1}{\varepsilon}} \phi\,dj\\
+    & = \int p_j\phi\,dj +  \int \lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}y_j^{-\frac{1}{\varepsilon}} \phi\,dj\\
+    & = \int \left(p_j-\lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}y_j^{-\frac{1}{\varepsilon}}\right) \phi\,dj\\
+    & = 0
+\end{align*}$$</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This first order condition needs to be satisfied with respect to any given test function $\phi$ including a dirac-delta function (or test functions $\phi$ limiting to dirac-delta function). Hence,
+$$\begin{align*}
+\left(p_j-\lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}y_j^{-\frac{1}{\varepsilon}}\right)=0 &&\forall j
+\end{align*}$$
+getting the first order condition we found above.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In most cases, there is no real danger treating variational derivatives as the standard derivatives. The only time problem can arise is when two difference sense of derivatives (standard and variational) are mixed in one equation. Those cases are rare and we can always just use test functions to get to the correct solution safely.</p>
+</div>
+</div>
+</div>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
@@ -1162,7 +1348,7 @@ h6:hover .anchor-link {
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
-<p>There are <a href="https://sehyoun.com/blog/test-test.html#disqus_thread">comments</a>.</p>    </article>
+<p>There are <a href="https://sehyoun.com/blog/20170710_ces-production.html#disqus_thread">comments</a>.</p>    </article>
     </aside><!-- /#featured -->
     </div>
 	    

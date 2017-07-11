@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>SeHyoun's Blog</title><link>https://sehyoun.com/blog/</link><description></description><lastBuildDate>Sun, 01 Jan 2017 23:39:00 -0500</lastBuildDate><item><title>TEST NOTEBOOK</title><link>https://sehyoun.com/blog/test-test.html</link><description>
+<rss version="2.0"><channel><title>SeHyoun's Blog</title><link>https://sehyoun.com/blog/</link><description></description><lastBuildDate>Mon, 10 Jul 2017 18:25:00 -0400</lastBuildDate><item><title>CES Production Function</title><link>https://sehyoun.com/blog/20170710_ces-production.html</link><description>
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;
 &lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;This is a jupyter notebook&lt;/p&gt;
+&lt;h1 id="Calculation-for-CES-Production-Function"&gt;Calculation for CES Production Function&lt;a class="anchor-link" href="#Calculation-for-CES-Production-Function"&gt;¶&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;I found myself doing this calculation over and over again, so I am just writing the post so that it might save people some time in not repeating the calculation.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -14,9 +14,22 @@
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;$\frac{1}{2}$&lt;/p&gt;
+&lt;p&gt;A firm can produce using production function using differentiated input of&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing code_cell rendered"&gt;
-&lt;div class="input"&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">SeHyoun Ahn</dc:creator><pubDate>Sun, 01 Jan 2017 23:39:00 -0500</pubDate><guid isPermaLink="false">tag:sehyoun.com,2017-01-01:/blog/test-test.html</guid><category>Pelican</category><category>Jupyter</category></item></channel></rss>
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+$$Y = \left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}$$
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;&lt;span id="main_text"&gt;&lt;/span&gt; When each differentiate intermediate inputs are priced at $p_j$, then the firm will solve a cost minimization problem of&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">SeHyoun Ahn</dc:creator><pubDate>Mon, 10 Jul 2017 18:25:00 -0400</pubDate><guid isPermaLink="false">tag:sehyoun.com,2017-07-10:/blog/20170710_ces-production.html</guid><category>CES</category><category>Production</category><category>Calculus of Variations</category></item></channel></rss>
