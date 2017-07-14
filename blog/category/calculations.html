@@ -102,16 +102,16 @@
     <div class="col-md-6 col-sm-12">
     <aside id="featured" class="body">
     <article>
-      <h1 class="entry-title"><a href="https://sehyoun.com/blog/20170710_ces-production.html">CES Production Function</a></h1>
+      <h1 class="entry-title"><a href="https://sehyoun.com/blog/20170714_finite_volume_FPE.html">Finite Volume Method for Fokker-Planck Equation</a></h1>
 <div class="post-info">
-	<abbr class="published" title="2017-07-10T18:25:00-04:00">
-	  Published: Mon 10 July 2017
+	<abbr class="published" title="2017-07-14T20:25:00-04:00">
+	  Published: Fri 14 July 2017
     </abbr>
 
     <address class="vcard author">
       By          <a class="url fn" href="https://sehyoun.com/blog/author/sehyoun-ahn.html">SeHyoun Ahn</a
     </address>
-<p>Tags: <a href="https://sehyoun.com/blog/tag/ces.html">CES</a> <a href="https://sehyoun.com/blog/tag/production.html">Production</a> <a href="https://sehyoun.com/blog/tag/calculus-of-variations.html">Calculus of Variations</a> </p></div><style type="text/css">/*!
+<p>Tags: <a href="https://sehyoun.com/blog/tag/fokker-planck-equation.html">Fokker-Planck Equation</a> <a href="https://sehyoun.com/blog/tag/finite-volume.html">Finite Volume</a> <a href="https://sehyoun.com/blog/tag/numerical-methods.html">Numerical Methods</a> <a href="https://sehyoun.com/blog/tag/pde.html">PDE</a> </p></div><style type="text/css">/*!
 *
 * IPython notebook
 *
@@ -1092,7 +1092,8 @@ h6:hover .anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Calculation-for-CES-Production-Function">Calculation for CES Production Function<a class="anchor-link" href="#Calculation-for-CES-Production-Function">¶</a></h1><p>I found myself doing this calculation over and over again, so I am just writing the post so that it might save people some time in not repeating the calculation.</p>
+<h1 id="Finite-Volumen-Method-for-Fokker-Planck-Equation">Finite Volumen Method for Fokker-Planck Equation<a class="anchor-link" href="#Finite-Volumen-Method-for-Fokker-Planck-Equation">¶</a></h1><p>The dynamics of the distribution of the population in mean-field games are given by the Fokker-Planck equation (FPE). In most cases, FPE can not be solved analytically, and we have to solve it numerically. All numerical approximations introduce errors, but some errors matter more than others. In the case of FPE, since we are tracking the dynamics of the distribution of population, the highest priority in approximation is that the mass of people do not change due to numerically approximation scheme. Further, if the discretization does not conserve mass, the steady-state distribution does not even exist and equilibrium distribution can not be found with the discretization. Hence, the discretization has to be conservative/mass-preserving. In this post, the finite volume discretization will be shown. You can check wikipedia description of finite volume method <a href="https://en.wikipedia.org/wiki/Finite_volume_method"> here</a>.</p>
+<p>If you only care about the discretization itself, you can just look at the resulting scheme at the bottom without reading through the cacluation.</p>
 </div>
 </div>
 </div>
@@ -1101,71 +1102,12 @@ h6:hover .anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>A firm can produce using production function using differentiated input of</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-$$Y = \left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}$$
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><span id="main_text"></span> When each differentiate intermediate inputs are priced at $p_j$, then the firm will solve a cost minimization problem of</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-\begin{align*}
-  \min_{y_j} & \int p_jy_j\,dj\\
-  & \text{s.t.  } Y=\underline{Y}
-\end{align*}
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>(Aside: you can equivalently solve the output maximization given price)</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Letting $\lambda$ be the Lagrange multiplier on $Y=\underline{Y}$, we get the Lagrangian
+<h2 id="Problem-Setup">Problem Setup<a class="anchor-link" href="#Problem-Setup">¶</a></h2><p>For simplicity, one-dimensional FPE will be solved here, but in principle, the generalization to higher dimension is straight forward. For one-dimension, the FPE is given by
 $$\begin{align*}
-    \mathcal{L} = \int p_jy_j\,dj + \lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}}
-\end{align*}$$</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Leading to the first order condition of 
-$$\begin{align*}
-    p_j + \lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}y_j^{-\frac{1}{\varepsilon}} = 0
+\frac{dg}{dt} = -\frac{d}{dx}\left(sg\right) + \frac{d}{dx}\left(\nu\frac{dg}{dx}\right)
 \end{align*}$$
-(This is not the "standard" derivative, but the first variation. There are notes below about how to work only with only the standard definition of derivatives. <a href="#Review-of-the-Calculus-of-Variations"> Notes</a>)</p>
+where $x\in[0,1]$, $s(x):[0,1]\rightarrow\mathbb{R}$.</p>
+<p>For the derivation of the FPE, you can see the fantastic post by Terry Tao <a href="https://terrytao.wordpress.com/2010/01/07/mean-field-equations/">here</a>.</p>
 </div>
 </div>
 </div>
@@ -1174,27 +1116,11 @@ $$\begin{align*}
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Rearranging side and letting $C = \lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}$, we get  that
+<h2 id="Discretization">Discretization<a class="anchor-link" href="#Discretization">¶</a></h2><p>Let arbitrarily $x_0(=0),x_1,\ldots,x_n(=1)$ be the points of discretization and let $G_i$ be the total mass in $\left[\frac{x_{i-1}+x_{i}}{2},\frac{x_i+x_{i+1}}{2}\right]$, i.e.,
 $$\begin{align*}
-    y_j = \left(\frac{C}{p_j}\right)^\varepsilon
-\end{align*}$$</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>To solve for the normalization constant, we can just plug the first order condition into the production function to get
-$$\begin{align*}
-    \underline{Y} & = \left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}\\
-    & = \left(\int \left(\frac{C}{p_j}\right)^{\varepsilon -1} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}\\
-    & = C^\varepsilon\left(\int p_j^{1-\varepsilon}\, dj\right)^{\frac{\varepsilon}{\varepsilon-1}}\\
-    & = C^\varepsilon P^{-\varepsilon}
+G_i =\int_{\frac{x_{i-1}+x_{i}}{2}}^{\frac{x_{i}+x_{i+1}}{2}}g(x)\,dx
 \end{align*}$$
-where
-$$ P:=\left(\int p_j^{1-\varepsilon}\, dj\right)^{\frac{1}{1-\varepsilon}}$$</p>
+where $x_{-1} = x_0$ and $x_{n+1} = x_n$ for notational simplicity.</p>
 </div>
 </div>
 </div>
@@ -1203,9 +1129,11 @@ $$ P:=\left(\int p_j^{1-\varepsilon}\, dj\right)^{\frac{1}{1-\varepsilon}}$$</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Plugging $C$ back in, we end up with the expression
+<p>Given the definitions, we have
 $$\begin{align*}
-    y_j = \underline{Y} \left(\frac{p_j}{P}\right)^{-\varepsilon}
+\frac{dG_i}{dt} & = \int_{\frac{x_{i-1}+x_{i}}{2}}^{\frac{x_{i}+x_{i+1}}{2}}\frac{g}{dt}\,dx\\
+    & = \int_{\frac{x_{i-1}+x_{i}}{2}}^{\frac{x_{i}+x_{i+1}}{2}} \frac{d}{dx}(sg) + \frac{d}{dx}\left(\nu\frac{dg}{dx}\right)\, dx\\
+    & = \left. \left(sg + \nu\frac{dg}{dx}\right) \right|_{\frac{x_{i-1}+x_{i}}{2}}^{\frac{x_{i}+x_{i+1}}{2}}
 \end{align*}$$</p>
 </div>
 </div>
@@ -1215,99 +1143,23 @@ $$\begin{align*}
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To summarize, given the above production function form, the final good producer/consumer demands
+<p>This exhibits the intuition for the finite-volume method clearly. The change in the total mass in cell $i$ is given by the flow into and out of the cell. Since the flow out of a cell is a flow into another cell, the method conserves mass.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Approximations">Approximations<a class="anchor-link" href="#Approximations">¶</a></h3><p>However, this scheme is not complete yet. The only values on the discretized grid is given by the total mass $G_i$ instead of $g$'s or $\frac{dg}{dx}$. Hence, they need to be approximated from $G_i$. This is straightforward by taking the density of a given cell in the center to equal to the average density of the cell. In equations, we are making the approximation
 $$\begin{align*}
-    & y_j = \underline{Y} \left(\frac{p_j}{P}\right)^{-\varepsilon}\\
-    & P = \left(\int p_j^{1-\varepsilon}\, dj\right)^{\frac{1}{1-\varepsilon}}
-\end{align*}$$</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Review-of-the-Calculus-of-Variations">Review of the Calculus of Variations<a class="anchor-link" href="#Review-of-the-Calculus-of-Variations">¶</a></h2><p><a href="#main_text">(go back to main text)</a></p>
-<p>This last part is optional, but it is included to make it as "self-contained" as possible. Now, we are going to introduce just as much calculus of variations as necessary for this calculation. To do so, let $\phi(j)$ be some test function, and consider a function defined by
-$$\begin{align*}
-    \mathcal{L}(\alpha) = \int p_j(y_j+\alpha\phi)\,dj + \lambda\left(\int (y_j+\alpha\phi)^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}}
-\end{align*}$$</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>If $y_j$'s minimize $\mathcal{L}$ over all functions, then $\mathcal{L}(\alpha)>\mathcal{L}(0)$ for any $\alpha$. Hence, 
-$$\left.\frac{d}{d\alpha}\mathcal{L}(\alpha)\right|_{\alpha=0} = 0$$
-Now, this derivative with respect to $\alpha$ is a standard derivative (not variational). Intuitively, optimization is being done in a given test function direction, and given a direction, the usual calculus applies.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Taking the standard derivative with chain rule, we get
-$$\begin{align*}
-\frac{d}{d\alpha}\mathcal{L}(\alpha) = \int p_j\phi\,dj +  \lambda\left(\int (y_j+\alpha\phi)^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}\cdot \int (y_j+\alpha\phi)^{-\frac{1}{\varepsilon}} \phi\,dj
-\end{align*}$$</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Hence,
-$$\begin{align*}
-    \left.\frac{d}{d\alpha}\mathcal{L}(\alpha)\right|_{\alpha=0} & = \int p_j\phi\,dj +  \lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}\cdot \int y_j^{-\frac{1}{\varepsilon}} \phi\,dj\\
-    & = \int p_j\phi\,dj +  \int \lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}y_j^{-\frac{1}{\varepsilon}} \phi\,dj\\
-    & = \int \left(p_j-\lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}y_j^{-\frac{1}{\varepsilon}}\right) \phi\,dj\\
-    & = 0
-\end{align*}$$</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>This first order condition needs to be satisfied with respect to any given test function $\phi$ including a dirac-delta function (or test functions $\phi$ limiting to dirac-delta function). Hence,
-$$\begin{align*}
-\left(p_j-\lambda\left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}}\,dj\right)^{\frac{\varepsilon}{\varepsilon-1}-1}y_j^{-\frac{1}{\varepsilon}}\right)=0 &&\forall j
+g(x_i) \approx G_i \left/\frac{x_{i+1}-x_{i-1}}{2}\right. = \frac{2G_i}{x_{i+1}-{x_{i-1}}}
 \end{align*}$$
-getting the first order condition we found above.</p>
+Given this approximation, we can also approximate the derivative by using finite difference:
+$$\begin{align*}
+\left.\frac{dg}{dx}\right|_{x=\frac{x_i+x_{i+1}}{2}} \approx \frac{g(x_{i+1})-g(x_i)}{x_{i+1}-x_i} = \frac{2G_{i+1}}{(x_{i+2}-x_{i})(x_{i+1}-x_i)} - \frac{2G_i}{(x_{i+1}-x_{i-1})(x_{i+1}-x_i)}
+\end{align*}$$</p>
 </div>
 </div>
 </div>
@@ -1316,7 +1168,32 @@ getting the first order condition we found above.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In most cases, there is no real danger treating variational derivatives as the standard derivatives. The only time problem can arise is when two difference sense of derivatives (standard and variational) are mixed in one equation. Those cases are rare and we can always just use test functions to get to the correct solution safely.</p>
+<p>Above approximation handles the $\frac{dg}{dx}$ terms, but for $sg$-term, further approximations are needed as they are evaluated in between points of evaluation. We have approximation of $g(x_i)$'s from the discretization. If one were solving mean-field games, the function $s(x)$ is also given as approximations with values known at grid points. Hence, given $s(x_i)$'s and $g(x_i)$'s, any interpolation scheme can be used to approximate $s\left(\frac{x_i+x_{i+1}}{2}\right)g\left(\frac{x_i+x_{i+1}}{2}\right)$.</p>
+<p>One can use a direct linear interpolation between the product of the two values, i.e.,
+$$\begin{align*}
+s\left(\frac{x_i+x_{i+1}}{2}\right)g\left(\frac{x_i+x_{i+1}}{2}\right) \approx \frac{s_ig_i + s_{i+1}g_{i+1}}{2}
+\end{align*}$$</p>
+<p>Or one can use upwind style approximation given by
+$$\begin{align*}
+s\left(\frac{x_i+x_{i+1}}{2}\right)g\left(\frac{x_i+x_{i+1}}{2}\right) \approx s_ig_i\mathbb{1}_{(s_i>0)} + s_{i+1}g_{i+1}\mathbb{1}_{(s_{i+1}<0)}
+\end{align*}$$</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Finite-Volume-Scheme">Finite-Volume Scheme<a class="anchor-link" href="#Finite-Volume-Scheme">¶</a></h1><p>Putting everything (with upwind approximation) together, we get
+$$\begin{align*}
+\frac{dG_i}{dt} = & - s_i \frac{2G_i}{x_{i+1}-x_{i-1}} \mathbb{1}_{s_i>0} - s_{i+1} \frac{2G_{i+1}}{x_{i+2}-x_{i}}\mathbb{1}_{s_{i+1}<0} + s_{i-1} \frac{2G_{i-1}}{x_{i}-x_{i-2}} \mathbb{1}_{s_{i-1}>0} + s_{i} \frac{2G_{i}}{x_{i+1}-x_{i-1}} \mathbb{1}_{s_i<0} \\
+    & + \nu\left( \frac{2G_{i+1}}{(x_{i+2}-x_{i})(x_{i+1}-x_i)} - \frac{2G_i}{(x_{i+1}-x_{i-1})(x_{i+1}-x_i)} - \frac{2G_{i}}{(x_{i+1}-x_{i-1})(x_{i}-x_{i-1})} + \frac{2G_{i-1}}{(x_{i}-x_{i-2})(x_{i}-x_{i-1})}\right)
+\end{align*}$$</p>
+<p>Note that $G_i$ stands for the weight of the cell, and $G_i$ needs to be adjusted if you want "density" for plotting, for example.
+$$\begin{align*}
+g(x_i) \approx \frac{2G_i}{x_{i+1}-{x_{i-1}}}
+\end{align*}$$</p>
 </div>
 </div>
 </div>
@@ -1348,10 +1225,74 @@ getting the first order condition we found above.</p>
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
-<p>There are <a href="https://sehyoun.com/blog/20170710_ces-production.html#disqus_thread">comments</a>.</p>    </article>
+<p>There are <a href="https://sehyoun.com/blog/20170714_finite_volume_FPE.html#disqus_thread">comments</a>.</p>    </article>
     </aside><!-- /#featured -->
     </div>
+    <div class="col-md-6 col-sm-12">
+    <section id="content">
+      <h1>Other articles</h1>
+      <hr />
+      <ol id="posts-list" class="hfeed">
 	    
+
+    <div class="container-fluid">
+      <li><article class="hentry">
+		<header>
+	      <h1><a href="https://sehyoun.com/blog/20170710_ces-production.html" rel="bookmark"
+			 title="Permalink to CES Production Function">CES Production Function</a></h1>
+		</header>
+		<div class="entry-content">
+		  
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Calculation-for-CES-Production-Function">Calculation for CES Production Function<a class="anchor-link" href="#Calculation-for-CES-Production-Function">¶</a></h1><p>I found myself doing this calculation over and over again, so I am just writing the post so that it might save people some time in not repeating the calculation.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A firm can produce using production function using differentiated input of</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+$$Y = \left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}$$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><span id="main_text"></span> When each differentiate intermediate inputs are priced at $p_j$, then the firm will solve a cost minimization problem of</p>
+		  
+		  <a class="readmore" href="https://sehyoun.com/blog/20170710_ces-production.html">read more</a>
+<p>There are <a href="https://sehyoun.com/blog/20170710_ces-production.html#disqus_thread">comments</a>.</p><div class="post-info">
+	<abbr class="published" title="2017-07-10T18:25:00-04:00">
+	  Published: Mon 10 July 2017
+    </abbr>
+
+    <address class="vcard author">
+      By          <a class="url fn" href="https://sehyoun.com/blog/author/sehyoun-ahn.html">SeHyoun Ahn</a
+    </address>
+<p>Tags: <a href="https://sehyoun.com/blog/tag/ces.html">CES</a> <a href="https://sehyoun.com/blog/tag/production.html">Production</a> <a href="https://sehyoun.com/blog/tag/calculus-of-variations.html">Calculus of Variations</a> </p></div>		</div><!-- /.entry-content -->
+       </article></li>
+	    
+          </ol><!-- /#posts-list -->
+        </section><!-- /#content -->
+        </div>
+
 	
     </div>
 	
