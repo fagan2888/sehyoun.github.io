@@ -1,0 +1,65 @@
+.. currentmodule:: src
+
+Sparse Grid Finite Difference Codes
+===================================
+
+There are already open-source implementation of sparse-grid interpolation toolbox (refer to `SPGrid++ <https://sehyoun.com>`_. However, I found them to have too many features. There is always a trade-off between availability of features and complexity of the code-base. For my application, I decided that the payoff is in the negative, and hence, I have implemented things myself. I might introduce more features in the future, but currently, there are just enough codes to implement finite difference methods based on upwind scheme.
+
+
+Specifications:
+_______________
+
+Estimated time to use for basic usage:
+
+* 5 minutes
+
+
+Alternate toolboxes/codes on sparse grids (Though I have not read the codes in detail [#]_, I have summary reads of the toolboxes here):
+
+* `SPGrid++ <https://sehyoun.com>`_
+* `Tasmanian <https://sehyoun.com>`_
+
+For people who are only interested in the mean-field games application or solving Hamilton-Jacobi-Bellman equations (with finite difference method), you can consider my other toolbox
+
+* MFG solver `githubXXXX <https://sehyoun.com>`_ `documentationXXXX <https://sehyoun.com>`_
+
+which includes more automations.
+
+
+subsubsection
+_____________
+
+.. automethod:: sparse_grid.init_grid
+    :module: sparse_grid
+
+.. automethod:: sparse_grid.adapt_nodes
+    :module: sparse_grid
+
+.. automethod:: sparse_grid.clean_nodes
+    :module: sparse_grid
+
+.. automethod:: sparse_grid.recompute_grid
+    :module: sparse_grid
+
+.. automethod:: sparse_grid.setup_interpolation
+    :module: sparse_grid
+
+.. automethod:: sparse_grid.compute_derivs
+    :module: sparse_grid
+
+.. automethod:: sparse_grid.find_upwind
+    :module: sparse_grid
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Contents:
+
+    zrefs
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+

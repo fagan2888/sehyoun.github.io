@@ -1,0 +1,6 @@
+References
+==========
+
+
+.. bibliography:: test.bib
+    :style: alpha
