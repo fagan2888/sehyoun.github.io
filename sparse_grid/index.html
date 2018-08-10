@@ -157,26 +157,18 @@
             
   <div class="section" id="sparse-grid-finite-difference-codes">
 <h1>Sparse Grid Finite Difference Codes<a class="headerlink" href="#sparse-grid-finite-difference-codes" title="Permalink to this headline">¶</a></h1>
-<p>There are already open-source implementation of sparse-grid interpolation toolbox (refer to <a class="reference external" href="https://sehyoun.com">SPGrid++</a>. However, I found them to have too many features. There is always a trade-off between availability of features and complexity of the code-base. For my application, I decided that the payoff is in the negative, and hence, I have implemented things myself. I might introduce more features in the future, but currently, there are just enough codes to implement finite difference methods based on upwind scheme.</p>
-<div class="section" id="specifications">
-<h2>Specifications:<a class="headerlink" href="#specifications" title="Permalink to this headline">¶</a></h2>
-<p>Estimated time to use for basic usage:</p>
+<p>There are already open-source implementations of sparse-grid interpolation toolbox. This toolbox is written to interact with other parts of solving Hamilton-Jacobi-Bellman equation well. Alternately, for more pure use of sparse grids for numerical approximation, refer to:</p>
 <ul class="simple">
-<li>5 minutes</li>
-</ul>
-<p>Alternate toolboxes/codes on sparse grids (Though I have not read the codes in detail <a href="#id3"><span class="problematic" id="id4"><span id="id1"></span>[#]_</span></a>, I have summary reads of the toolboxes here):</p>
-<ul class="simple">
-<li><a class="reference external" href="https://sehyoun.com">SPGrid++</a></li>
-<li><a class="reference external" href="https://sehyoun.com">Tasmanian</a></li>
+<li><a class="reference external" href="http://sgpp.sparsegrids.org/">SPGrid++</a></li>
+<li><a class="reference external" href="https://tasmanian.ornl.gov/">Tasmanian</a></li>
 </ul>
 <p>For people who are only interested in the mean-field games application or solving Hamilton-Jacobi-Bellman equations (with finite difference method), you can consider my other toolbox</p>
 <ul class="simple">
-<li>MFG solver <a class="reference external" href="https://sehyoun.com">githubXXXX</a> <a class="reference external" href="https://sehyoun.com">documentationXXXX</a></li>
+<li>MFG solver <a class="reference external" href="https://sehyoun.com">NOT PUBLIC YET</a></li>
 </ul>
-<p>which includes more automations.</p>
-</div>
-<div class="section" id="subsubsection">
-<h2>subsubsection<a class="headerlink" href="#subsubsection" title="Permalink to this headline">¶</a></h2>
+<p>which the toolbox references to.</p>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
 <dt id="sparse_grid.sparse_grid.init_grid">
 <code class="descclassname">sparse_grid.</code><code class="descname">init_grid</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.init_grid" title="Permalink to this definition">¶</a></dt>
