@@ -1,0 +1,1130 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Technical Documentation &mdash; Sparse Grid Toolbox 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/css/mystyle.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Sparse Grid Toolbox 0.1 documentation" href="index.html"/>
+        <link rel="next" title="License" href="license.html"/>
+        <link rel="prev" title="Simple Tutorial" href="tutorial1.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Sparse Grid Toolbox
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial1.html">Simple Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Technical Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#properties">Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zrefs.html">Bibliography</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sparse Grid Toolbox</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Technical Documentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="technical-documentation">
+<h1>Technical Documentation<a class="headerlink" href="#technical-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This is the technical documentation. See <a class="reference internal" href="tutorial1.html#tutorial"><span class="std std-ref">Simple Tutorial</span></a> instead to get started.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Certain functions make certain assumptions about the internal states. Under the object-oriented programming, this is solved by using “getters/setters” while forbidding access to internal states. Since the class is small/simple, I left all attributes accessible at any time, and opted to document on the function side. Everything can be redefined from <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a> and <a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a>, so when in doubt make sure that they are correct and call <a class="reference internal" href="#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a>.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Currently, the object constructs all difference operators even though this is a costly to do so. This is for simplicity of the function calls. This might be updated in the future.</p>
+</div>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="sparse_grid.boundaries">
+<code class="descclassname">sparse_grid.</code><code class="descname">boundaries</code><a class="headerlink" href="#sparse_grid.boundaries" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times 2\)</span>) cell array of logical vectors</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Whether the grid point is on a boundary</p>
+<ul>
+<li><p class="first">rows: coordinate dimension</p>
+</li>
+<li><p class="first">columns</p>
+<blockquote>
+<div><ul class="simple">
+<li>1 : upper boundary</li>
+<li>2 : lower boundary</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To get the grid points on the upper boundary of 3rd dimension, we call</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">}(</span><span class="n">grid</span><span class="p">.</span><span class="n">boundaries</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">})</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.d_backward">
+<code class="descclassname">sparse_grid.</code><code class="descname">d_backward</code><a class="headerlink" href="#sparse_grid.d_backward" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times 1\)</span>) cell-array of (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a><span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a>) sparse matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Cell array of backward difference operators. Cell index corresponds to the coordinate dimension.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To evaluate the backward difference in 2nd dimension for a function with nodal values of <code class="code docutils literal notranslate"><span class="pre">f_nodal</span></code>, we call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_backward</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="n">f_nodal</span>
+</pre></div>
+</div>
+<p>Hence, to compute the backward difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_backward</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.d_backward_interp">
+<code class="descclassname">sparse_grid.</code><code class="descname">d_backward_interp</code><a class="headerlink" href="#sparse_grid.d_backward_interp" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times 1\)</span>) cell-array of (number_of_interpolation_points <span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a>) sparse matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Cell array of backward difference operators. Cell index corresponds to the coordinate dimension.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To evaluate the backward difference in 2nd dimension for a function with nodal values of <code class="code docutils literal notranslate"><span class="pre">f_nodal</span></code>, we call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_backward_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="n">f_nodal</span>
+</pre></div>
+</div>
+<p>Hence, to compute the backward difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_backward_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">See also:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#sparse_grid.sparse_grid.setup_interpolation" title="sparse_grid.sparse_grid.setup_interpolation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setup_interpolation</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.d_forward">
+<code class="descclassname">sparse_grid.</code><code class="descname">d_forward</code><a class="headerlink" href="#sparse_grid.d_forward" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times 1\)</span>) cell-array of (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a><span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a>) sparse matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Cell array of forward difference operators. Cell index corresponds to the coordinate dimension.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To evaluate the forward difference in 2nd dimension for a function with nodal values of <code class="code docutils literal notranslate"><span class="pre">f_nodal</span></code>, we call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_forward</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="n">f_nodal</span>
+</pre></div>
+</div>
+<p>Hence, to compute the forward difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_forward</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.d_forward_interp">
+<code class="descclassname">sparse_grid.</code><code class="descname">d_forward_interp</code><a class="headerlink" href="#sparse_grid.d_forward_interp" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times 1\)</span>) cell-array of (number_of_interpolation_points <span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a>) sparse matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Cell array of forward difference operators. Cell index corresponds to the coordinate dimension.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To evaluate the forward difference in 2nd dimension for a function with nodal values of <code class="code docutils literal notranslate"><span class="pre">f_nodal</span></code>, we call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_forward_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="n">f_nodal</span>
+</pre></div>
+</div>
+<p>Hence, to compute the forward difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_forward_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">See also:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#sparse_grid.sparse_grid.setup_interpolation" title="sparse_grid.sparse_grid.setup_interpolation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setup_interpolation</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.d_midpoint">
+<code class="descclassname">sparse_grid.</code><code class="descname">d_midpoint</code><a class="headerlink" href="#sparse_grid.d_midpoint" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times 1\)</span>) cell-array of (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a><span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a>) sparse matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Cell array of central difference operators. Cell index corresponds to the coordinate dimension.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To evaluate the central difference in 2nd dimension for a function with nodal values of <code class="code docutils literal notranslate"><span class="pre">f_nodal</span></code>, we call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_midpoint</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="n">f_nodal</span>
+</pre></div>
+</div>
+<p>Hence, to compute the forward difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_midpoint</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.d_midpoint_interp">
+<code class="descclassname">sparse_grid.</code><code class="descname">d_midpoint_interp</code><a class="headerlink" href="#sparse_grid.d_midpoint_interp" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times 1\)</span>) cell-array of (number_of_interpolation_points <span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a>) sparse matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Cell array of central difference operators. Cell index corresponds to the coordinate dimension.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To evaluate the central difference in 2nd dimension for a function with nodal values of <code class="code docutils literal notranslate"><span class="pre">f_nodal</span></code>, we call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_midpoint_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="n">f_nodal</span>
+</pre></div>
+</div>
+<p>Hence, to compute the central difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_midpoint_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">See also:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#sparse_grid.sparse_grid.setup_interpolation" title="sparse_grid.sparse_grid.setup_interpolation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setup_interpolation</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.dd_center">
+<code class="descclassname">sparse_grid.</code><code class="descname">dd_center</code><a class="headerlink" href="#sparse_grid.dd_center" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times 1\)</span>) cell-array of (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a><span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a>) sparse matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Cell array of second order difference operators. Cell index corresponds to the coordinate dimension.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To evaluate the second order difference in 2nd dimension for a function with nodal values of <code class="code docutils literal notranslate"><span class="pre">f_nodal</span></code>, we call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">dd_center</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="n">f_nodal</span>
+</pre></div>
+</div>
+<p>Hence, to compute the second order difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">dd_center</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.dd_center_interp">
+<code class="descclassname">sparse_grid.</code><code class="descname">dd_center_interp</code><a class="headerlink" href="#sparse_grid.dd_center_interp" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times 1\)</span>) cell-array of (number_of_interpolation_points <span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a>) sparse matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Cell array of second order difference operators. Cell index corresponds to the coordinate dimension.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To evaluate the second order difference on 2nd dimension for a function with nodal values of <code class="code docutils literal notranslate"><span class="pre">f_nodal</span></code>, we call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">dd_center_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="n">f_nodal</span>
+</pre></div>
+</div>
+<p>Hence, to compute the second order difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">dd_center_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">See also:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#sparse_grid.sparse_grid.setup_interpolation" title="sparse_grid.sparse_grid.setup_interpolation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setup_interpolation</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.interp_nodes">
+<code class="descclassname">sparse_grid.</code><code class="descname">interp_nodes</code><a class="headerlink" href="#sparse_grid.interp_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times\)</span> number_of_interpolation_points) matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Grid points for interpolating the function</p>
+<ul class="simple">
+<li>columes: grid point</li>
+<li>rows: coordinate dimension</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">See also:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#sparse_grid.sparse_grid.setup_interpolation" title="sparse_grid.sparse_grid.setup_interpolation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setup_interpolation</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.val_interp">
+<code class="descclassname">sparse_grid.</code><code class="descname">val_interp</code><a class="headerlink" href="#sparse_grid.val_interp" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">(number_of_interpolation_points <span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a>) matrix of doubles</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.n_dim">
+<code class="descclassname">sparse_grid.</code><code class="descname">n_dim</code><a class="headerlink" href="#sparse_grid.n_dim" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Dimensionality of the sparse grid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.n_points">
+<code class="descclassname">sparse_grid.</code><code class="descname">n_points</code><a class="headerlink" href="#sparse_grid.n_points" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Number of grid points in the sparse grid. It has to equal to <code class="code docutils literal notranslate"><span class="pre">size(self.spgrid,</span> <span class="pre">2)</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.shifters">
+<code class="descclassname">sparse_grid.</code><code class="descname">shifters</code><a class="headerlink" href="#sparse_grid.shifters" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a> cell array of function handles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Mapping to the domain under consideration for the given coordinate dimension. Default is <code class="code docutils literal notranslate"><span class="pre">&#64;(x)</span> <span class="pre">x</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To map first dimension to uniformly space between 5 and 10, set</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">shifters</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span> <span class="p">=</span> <span class="p">@(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Reference:</th><td class="field-body"><p class="first last">See section XXXX of [ahn2018sparse]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.spgrid">
+<code class="descclassname">sparse_grid.</code><code class="descname">spgrid</code><a class="headerlink" href="#sparse_grid.spgrid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(2 <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a>) <span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a> matrix</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Representation the sparse grid. It is stacked in <span class="math notranslate nohighlight">\((l_1, p_1, l_2, p_2, \ldots, l_d, p_d)\)</span> order, where the tent function is</p>
+<div class="last math notranslate nohighlight">
+\[\begin{split}\phi_{l,p}(x) = \begin{cases}
+    1 - \left|\frac{x - x_{l,p}}{2^l}\right|  &amp; x\in \left[x_{l,p} - \frac{1}{2^l}, x_{l,p} + \frac{1}{2^l}\right]\\
+    0 &amp; \text{otherwise}
+\end{cases}\end{split}\]</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.spgrid_cache">
+<code class="descclassname">sparse_grid.</code><code class="descname">spgrid_cache</code><a class="headerlink" href="#sparse_grid.spgrid_cache" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(2 <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a>) <span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a> matrix</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Cached representation of the sparse grid. It is stacked in <span class="math notranslate nohighlight">\((l_1, p_1, l_2, p_2, \ldots, l_d, p_d)\)</span> order, where the tent function is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\phi_{l,p}(x) = \begin{cases}
+    1 - \left|\frac{x - x_{l,p}}{2^l}\right|  &amp; x\in \left[x_{l,p} - \frac{1}{2^l}, x_{l,p} + \frac{1}{2^l}\right]\\
+    0 &amp; \text{otherwise}
+\end{cases}\end{split}\]</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">See also:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#sparse_grid.sparse_grid.adapt_by_metric" title="sparse_grid.sparse_grid.adapt_by_metric"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">adapt_by_metric</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.val">
+<code class="descclassname">sparse_grid.</code><code class="descname">val</code><a class="headerlink" href="#sparse_grid.val" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a><span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a> sparse matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Convert the hierarchical representation into a nodal representation.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><div class="first highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">nodal_values</span> <span class="p">=</span> <span class="n">grid</span><span class="p">.</span><span class="n">val</span><span class="o">*</span><span class="n">hierarchical_values</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Reference:</th><td class="field-body"><p class="first last">See [ahn2018sparse] more details.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.x_i">
+<code class="descclassname">sparse_grid.</code><code class="descname">x_i</code><a class="headerlink" href="#sparse_grid.x_i" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a><span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a>) matrix of doubles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Coordinate values of the grid points.</p>
+<ul class="simple">
+<li>columes: grid points</li>
+<li>rows: coordinate dimension</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first last">To get the coordinate value of the 3rd dimension of the 100th grid point, we call <code class="code docutils literal notranslate"><span class="pre">grid.x_i(100,3)</span></code>, and to get the coordinate value of the first dimension, <code class="code docutils literal notranslate"><span class="pre">grid.x_i(:,1)</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.adapt_by_metric">
+<code class="descclassname">sparse_grid.</code><code class="descname">adapt_by_metric</code><span class="sig-paren">(</span><em>value</em>, <em>cutoff_adapt</em>, <em>cutoff_drop</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.adapt_by_metric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add or remove nodes by necessity of the nodes in approximating a given function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> (<em>double</em>) – function considered to be approximated</li>
+<li><strong>cutoff_adapt</strong> (<em>double</em>) – adapt nodes with impact higher than this number</li>
+<li><strong>cutoff_drop</strong> (<em>double</em>) – drop nodes with impact lower than this number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a> updated in class</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><a class="reference internal" href="#sparse_grid.spgrid_cache" title="sparse_grid.spgrid_cache"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid_cache</span></code></a> is set with the old grid
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">value_cache</span></code> is set with the input value</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.adapt_nodes">
+<code class="descclassname">sparse_grid.</code><code class="descname">adapt_nodes</code><span class="sig-paren">(</span><em>node_indices</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.adapt_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locally adapt the given nodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_indices</strong> (<em>integer</em>) – indices of nodes to adapt</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Updated object with new node points</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">This function is implemented inefficiently, but not optimized because it is only a small share of computation for solving HJB equations</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.clean_nodes">
+<code class="descclassname">sparse_grid.</code><code class="descname">clean_nodes</code><span class="sig-paren">(</span><em>node_indices</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.clean_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean away unnecessary points</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_indices</strong> (<em>bool</em>) – whether to clean away the grid point</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">updated object with nodes cleaned away</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This function makes sure that there aren’t dangling nodes</p>
+</div>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<p class="last">This function is implemented inefficiently, but not optimized because it is only a small share of computation for solving HJB equations</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.compute_derivs">
+<code class="descclassname">sparse_grid.</code><code class="descname">compute_derivs</code><span class="sig-paren">(</span><em>func</em>, <em>dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.compute_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>INTERNAL FUNCTION: Compute forward and backward derivative values for a given
+function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>func</strong> (<em>vector</em>) – vector/matrix of values of the function to take derivative of</li>
+<li><strong>dimension</strong> (<em>int</em>) – coordinate dimension to take derivative in</li>
+<li><strong>d_forward</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.d_forward" title="sparse_grid.d_forward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></a></li>
+<li><strong>d_backward</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.d_backward" title="sparse_grid.d_backward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_backward</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>[dv_dxf, dv_dxb]</p>
+<ul class="simple">
+<li>dv_dxf: forward derivative</li>
+<li>dv_dxb: backward derivative</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">In most regular applications, one can call <a class="reference external" href="http://localhost:8080/MFG/HJB.html#MFG.build_upwind" title="(in MFG v0.1)"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">build_upwind</span></code></a> in <a class="reference external" href="https://sehyoun.com">MFG</a> class, and users do not need to handle this directly.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.compute_nodal_point">
+<code class="descclassname">sparse_grid.</code><code class="descname">compute_nodal_point</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.compute_nodal_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>INTERNAL FUNCTION: Computes node points of the sparse grid</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This value is already set as <a class="reference internal" href="#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a> when <a class="reference internal" href="#sparse_grid.sparse_grid.init_grid" title="sparse_grid.sparse_grid.init_grid"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">init_grid</span></code></a> or <a class="reference internal" href="#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">recompute_grid</span></code></a> are called.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>spgrid</strong> (<em>implicit</em>) – matrix defining basis functions of the grid</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Matrix of sparse grid points</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.create_mapper">
+<code class="descclassname">sparse_grid.</code><code class="descname">create_mapper</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.create_mapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a hash map to store values of the sparse grid</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>values</strong> (<em>double</em>) – values to remember</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>mapping</strong> (<a class="reference external" href="https://www.mathworks.com/help/matlab/ref/containers.map.html">containers.Map</a> )</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>To store a value function of <code class="code docutils literal notranslate"><span class="pre">V</span></code> to be reused later</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">mapping</span> <span class="p">=</span> <span class="n">grid</span><span class="p">.</span><span class="n">mapify</span><span class="p">(</span><span class="n">V</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="#sparse_grid.sparse_grid.update_from_mapper" title="sparse_grid.sparse_grid.update_from_mapper"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">update_from_mapper</span></code></a></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.drop_high_levels">
+<code class="descclassname">sparse_grid.</code><code class="descname">drop_high_levels</code><span class="sig-paren">(</span><em>dimension</em>, <em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.drop_high_levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop grid points over the given max level</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dimension</strong> (<em>integer</em>) – coordinate dimension under consideration</li>
+<li><strong>level</strong> (<em>integer</em>) – drop grid points with <span class="math notranslate nohighlight">\(l\)</span> above the given value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Updates in place</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.fill_ancestors">
+<code class="descclassname">sparse_grid.</code><code class="descname">fill_ancestors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.fill_ancestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill in holes in the ancestor nodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>spgrid</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Updates in place</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">See <a class="reference external" href="https://sehyoun.com">here</a> XXXXXX for why this function is needed.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.find_upwind">
+<code class="descclassname">sparse_grid.</code><code class="descname">find_upwind</code><span class="sig-paren">(</span><em>mu_f</em>, <em>mu_b</em>, <em>dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.find_upwind" title="Permalink to this definition">¶</a></dt>
+<dd><p>INTERNAL FUNCTION: Findings direction for upwind</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mu_f</strong> (<em>vector</em>) – (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a> x 1) vector of “forward” drifts</li>
+<li><strong>mu_b</strong> (<em>vector</em>) – (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a> x 1) vector of “backward” drifts</li>
+<li><strong>dimension</strong> (<em>int</em>) – coordinate dimension the drifts are defined</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>[ind_f, ind_b]</p>
+<ul class="simple">
+<li>ind_f : (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a> x 1) vector whether forward direction
+should be used</li>
+<li>ind_b : (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a> x 1) vector whether backward direciton
+should be used</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>For <span class="math notranslate nohighlight">\(\mu\)</span> that’s not defined separately, you can just call
+find_upwind(mu,mu,dimension)</li>
+<li>One probably want to call methods directly in <a class="reference external" href="https://sehyoun.com">MFG</a> XXXXXXX class instead of working with grids directly.</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.init_grid">
+<code class="descclassname">sparse_grid.</code><code class="descname">init_grid</code><span class="sig-paren">(</span><em>n_dim</em>, <em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.init_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a sparse grid</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n_dim</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a></li>
+<li><strong>level</strong> (<em>integer</em>) – level of sparse grid</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Sets in class</p>
+<ul class="simple">
+<li><a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.boundaries" title="sparse_grid.boundaries"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">boundaries</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_forward" title="sparse_grid.d_forward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_backward" title="sparse_grid.d_backward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_backward</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_midpoint" title="sparse_grid.d_midpoint"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_midpoint</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.dd_center" title="sparse_grid.dd_center"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center</span></code></a></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.recompute_grid">
+<code class="descclassname">sparse_grid.</code><code class="descname">recompute_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.recompute_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>INTERNAL FUNCTION: Set up sparse grid structure details</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n_dim</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a></li>
+<li><strong>spgrid</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a></li>
+<li><strong>shifters</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Sets in class</p>
+<ul class="simple">
+<li><a class="reference internal" href="#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.boundaries" title="sparse_grid.boundaries"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">boundaries</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_forward" title="sparse_grid.d_forward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_backward" title="sparse_grid.d_backward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_backward</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_midpoint" title="sparse_grid.d_midpoint"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_midpoint</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.dd_center" title="sparse_grid.dd_center"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center</span></code></a></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.set_evaluator">
+<code class="descclassname">sparse_grid.</code><code class="descname">set_evaluator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.set_evaluator" title="Permalink to this definition">¶</a></dt>
+<dd><p>INTERNAL FUNCTION: Set up transformation from hierarchical form to nodal form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>spgrid</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a></li>
+<li><strong>shifters</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Updates in class</p>
+<ul class="simple">
+<li><a class="reference internal" href="#sparse_grid.val" title="sparse_grid.val"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">val</span></code></a></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.setup_interpolation">
+<code class="descclassname">sparse_grid.</code><code class="descname">setup_interpolation</code><span class="sig-paren">(</span><em>interp_points</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.setup_interpolation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare interpolation to a given set of points</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interp_points</strong> (<em>matrix</em>) – <p>points to interpolate to</p>
+<ul class="simple">
+<li>row: grid points</li>
+<li>column: coordinate dimenion</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Sets in class<ul class="simple">
+<li><a class="reference internal" href="#sparse_grid.interp_nodes" title="sparse_grid.interp_nodes"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">interp_nodes</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.val_interp" title="sparse_grid.val_interp"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">val_interp</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_forward_interp" title="sparse_grid.d_forward_interp"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward_interp</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_backward_interp" title="sparse_grid.d_backward_interp"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_backward_interp</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_midpoint_interp" title="sparse_grid.d_midpoint_interp"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_midpoint_interp</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.dd_center_interp" title="sparse_grid.dd_center_interp"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center_interp</span></code></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>This function is for setting up interpolation if values are going to be interpolated multiple times.</li>
+<li>A function for interpolating once might be implemented in the future.</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.update_from_mapper">
+<code class="descclassname">sparse_grid.</code><code class="descname">update_from_mapper</code><span class="sig-paren">(</span><em>mapper</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.update_from_mapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get values corresponding from the value functions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mapper</strong> (<em>containers.Map</em>) – output from <a class="reference internal" href="#sparse_grid.sparse_grid.create_mapper" title="sparse_grid.sparse_grid.create_mapper"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">create_mapper</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>value</strong> (double): updated/interpolated values</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>To store a value function of <code class="code docutils literal notranslate"><span class="pre">V</span></code> to be reused later</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">mapping</span> <span class="p">=</span> <span class="n">grid</span><span class="p">.</span><span class="n">mapify</span><span class="p">(</span><span class="n">V</span><span class="p">);</span>
+<span class="c">% Some change to grid</span>
+<span class="n">V_new</span> <span class="p">=</span> <span class="n">grid</span><span class="p">.</span><span class="n">update_from_mapper</span><span class="p">(</span><span class="n">mapping</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="#sparse_grid.sparse_grid.create_mapper" title="sparse_grid.sparse_grid.create_mapper"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">create_mapper</span></code></a></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.update_with_cache">
+<code class="descclassname">sparse_grid.</code><code class="descname">update_with_cache</code><span class="sig-paren">(</span><em>ind_keep</em>, <em>cutoff_drop</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.update_with_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop and add points get new sparse grid</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ind_keep</strong> (<em>bool</em>) – whether to keep the grid point</li>
+<li><strong>cutoff_drop</strong> (<em>double</em>) – From the cached grid drop points with value metric below the cutoff</li>
+<li><strong>value</strong> (<em>double</em>) – function under consideration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Updates in place</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>This function is supposed be called after calling <a class="reference internal" href="#sparse_grid.sparse_grid.adapt_by_metric" title="sparse_grid.sparse_grid.adapt_by_metric"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">adapt_by_metric</span></code></a>. See XXXXXX for an example usage of this function.</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<ul class="last simple">
+<li>This function just updates <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a>, so <a class="reference internal" href="#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a> needs to be called before accessing other parts of the sparse_grid.</li>
+</ul>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial1.html" class="btn btn-neutral" title="Simple Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017-2018, SeHyoun Ahn.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

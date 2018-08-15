@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Bibliography &mdash; Sparse Grid Toolbox 0.1 documentation</title>
+  <title>Installation &mdash; Sparse Grid Toolbox 0.1 documentation</title>
   
 
   
@@ -26,11 +26,11 @@
 
   
   
-    <link rel="stylesheet" href="/static/sphinx_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
 
   
-    <link rel="stylesheet" href="/static/sphinx_static/css/mystyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/mystyle.css" type="text/css" />
   
 
   
@@ -38,10 +38,11 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="Sparse Grid Toolbox 0.1 documentation" href="index.html"/>
-        <link rel="prev" title="License" href="license.html"/> 
+        <link rel="next" title="Simple Tutorial" href="tutorial1.html"/>
+        <link rel="prev" title="Sparse Grid Finite Difference Codes" href="index.html"/> 
 
   
-  <script src="/static/sphinx_static/js/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -93,11 +94,11 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial1.html">Simple Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="technical.html">Technical Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zrefs.html">Bibliography</a></li>
 </ul>
 
             
@@ -142,7 +143,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Bibliography</li>
+      <li>Installation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -159,31 +160,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="bibliography">
-<h1>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this headline">¶</a></h1>
-<p>This is the collection of citations that I deemed to be essential in building this set of codes. We stand on the shoulders of giants, but unfortunately, citing all giants become impossible quickly. You can cite the toolbox as</p>
-<p>I tried my best to give an attribution to</p>
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><ol class="arabic">
+<li><p class="first">Download the files from <a class="reference external" href="https://github.com/sehyoun/sparse_grid">github</a></p>
+</li>
+<li><p class="first">Compile the mex files by running <code class="code docutils literal notranslate"><span class="pre">compile_mex_files</span></code> included in the folder</p>
 <blockquote>
 <div><ul class="simple">
-<li>the introduction of the idea, or</li>
-<li>if “common knowledge” now: the clearest description of the idea <a class="footnote-reference" href="#id3" id="id1">[1]</a> with some weight on accessibility. <a class="footnote-reference" href="#id4" id="id2">[2]</a></li>
+<li>This step might require setting up a MATLAB compatible C++ compiler. See <a class="reference external" href="https://www.mathworks.com/support/compilers.html">MATLAB’s documentation page</a> for details.</li>
 </ul>
 </div></blockquote>
-<p>and each section has descriptions on relevant papers. Please report if I attributed some ideas to the wrong people (for the introduction of idea citation).</p>
-<p id="bibtex-bibliography-zrefs-0"></p>
-<p class="rubric">Footnotes</p>
-<table class="docutils footnote" frame="void" id="id3" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Disclaimer: It is impossible not to be biased in one’s opinion of clarity, and I have not read all papers in everything I have used. Hence, it should be read as “where SeHyoun learned the ideas from.”</td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id4" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>I considered non-open-access journal articles with author’s copy of the paper on author’s webpage as “accessible.”</td></tr>
-</tbody>
-</table>
+</li>
+<li><p class="first">Run <code class="code docutils literal notranslate"><span class="pre">addpath('/location/to/the/folder/src');</span></code> at the beginning of the program execution to include relevant toolbox functions.</p>
+</li>
+</ol>
+</div></blockquote>
 </div>
 
 
@@ -196,8 +189,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="tutorial1.html" class="btn btn-neutral float-right" title="Simple Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="license.html" class="btn btn-neutral" title="License" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="index.html" class="btn btn-neutral" title="Sparse Grid Finite Difference Codes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -235,16 +230,16 @@
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
-      <script type="text/javascript" src="/static/sphinx_static/jquery.js"></script>
-      <script type="text/javascript" src="/static/sphinx_static/underscore.js"></script>
-      <script type="text/javascript" src="/static/sphinx_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
   
   
-    <script type="text/javascript" src="/static/sphinx_static/js/theme.js"></script>
+    <script type="text/javascript" src="_static/js/theme.js"></script>
   
 
   

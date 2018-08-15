@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Sparse Grid Finite Difference Codes &mdash; SeHyoun&#39;s Sparse Grid Codes 0.1 documentation</title>
+  <title>Sparse Grid Finite Difference Codes &mdash; Sparse Grid Toolbox 0.1 documentation</title>
   
 
   
@@ -37,8 +37,8 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="SeHyoun&#39;s Sparse Grid Codes 0.1 documentation" href="#"/>
-        <link rel="next" title="Bibliography" href="zrefs.html"/> 
+    <link rel="top" title="Sparse Grid Toolbox 0.1 documentation" href="#"/>
+        <link rel="next" title="Installation" href="installation.html"/> 
 
   
   <script src="/static/sphinx_static/js/modernizr.min.js"></script>
@@ -57,7 +57,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> SeHyoun's Sparse Grid Codes
+            <a href="#" class="icon icon-home"> Sparse Grid Toolbox
           
 
           
@@ -93,6 +93,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial1.html">Simple Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="technical.html">Technical Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zrefs.html">Bibliography</a></li>
 </ul>
 
@@ -108,7 +112,7 @@
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">SeHyoun's Sparse Grid Codes</a>
+          <a href="#">Sparse Grid Toolbox</a>
         
       </nav>
 
@@ -157,224 +161,36 @@
             
   <div class="section" id="sparse-grid-finite-difference-codes">
 <h1>Sparse Grid Finite Difference Codes<a class="headerlink" href="#sparse-grid-finite-difference-codes" title="Permalink to this headline">¶</a></h1>
-<p>There are already open-source implementations of sparse-grid interpolation toolbox. This toolbox is written to interact with other parts of solving Hamilton-Jacobi-Bellman equation well. Alternately, for more pure use of sparse grids for numerical approximation, refer to:</p>
+<p>This is a set of matlab codes that automates sparse grids so that practitioners can use the sparse grids without having to know the implementational detail. This set of codes were originally written to test using sparse grids in solving Hamilton-Jacobi-Bellman equations. So far even things are only optimized if they are a bottleneck in the entire process of solving HJB equations. People who are more interested in a general application of the sparse grids might want to check out:</p>
 <ul class="simple">
-<li><a class="reference external" href="http://sgpp.sparsegrids.org/">SPGrid++</a></li>
+<li><a class="reference external" href="http://sgpp.sparsegrids.org/">SG++</a></li>
 <li><a class="reference external" href="https://tasmanian.ornl.gov/">Tasmanian</a></li>
 </ul>
+<p>Unfortunately, neither of them contain implementation of finite difference operators, but extending them should be straightforward following [ahn2018sparse]. For low-dimensional problems, there should not be much difference in speed between this implementation and the C++ implementation given above.</p>
 <p>For people who are only interested in the mean-field games application or solving Hamilton-Jacobi-Bellman equations (with finite difference method), you can consider my other toolbox</p>
 <ul class="simple">
 <li>MFG solver <a class="reference external" href="https://sehyoun.com">NOT PUBLIC YET</a></li>
 </ul>
-<p>which the toolbox references to.</p>
-<div class="section" id="methods">
-<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
-<dl class="method">
-<dt id="sparse_grid.sparse_grid.init_grid">
-<code class="descclassname">sparse_grid.</code><code class="descname">init_grid</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.init_grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize a sparse grid</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>n_dim</strong> (<em>implicit</em>) – <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></li>
-<li><strong>level</strong> (<em>integer</em>) – level of sparse grid</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>sets in class</p>
-<ul class="simple">
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">boundaries</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></li>
-</ul>
-</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="sparse_grid.sparse_grid.adapt_nodes">
-<code class="descclassname">sparse_grid.</code><code class="descname">adapt_nodes</code><span class="sig-paren">(</span><em>node_indices</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.adapt_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Locally adapt the given nodes</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_indices</strong> (<em>integer</em>) – indices of nodes to adapt</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">updated object with new node points</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition-todo admonition" id="index-0">
-<p class="first admonition-title">Todo</p>
-<p class="last">This function is implemented inefficiently. Check if this is the bottleneck</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="sparse_grid.sparse_grid.clean_nodes">
-<code class="descclassname">sparse_grid.</code><code class="descname">clean_nodes</code><span class="sig-paren">(</span><em>node_indices</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.clean_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clean away unnecessary points</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_indices</strong> (<em>bool</em>) – whether to clean away the grid point</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">updated object with nodes cleaned away</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This function makes sure that there aren’t dangling nodes</p>
-</div>
-<div class="admonition-todo admonition" id="index-1">
-<p class="first admonition-title">Todo</p>
-<p class="last">This function is implemented inefficiently. Check if this is the bottleneck</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="sparse_grid.sparse_grid.recompute_grid">
-<code class="descclassname">sparse_grid.</code><code class="descname">recompute_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.recompute_grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>INTERNAL FUNCTION: Set up sparse grid structure details</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>n_dim</strong> (<em>implicit</em>) – <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></li>
-<li><strong>spgrid</strong> (<em>implicit</em>) – <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></li>
-<li><strong>shifters</strong> (<em>implicit</em>) – <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>sets in class</p>
-<ul class="simple">
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">boundaries</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></li>
-<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></li>
-</ul>
-</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="sparse_grid.sparse_grid.setup_interpolation">
-<code class="descclassname">sparse_grid.</code><code class="descname">setup_interpolation</code><span class="sig-paren">(</span><em>interp_points</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.setup_interpolation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prepare interpolation to a given set of points</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interp_points</strong> (<em>matrix</em>) – points to interpolat to. i indexes points, j indexes dimenion</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[interp_nodes, d_forward_interp, d_backward_interp, dd_center_interp] set in class</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This function is for setting up interpolation if values are going to be interpolated multiple times.</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="sparse_grid.sparse_grid.compute_derivs">
-<code class="descclassname">sparse_grid.</code><code class="descname">compute_derivs</code><span class="sig-paren">(</span><em>func</em>, <em>dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.compute_derivs" title="Permalink to this definition">¶</a></dt>
-<dd><p>INTERNAL FUNCTION: Compute forward and backward derivative values for a given
-function</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>func</strong> (<em>vector</em>) – vector/matrix of values of the function to take derivative of</li>
-<li><strong>dimension</strong> (<em>int</em>) – coordinate dimension to take derivative in</li>
-<li><strong>d_forward</strong> (<em>implicit</em>) – <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></li>
-<li><strong>d_backward</strong> (<em>implicit</em>) – <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_backward</span></code></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>[dv_dxf, dv_dxb]</p>
-<ul class="simple">
-<li>dv_dxf: forward derivative</li>
-<li>dv_dxb: backward derivative</li>
-</ul>
-</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">In most regular applications, one can call <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">build_upwind</span></code>, and hence do not need to consider derivative values.</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="sparse_grid.sparse_grid.find_upwind">
-<code class="descclassname">sparse_grid.</code><code class="descname">find_upwind</code><span class="sig-paren">(</span><em>mu_f</em>, <em>mu_b</em>, <em>dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.find_upwind" title="Permalink to this definition">¶</a></dt>
-<dd><p>INTERNAL FUNCTION: Findings direction for upwind</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mu_f</strong> (<em>vector</em>) – (<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code> x 1) vector of “forward” drifts</li>
-<li><strong>mu_b</strong> (<em>vector</em>) – (<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code> x 1) vector of “backward” drifts</li>
-<li><strong>dimension</strong> (<em>int</em>) – coordinate dimension the drifts are defined</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>[ind_f, ind_b]</p>
-<ul class="simple">
-<li>ind_f : (<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code> x 1) vector whether forward direction
-should be used</li>
-<li>ind_b : (<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code> x 1) vector whether backward direciton
-should be used</li>
-</ul>
-</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<ul class="last simple">
-<li>For <span class="math notranslate nohighlight">\(\mu\)</span> that’s not defined separately, you can just call
-find_upwind(mu,mu,dimension)</li>
-<li>One probably want to call methods directly in MFG class instead of working with grids directly.</li>
-</ul>
-</div>
-</dd></dl>
-
+<p>to which this toolbox makes references.</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial1.html">Simple Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial1.html#function-approximation">Function Approximation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="technical.html">Technical Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="technical.html#properties">Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="technical.html#methods">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#clause-bsd-license">2-Clause BSD License</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="zrefs.html">Bibliography</a></li>
 </ul>
-</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -395,7 +211,7 @@ find_upwind(mu,mu,dimension)</li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="zrefs.html" class="btn btn-neutral float-right" title="Bibliography" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -405,7 +221,7 @@ find_upwind(mu,mu,dimension)</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, SeHyoun Ahn.
+        &copy; Copyright 2017-2018, SeHyoun Ahn.
 
     </p>
   </div>
@@ -430,7 +246,7 @@ find_upwind(mu,mu,dimension)</li>
             VERSION:'0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
+            HAS_SOURCE:  false,
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
