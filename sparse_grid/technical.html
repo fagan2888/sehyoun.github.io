@@ -38,8 +38,8 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="Sparse Grid Toolbox 0.1 documentation" href="index.html"/>
-        <link rel="next" title="License" href="license.html"/>
-        <link rel="prev" title="Simple Tutorial" href="tutorial1.html"/> 
+        <link rel="next" title="Potential Updates" href="updates.html"/>
+        <link rel="prev" title="Adaptive Sparse Grid" href="tutorial2.html"/> 
 
   
   <script src="/static/sphinx_static/js/modernizr.min.js"></script>
@@ -95,12 +95,13 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial1.html">Simple Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Technical Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#properties">Properties</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="updates.html">Potential Updates</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zrefs.html">Bibliography</a></li>
 </ul>
@@ -166,7 +167,7 @@
             
   <div class="section" id="technical-documentation">
 <h1>Technical Documentation<a class="headerlink" href="#technical-documentation" title="Permalink to this headline">¶</a></h1>
-<p>This is the technical documentation. See <a class="reference internal" href="tutorial1.html#tutorial"><span class="std std-ref">Simple Tutorial</span></a> instead to get started.</p>
+<p>This is the technical documentation. See <a class="reference internal" href="tutorials.html#tutorial"><span class="std std-ref">Tutorials</span></a> instead to get started.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">Certain functions make certain assumptions about the internal states. Under the object-oriented programming, this is solved by using “getters/setters” while forbidding access to internal states. Since the class is small/simple, I left all attributes accessible at any time, and opted to document on the function side. Everything can be redefined from <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a> and <a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a>, so when in doubt make sure that they are correct and call <a class="reference internal" href="#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a>.</p>
@@ -230,7 +231,7 @@
 </pre></div>
 </div>
 <p>Hence, to compute the backward difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_backward</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_backward</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </td>
@@ -257,7 +258,7 @@
 </pre></div>
 </div>
 <p>Hence, to compute the backward difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_backward_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_backward_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </td>
@@ -287,7 +288,7 @@
 </pre></div>
 </div>
 <p>Hence, to compute the forward difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_forward</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_forward</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </td>
@@ -314,7 +315,7 @@
 </pre></div>
 </div>
 <p>Hence, to compute the forward difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_forward_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_forward_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </td>
@@ -344,7 +345,7 @@
 </pre></div>
 </div>
 <p>Hence, to compute the forward difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_midpoint</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_midpoint</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </td>
@@ -371,7 +372,7 @@
 </pre></div>
 </div>
 <p>Hence, to compute the central difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_midpoint_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_midpoint_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </td>
@@ -401,7 +402,7 @@
 </pre></div>
 </div>
 <p>Hence, to compute the second order difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
-<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">dd_center</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">dd_center</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </td>
@@ -428,7 +429,7 @@
 </pre></div>
 </div>
 <p>Hence, to compute the second order difference of the <span class="math notranslate nohighlight">\(\cos(x_2)\)</span> in 2nd dimension, we can call</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">dd_center_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">dd_center_interp</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
 </td>
@@ -612,7 +613,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a><span class="math notranslate nohighlight">\(\times\)</span><a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a>) matrix of doubles</p>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a> cell array of (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a>) (column) vector of doubles</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Coordinate values of the grid points.</p>
@@ -732,7 +733,7 @@ function</p>
 </table>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">In most regular applications, one can call <a class="reference external" href="http://localhost:8080/MFG/HJB.html#MFG.build_upwind" title="(in MFG v0.1)"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">build_upwind</span></code></a> in <a class="reference external" href="https://sehyoun.com">MFG</a> class, and users do not need to handle this directly.</p>
+<p class="last">In most regular applications, one can call <code class="xref mat mat-func docutils literal notranslate"><span class="pre">build_upwind</span></code> in <a class="reference external" href="https://sehyoun.com">MFG</a> class, and users do not need to handle this directly.</p>
 </div>
 </dd></dl>
 
@@ -1064,10 +1065,10 @@ find_upwind(mu,mu,dimension)</li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="updates.html" class="btn btn-neutral float-right" title="Potential Updates" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tutorial1.html" class="btn btn-neutral" title="Simple Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tutorial2.html" class="btn btn-neutral" title="Adaptive Sparse Grid" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

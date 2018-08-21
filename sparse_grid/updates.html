@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>License &mdash; Sparse Grid Toolbox 0.1 documentation</title>
+  <title>Potential Updates &mdash; Sparse Grid Toolbox 0.1 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="Sparse Grid Toolbox 0.1 documentation" href="index.html"/>
-        <link rel="next" title="Bibliography" href="zrefs.html"/>
-        <link rel="prev" title="Potential Updates" href="updates.html"/> 
+        <link rel="next" title="License" href="license.html"/>
+        <link rel="prev" title="Technical Documentation" href="technical.html"/> 
 
   
   <script src="/static/sphinx_static/js/modernizr.min.js"></script>
@@ -97,8 +97,8 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="technical.html">Technical Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="updates.html">Potential Updates</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">License</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Potential Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zrefs.html">Bibliography</a></li>
 </ul>
 
@@ -144,7 +144,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>License</li>
+      <li>Potential Updates</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -161,30 +161,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="license">
-<h1>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
-<p><strong>BSD 2-Clause License</strong></p>
-<p>Copyright (c) 2017-2018, SeHyoun Ahn</p>
-<p>All rights reserved.</p>
-<p>Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:</p>
-<ul class="simple">
-<li>Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.</li>
-<li>Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.</li>
+  <div class="section" id="potential-updates">
+<h1>Potential Updates<a class="headerlink" href="#potential-updates" title="Permalink to this headline">¶</a></h1>
+<p>This toolbox is written mainly for personal and work related use at <a class="reference external" href="https://norges-bank.no">Norges Bank</a>. Hence, things are written for specific applications. General extensions are left for future if the expected payoff for the current application is small. Create an issue in <a class="reference external" href="https://github.com/sehyoun/sparse_grid">github</a> if you believe some extension might be useful for you application.</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>Separate out <a class="reference internal" href="technical.html#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a> to allow computing only the required operators.</li>
+<li>Create an option to treat the boundary condition differently for <a class="reference internal" href="technical.html#sparse_grid.dd_center" title="sparse_grid.dd_center"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center</span></code></a>. Currently, it assumes that the boundary is a reflecting boundary.</li>
+<li>Only multithreading is supported via openmp. In theory, the problem can be extensioned with MPI to use even more compute nodes. Currently, the internal problem size is not large enough to require MPI setup.</li>
+<li>Adaptation is done in an (asymptotical) inefficient manner. As the scale of the problem increases, this part can take a larger share of the program execution, but currently, adaptation takes less than a fraction of one percent of the execution time.</li>
 </ul>
-<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+</div>
 </div>
 
 
@@ -197,10 +185,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="zrefs.html" class="btn btn-neutral float-right" title="Bibliography" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="updates.html" class="btn btn-neutral" title="Potential Updates" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="technical.html" class="btn btn-neutral" title="Technical Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
