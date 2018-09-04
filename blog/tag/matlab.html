@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>SeHyoun's Blog - Calculations</title>
+        <title>SeHyoun's Blog - MATLAB</title>
 <link href="https://sehyoun.com/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://sehyoun.com/static/js/bootstrap.min.js"></script>
 <link href="https://sehyoun.com/static/css/style.css" rel="stylesheet" type="text/css">
-<script src="https://sehyoun.com/static/js/responsive.js"></script>        <link rel="stylesheet" href="https://sehyoun.com/blog/theme/css/main.css" />
+<script src="https://sehyoun.com/static/js/responsive.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>        <link rel="stylesheet" href="https://sehyoun.com/blog/theme/css/main.css" />
         <link href="https://sehyoun.com/blog/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="SeHyoun's Blog Atom Feed" />
         <link href="https://sehyoun.com/blog/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="SeHyoun's Blog RSS Feed" />
 
@@ -16,6 +17,7 @@
             <![endif]-->
 <link href="https://sehyoun.com/static/css/style.css" rel="stylesheet" type="text/css">
 <script src="https://sehyoun.com/static/js/responsive.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <body id="index" class="home">
@@ -92,7 +94,7 @@
 
 	  <nav><ul>
 	        <li><a href="#">Blog</a></li>
-                    <li class="active"><a href="https://sehyoun.com/blog/category/calculations.html">Calculations</a></li>
+                    <li><a href="https://sehyoun.com/blog/category/programming.html">Programming</a></li>
 		<li><a href="https://sehyoun.com/blog/tags.html">Tags</a></li>
            </ul></nav>
 	   
@@ -103,16 +105,16 @@
     <div class="col-md-6 col-sm-12">
     <aside id="featured" class="body">
     <article>
-      <h1 class="entry-title"><a href="https://sehyoun.com/blog/20170714_finite_volume_FPE.html">Finite Volume Method for Fokker-Planck Equation</a></h1>
+      <h1 class="entry-title"><a href="https://sehyoun.com/blog/20180904_using-matlab-with-jupyter-notebook.html">Using MATLAB with Jupyter Notebook</a></h1>
 <div class="post-info">
-	<abbr class="published" title="2017-07-14T20:25:00-04:00">
-	  Published: Fri 14 July 2017
+	<abbr class="published" title="2018-09-04T18:25:00-04:00">
+	  Published: Tue 04 September 2018
     </abbr>
 
     <address class="vcard author">
       By          <a class="url fn" href="https://sehyoun.com/blog/author/sehyoun-ahn.html">SeHyoun Ahn</a
     </address>
-<p>Tags: <a href="https://sehyoun.com/blog/tag/fokker-planck-equation.html">Fokker-Planck Equation</a> <a href="https://sehyoun.com/blog/tag/finite-volume.html">Finite Volume</a> <a href="https://sehyoun.com/blog/tag/numerical-methods.html">Numerical Methods</a> <a href="https://sehyoun.com/blog/tag/pde.html">PDE</a> </p></div><style type="text/css">/*!
+<p>Tags: <a href="https://sehyoun.com/blog/tag/matlab.html">MATLAB</a> <a href="https://sehyoun.com/blog/tag/jupyter-notebook.html">Jupyter Notebook</a> <a href="https://sehyoun.com/blog/tag/python.html">Python</a> </p></div><style type="text/css">/*!
 *
 * IPython notebook
 *
@@ -269,6 +271,7 @@ div.cell.selected.jupyter-soft-selected {
   }
 }
 div.inner_cell {
+  min-width: 0;
   /* Old browsers */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -289,11 +292,6 @@ div.inner_cell {
   box-flex: 1;
   /* Modern browsers */
   flex: 1;
-}
-@-moz-document url-prefix() {
-  div.inner_cell {
-    overflow-x: hidden;
-  }
 }
 /* input_area and input_prompt must match in top border and margin for alignment */
 div.input_area {
@@ -1088,116 +1086,271 @@ h6:hover .anchor-link {
 
 .ansi-bold { font-weight: bold; }
 </style>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Finite-Volumen-Method-for-Fokker-Planck-Equation">Finite Volumen Method for Fokker-Planck Equation<a class="anchor-link" href="#Finite-Volumen-Method-for-Fokker-Planck-Equation">¶</a></h1><p>The dynamics of the distribution of the population in mean-field games are given by the Fokker-Planck equation (FPE). In most cases, FPE can not be solved analytically, and we have to solve it numerically. All numerical approximations introduce errors, but some errors matter more than others. In the case of FPE, since we are tracking the dynamics of the distribution of population, the highest priority in approximation is that the mass of people do not change due to numerically approximation scheme. Further, if the discretization does not conserve mass, the steady-state distribution does not even exist and equilibrium distribution can not be found with the discretization. Hence, the discretization has to be conservative/mass-preserving. In this post, the finite volume discretization will be shown. You can check wikipedia description of finite volume method <a href="https://en.wikipedia.org/wiki/Finite_volume_method"> here</a>.</p>
-<p>If you only care about the discretization itself, you can just look at the resulting scheme at the bottom without reading through the cacluation.</p>
+<h1 id="Using-MATLAB-with-Jupyter-Notebook">Using MATLAB with Jupyter Notebook<a class="anchor-link" href="#Using-MATLAB-with-Jupyter-Notebook">¶</a></h1><p>(pdf of this post is available: <a href="Using-MATLAB-with-Jupyter-Notebook.pdf">here</a>)</p>
+<p>This is a meta-post about blogging. I use Jupyter Notebook with Pelican to create blog posts. I might convert my codes to some other language (Julia) in the future, but I already have significant codebase built up in MATLAB that the up-front cost of making the jump is large. However, with MATLAB-Python integration it is not too painful to use them together, and using this toolchain works better (for me) than using the <a href="https://www.mathworks.com/help/matlab/ref/publish.html">publish</a> function I have used before to generate replication pages.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Problem-Setup">Problem Setup<a class="anchor-link" href="#Problem-Setup">¶</a></h2><p>For simplicity, one-dimensional FPE will be solved here, but in principle, the generalization to higher dimension is straight forward. For one-dimension, the FPE is given by
-$$\begin{align*}
-\frac{dg}{dt} = -\frac{d}{dx}\left(sg\right) + \frac{d}{dx}\left(\nu\frac{dg}{dx}\right)
-\end{align*}$$
-where $x\in[0,1]$, $s(x):[0,1]\rightarrow\mathbb{R}$.</p>
-<p>For the derivation of the FPE, you can see the fantastic post by Terry Tao <a href="https://terrytao.wordpress.com/2010/01/07/mean-field-equations/">here</a>.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Discretization">Discretization<a class="anchor-link" href="#Discretization">¶</a></h2><p>Let arbitrarily $x_0(=0),x_1,\ldots,x_n(=1)$ be the points of discretization and let $G_i$ be the total mass in $\left[\frac{x_{i-1}+x_{i}}{2},\frac{x_i+x_{i+1}}{2}\right]$, i.e.,
-$$\begin{align*}
-G_i =\int_{\frac{x_{i-1}+x_{i}}{2}}^{\frac{x_{i}+x_{i+1}}{2}}g(x)\,dx
-\end{align*}$$
-where $x_{-1} = x_0$ and $x_{n+1} = x_n$ for notational simplicity.</p>
+<h2 id="Installing-MATLAB-engine">Installing MATLAB engine<a class="anchor-link" href="#Installing-MATLAB-engine">¶</a></h2><p>First, to be able to call MATLAB from python, one needs to install the matlab engine. One can read about the MATLAB-python integration at Mathworks's <a href="https://www.mathworks.com/help/matlab/matlab-engine-for-python.html">documentation page</a>.</p>
+<h3 id="Aside">Aside<a class="anchor-link" href="#Aside">¶</a></h3><p>The <code><setup.py></code> provided with MATLAB (2017b) does not find the proper location for installing the proper files if you are using Anaconda instead of MATLAB. However, since the setup file just finds python location and places a folder there, patching it to work with Anaconda is simple.</p>
+<pre><code>1. Find the location of the matlab module folder by looking at the output from running <python setup.py install>
+2. Copy the folder and place it into anaconda3/lib/python3.x/site-packages
+
+</code></pre>
+<p>This should be enough to get matlab engine to function properly with Anaconda.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Given the definitions, we have
-$$\begin{align*}
-\frac{dG_i}{dt} & = \int_{\frac{x_{i-1}+x_{i}}{2}}^{\frac{x_{i}+x_{i+1}}{2}}\frac{g}{dt}\,dx\\
-    & = \int_{\frac{x_{i-1}+x_{i}}{2}}^{\frac{x_{i}+x_{i+1}}{2}} \frac{d}{dx}(sg) + \frac{d}{dx}\left(\nu\frac{dg}{dx}\right)\, dx\\
-    & = \left. \left(sg + \nu\frac{dg}{dx}\right) \right|_{\frac{x_{i-1}+x_{i}}{2}}^{\frac{x_{i}+x_{i+1}}{2}}
-\end{align*}$$</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This exhibits the intuition for the finite-volume method clearly. The change in the total mass in cell $i$ is given by the flow into and out of the cell. Since the flow out of a cell is a flow into another cell, the method conserves mass.</p>
+<h2 id="Magic-Method-for-Jupyter-Notebook">Magic Method for Jupyter Notebook<a class="anchor-link" href="#Magic-Method-for-Jupyter-Notebook">¶</a></h2><p>Now, one can just follow the documentation from MATLAB to call MATLAB from Python, but using it at this setup is annoying from Python side as the output is sent to the stdout of the OS (command line calling jupyter notebook in linux). However, this is easy to fix by declaring a magic method within Jupyter Notebook. The function that I ususally setup is</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [1]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matlab.engine</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">IPython.core.magic</span> <span class="k">import</span> <span class="n">register_cell_magic</span>
+<span class="n">ip</span> <span class="o">=</span> <span class="n">get_ipython</span><span class="p">()</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+<span class="n">err</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+
+<span class="c1"># Setup matlab cell magic #</span>
+<span class="nd">@register_cell_magic</span>
+<span class="k">def</span> <span class="nf">matlab_magic</span><span class="p">(</span><span class="n">line</span><span class="p">,</span><span class="n">cell</span><span class="p">):</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">truncate</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">err</span><span class="o">.</span><span class="n">truncate</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">err</span><span class="o">.</span><span class="n">truncate</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="s1">'''</span><span class="si">{line}</span><span class="s1">.eval("""</span><span class="si">{cell}</span><span class="s1">""", nargout=0, stdout=out, stderr=err)'''</span>
+    <span class="n">ip</span><span class="o">.</span><span class="n">run_cell</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Approximations">Approximations<a class="anchor-link" href="#Approximations">¶</a></h3><p>However, this scheme is not complete yet. The only values on the discretized grid is given by the total mass $G_i$ instead of $g$'s or $\frac{dg}{dx}$. Hence, they need to be approximated from $G_i$. This is straightforward by taking the density of a given cell in the center to equal to the average density of the cell. In equations, we are making the approximation
-$$\begin{align*}
-g(x_i) \approx G_i \left/\frac{x_{i+1}-x_{i-1}}{2}\right. = \frac{2G_i}{x_{i+1}-{x_{i-1}}}
-\end{align*}$$
-Given this approximation, we can also approximate the derivative by using finite difference:
-$$\begin{align*}
-\left.\frac{dg}{dx}\right|_{x=\frac{x_i+x_{i+1}}{2}} \approx \frac{g(x_{i+1})-g(x_i)}{x_{i+1}-x_i} = \frac{2G_{i+1}}{(x_{i+2}-x_{i})(x_{i+1}-x_i)} - \frac{2G_i}{(x_{i+1}-x_{i-1})(x_{i+1}-x_i)}
-\end{align*}$$</p>
+<p>This function defines the <a href="https://ipython.readthedocs.io/en/stable/interactive/magics.html">magic method</a> %%matlab_magic so that one can call MATLAB without having to call through the "engine" syntax. The general syntax of a magic line is</p>
+<pre><code>%%matlab_magic name_of_matlab_engine
+
+any matlab codes
+
+</code></pre>
+<p>This is basically all that is necessary to call MATLAB from Jupyter Notebook. To see that it works properly, let's see a few examples.</p>
+<p>First we start an instance of MATLAB.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [2]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">eng</span> <span class="o">=</span> <span class="n">matlab</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">start_matlab</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Above approximation handles the $\frac{dg}{dx}$ terms, but for $sg$-term, further approximations are needed as they are evaluated in between points of evaluation. We have approximation of $g(x_i)$'s from the discretization. If one were solving mean-field games, the function $s(x)$ is also given as approximations with values known at grid points. Hence, given $s(x_i)$'s and $g(x_i)$'s, any interpolation scheme can be used to approximate $s\left(\frac{x_i+x_{i+1}}{2}\right)g\left(\frac{x_i+x_{i+1}}{2}\right)$.</p>
-<p>One can use a direct linear interpolation between the product of the two values, i.e.,
-$$\begin{align*}
-s\left(\frac{x_i+x_{i+1}}{2}\right)g\left(\frac{x_i+x_{i+1}}{2}\right) \approx \frac{s_ig_i + s_{i+1}g_{i+1}}{2}
-\end{align*}$$</p>
-<p>Or one can use upwind style approximation given by
-$$\begin{align*}
-s\left(\frac{x_i+x_{i+1}}{2}\right)g\left(\frac{x_i+x_{i+1}}{2}\right) \approx s_ig_i\mathbb{1}_{(s_i>0)} + s_{i+1}g_{i+1}\mathbb{1}_{(s_{i+1}<0)}
-\end{align*}$$</p>
+<p>We can define a variable and check the value following the same syntax as in MATLAB. In fact, one can just consider anything one runs within matlab_magic to be ran within MATLAB.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="k">matlab_magic</span> eng
+
+x = 5;
+disp(x);
+x
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>     5
+
+
+x =
+
+     5
+
+
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Finite-Volume-Scheme">Finite-Volume Scheme<a class="anchor-link" href="#Finite-Volume-Scheme">¶</a></h1><p>Putting everything (with upwind approximation) together, we get
-$$\begin{align*}
-\frac{dG_i}{dt} = & - s_i \frac{2G_i}{x_{i+1}-x_{i-1}} \mathbb{1}_{s_i>0} - s_{i+1} \frac{2G_{i+1}}{x_{i+2}-x_{i}}\mathbb{1}_{s_{i+1}<0} + s_{i-1} \frac{2G_{i-1}}{x_{i}-x_{i-2}} \mathbb{1}_{s_{i-1}>0} + s_{i} \frac{2G_{i}}{x_{i+1}-x_{i-1}} \mathbb{1}_{s_i<0} \\
-    & + \nu\left( \frac{2G_{i+1}}{(x_{i+2}-x_{i})(x_{i+1}-x_i)} - \frac{2G_i}{(x_{i+1}-x_{i-1})(x_{i+1}-x_i)} - \frac{2G_{i}}{(x_{i+1}-x_{i-1})(x_{i}-x_{i-1})} + \frac{2G_{i-1}}{(x_{i}-x_{i-2})(x_{i}-x_{i-1})}\right)
-\end{align*}$$</p>
-<p>Note that $G_i$ stands for the weight of the cell, and $G_i$ needs to be adjusted if you want "density" for plotting, for example.
-$$\begin{align*}
-g(x_i) \approx \frac{2G_i}{x_{i+1}-{x_{i-1}}}
-\end{align*}$$</p>
+<p>Most functions work as expected and one can make plots as well, and it will call up a matlab figure. However, there is no automatic method to make the plots inline unlike what you can do with matplotlib.</p>
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="k">matlab_magic</span> eng
+
+y = linspace(0,1,10);
+disp(y);
+plot(y);
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  Columns 1 through 7
+
+         0    0.1111    0.2222    0.3333    0.4444    0.5556    0.6667
+
+  Columns 8 through 10
+
+    0.7778    0.8889    1.0000
+
+
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>One can however, save the figure and attach the image to Jupyter Notebook without much problem via</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [5]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="k">matlab_magic</span> eng
+
+saveas(gcf, 'using_matlab_with_jupyter_notebook_figure1.png');
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And attach figure following the syntax</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>![alt text here](./using_matlab_with_jupyter_notebook_figure1.png)</code></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img alt="Figure1" src="using_matlab_with_jupyter_notebook_figure1.png" style="max-width:100%;"></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can pretty much use Jupyter Notebook features with underlying engine of MATLAB with this setup now.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Make-MATLAB-Magic-Persistent">Make MATLAB Magic Persistent<a class="anchor-link" href="#Make-MATLAB-Magic-Persistent">¶</a></h2><p>One can also make the magic function automatic to all jupyter notebook by update the startup file located at <code><~/.ipython/profile_default/startup/start.ipy></code> in linux (for windows or mac OSes, search for corresponding locations).</p>
+<p>One can just place the script given above in In [1] into the file and save. MATLAB magic should be ready with all new jupyter notebook at startup.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Good-Bye">Good-Bye<a class="anchor-link" href="#Good-Bye">¶</a></h2><p>Finally, we end the post by closing the MATLAB engine via</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">eng</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
@@ -1226,74 +1379,10 @@ g(x_i) \approx \frac{2G_i}{x_{i+1}-{x_{i-1}}}
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
-<p>There are <a href="https://sehyoun.com/blog/20170714_finite_volume_FPE.html#disqus_thread">comments</a>.</p>    </article>
+<p>There are <a href="https://sehyoun.com/blog/20180904_using-matlab-with-jupyter-notebook.html#disqus_thread">comments</a>.</p>    </article>
     </aside><!-- /#featured -->
     </div>
-    <div class="col-md-6 col-sm-12">
-    <section id="content">
-      <h1>Other articles</h1>
-      <hr />
-      <ol id="posts-list" class="hfeed">
 	    
-
-    <div class="container-fluid">
-      <li><article class="hentry">
-		<header>
-	      <h1><a href="https://sehyoun.com/blog/20170710_ces-production.html" rel="bookmark"
-			 title="Permalink to CES Production Function">CES Production Function</a></h1>
-		</header>
-		<div class="entry-content">
-		  
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Calculation-for-CES-Production-Function">Calculation for CES Production Function<a class="anchor-link" href="#Calculation-for-CES-Production-Function">¶</a></h1><p>I found myself doing this calculation over and over again, so I am just writing the post so that it might save people some time in not repeating the calculation.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>A firm can produce using production function using differentiated input of</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-$$Y = \left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}$$
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><span id="main_text"></span> When each differentiate intermediate inputs are priced at $p_j$, then the firm will solve a cost minimization problem of</p>
-		  
-		  <a class="readmore" href="https://sehyoun.com/blog/20170710_ces-production.html">read more</a>
-<p>There are <a href="https://sehyoun.com/blog/20170710_ces-production.html#disqus_thread">comments</a>.</p><div class="post-info">
-	<abbr class="published" title="2017-07-10T18:25:00-04:00">
-	  Published: Mon 10 July 2017
-    </abbr>
-
-    <address class="vcard author">
-      By          <a class="url fn" href="https://sehyoun.com/blog/author/sehyoun-ahn.html">SeHyoun Ahn</a
-    </address>
-<p>Tags: <a href="https://sehyoun.com/blog/tag/ces.html">CES</a> <a href="https://sehyoun.com/blog/tag/production.html">Production</a> <a href="https://sehyoun.com/blog/tag/calculus-of-variations.html">Calculus of Variations</a> </p></div>		</div><!-- /.entry-content -->
-       </article></li>
-	    
-          </ol><!-- /#posts-list -->
-        </section><!-- /#content -->
-        </div>
-
 	
     </div>
 

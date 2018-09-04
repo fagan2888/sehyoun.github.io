@@ -1,41 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>SeHyoun's Blog</title><link>https://sehyoun.com/blog/</link><description></description><lastBuildDate>Fri, 14 Jul 2017 20:25:00 -0400</lastBuildDate><item><title>Finite Volume Method for Fokker-Planck Equation</title><link>https://sehyoun.com/blog/20170714_finite_volume_FPE.html</link><description>
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
+<rss version="2.0"><channel><title>SeHyoun's Blog</title><link>https://sehyoun.com/blog/</link><description></description><lastBuildDate>Tue, 04 Sep 2018 18:25:00 -0400</lastBuildDate><item><title>Using MATLAB with Jupyter Notebook</title><link>https://sehyoun.com/blog/20180904_using-matlab-with-jupyter-notebook.html</link><description>
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h1 id="Finite-Volumen-Method-for-Fokker-Planck-Equation"&gt;Finite Volumen Method for Fokker-Planck Equation&lt;a class="anchor-link" href="#Finite-Volumen-Method-for-Fokker-Planck-Equation"&gt;¶&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;The dynamics of the distribution of the population in mean-field games are given by the Fokker-Planck equation (FPE). In most cases, FPE can not be solved analytically, and we have to solve it numerically. All numerical approximations introduce errors, but some errors matter more than others. In the case of FPE, since we are tracking the dynamics of the distribution of population, the highest priority in approximation is that the mass of people do not change due to numerically approximation scheme. Further, if the discretization does not conserve mass, the steady-state distribution does not even exist and equilibrium distribution can not be found with the discretization. Hence, the discretization has to be conservative/mass-preserving. In this post, the finite volume discretization will be shown. You can check wikipedia description of finite volume method &lt;a href="https://en.wikipedia.org/wiki/Finite_volume_method"&gt; here&lt;/a&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">SeHyoun Ahn</dc:creator><pubDate>Fri, 14 Jul 2017 20:25:00 -0400</pubDate><guid isPermaLink="false">tag:sehyoun.com,2017-07-14:/blog/20170714_finite_volume_FPE.html</guid><category>Fokker-Planck Equation</category><category>Finite Volume</category><category>Numerical Methods</category><category>PDE</category></item><item><title>CES Production Function</title><link>https://sehyoun.com/blog/20170710_ces-production.html</link><description>
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
-&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h1 id="Calculation-for-CES-Production-Function"&gt;Calculation for CES Production Function&lt;a class="anchor-link" href="#Calculation-for-CES-Production-Function"&gt;¶&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;I found myself doing this calculation over and over again, so I am just writing the post so that it might save people some time in not repeating the calculation.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
-&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;A firm can produce using production function using differentiated input of&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
-&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-$$Y = \left(\int y_j^{\frac{\varepsilon -1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}$$
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;
-&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
-&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;&lt;span id="main_text"&gt;&lt;/span&gt; When each differentiate intermediate inputs are priced at $p_j$, then the firm will solve a cost minimization problem of&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">SeHyoun Ahn</dc:creator><pubDate>Mon, 10 Jul 2017 18:25:00 -0400</pubDate><guid isPermaLink="false">tag:sehyoun.com,2017-07-10:/blog/20170710_ces-production.html</guid><category>CES</category><category>Production</category><category>Calculus of Variations</category></item></channel></rss>
+&lt;h1 id="Using-MATLAB-with-Jupyter-Notebook"&gt;Using MATLAB with Jupyter Notebook&lt;a class="anchor-link" href="#Using-MATLAB-with-Jupyter-Notebook"&gt;¶&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;(pdf of this post is available: &lt;a href="Using-MATLAB-with-Jupyter-Notebook.pdf"&gt;here&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;This is a meta-post about blogging. I use Jupyter Notebook with Pelican to create blog posts. I might convert my codes to some other language (Julia) in the future, but I already have significant codebase built up in MATLAB that the up-front cost of making the jump is large. However, with MATLAB-Python integration it is not too painful to use them together, and using this toolchain works better (for me) than using the &lt;a href="https://www.mathworks.com/help/matlab/ref/publish.html"&gt;publish&lt;/a&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">SeHyoun Ahn</dc:creator><pubDate>Tue, 04 Sep 2018 18:25:00 -0400</pubDate><guid isPermaLink="false">tag:sehyoun.com,2018-09-04:/blog/20180904_using-matlab-with-jupyter-notebook.html</guid><category>MATLAB</category><category>Jupyter Notebook</category><category>Python</category></item></channel></rss>
