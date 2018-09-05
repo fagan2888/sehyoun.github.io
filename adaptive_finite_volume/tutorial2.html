@@ -228,7 +228,7 @@
 <span class="o">&gt;&gt;</span> <span class="n">scatter</span><span class="p">(</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">1</span><span class="p">),</span> <span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">));</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/afv_tutorial2_fig_1.png"><img alt="_images/afv_tutorial2_fig_1.png" class="align-center" src="_images/afv_tutorial2_fig_1.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial2_fig_1.png"><img alt="images/afv_tutorial2_fig_1.png" class="align-center" src="images/afv_tutorial2_fig_1.png" style="width: 100%;" /></a>
 <p>At this point, the grid only has the information on the cells, but not on the edges. The edge information can be updated via <a class="reference internal" href="technical.html#afv_grid.extract_edges" title="afv_grid.extract_edges"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">extract_edges</span></code></a>. Whenever the grid structure changes, <a class="reference internal" href="technical.html#afv_grid.extract_edges" title="afv_grid.extract_edges"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">extract_edges</span></code></a> needs to be called to make sure that the edge structure is consistent.</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">grid</span><span class="p">.</span><span class="n">extract_edges</span><span class="p">();</span>
 </pre></div>
@@ -239,7 +239,7 @@
 <span class="o">&gt;&gt;</span> <span class="n">scatter</span><span class="p">(</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">1</span><span class="p">),</span> <span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">),</span> <span class="s">&#39;r.&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/afv_tutorial2_fig_2.png"><img alt="_images/afv_tutorial2_fig_2.png" class="align-center" src="_images/afv_tutorial2_fig_2.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial2_fig_2.png"><img alt="images/afv_tutorial2_fig_2.png" class="align-center" src="images/afv_tutorial2_fig_2.png" style="width: 100%;" /></a>
 <p>Now, we are ready to implement the Ornstein-Uhlenbeck process. The equation is completely defined with drifts and diffusion terms corresponding to the edges. The data for edges are stored as a vector. However, the drift values needs to be difference depending on which direction the edge divides. The normal direction of the edge are stored as <a class="reference internal" href="technical.html#afv_grid.e2dir" title="afv_grid.e2dir"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">e2dir</span></code></a>. Hence, the drift terms can be implemented with</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">x_i</span> <span class="p">=</span> <span class="n">grid</span><span class="p">.</span><span class="n">edge_midpoints</span><span class="p">();</span>
 <span class="o">&gt;&gt;</span> <span class="k">for</span> <span class="n">iter_dim</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_dim</span>
@@ -272,7 +272,7 @@
 <span class="o">&gt;&gt;</span> <span class="n">scatter3</span><span class="p">(</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">1</span><span class="p">),</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">),</span><span class="n">g_true</span><span class="p">(</span><span class="n">x_i</span><span class="p">),</span><span class="s">&#39;.&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/afv_tutorial2_fig_3.png"><img alt="_images/afv_tutorial2_fig_3.png" class="align-center" src="_images/afv_tutorial2_fig_3.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial2_fig_3.png"><img alt="images/afv_tutorial2_fig_3.png" class="align-center" src="images/afv_tutorial2_fig_3.png" style="width: 100%;" /></a>
 <p>Finally, the grid structure is independent of the parameter values, so the grid does not have to be reset with new parameters values. Hence, consider a new set of parameters</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}&amp;\vec{\mu} = \begin{bmatrix}0.35\\0.35\end{bmatrix}\\
@@ -300,7 +300,7 @@
 <span class="o">&gt;&gt;</span> <span class="n">g</span> <span class="p">=</span> <span class="n">g</span><span class="o">./</span><span class="n">sum</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/afv_tutorial2_fig_4.png"><img alt="_images/afv_tutorial2_fig_4.png" class="align-center" src="_images/afv_tutorial2_fig_4.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial2_fig_4.png"><img alt="images/afv_tutorial2_fig_4.png" class="align-center" src="images/afv_tutorial2_fig_4.png" style="width: 100%;" /></a>
 <p>Excluding diagnostic plot commands, the amount of coding that’s necessary is minimal. One just needs to</p>
 <blockquote>
 <div><ol class="arabic simple">
