@@ -1,0 +1,1102 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Perturbation Method &mdash; MFG 0.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/mystyle.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="MFG 0.1 alpha documentation" href="../index.html"/>
+        <link rel="next" title="License" href="../license.html"/>
+        <link rel="prev" title="Tutorial: Using the Perturbation Helper" href="../tutorials/tutorial1.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MFG
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Perturbation Method</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#properties">Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citation-requests">Citation Requests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zrefs.html">Citation and References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MFG</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Perturbation Method</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="perturbation-method">
+<span id="pert-helper"></span><h1>Perturbation Method<a class="headerlink" href="#perturbation-method" title="Permalink to this headline">¶</a></h1>
+<p>This is a technical documentation page, one should read the <a class="reference internal" href="../tutorials/tutorial1.html#tutorial-pert-helper"><span class="std std-ref">tutorial</span></a> to get started.</p>
+<p>The toolbox has support for working with perturbation methods as summarized in <a class="reference internal" href="../zrefs.html#ahn2017inequality" id="id1">[Ahn et al., 2017]</a>. For the people who are coming from the DYNARE/RISE background, one can consider this as the pre-parser portion of analyzing the model files. Unfortunately, the differentiations are coded in DYNARE/RISE does not generalize to problems at the scale of heterogeneous agent models (see <a class="reference external" href="https://github.com/sehyoun/MATLABAutoDiff">MATLABAutoDiff</a> ). In this computation, the steady-state values need to be found <span class="red">before</span> the differentiation.</p>
+<p>For most applications, one can follow the recipe of</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p class="first">Population <a class="reference internal" href="#ADHelper.var2ss" title="ADHelper.var2ss"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ss</span></code></a>, <a class="reference internal" href="#ADHelper.var2ischoice" title="ADHelper.var2ischoice"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ischoice</span></code></a>, and <a class="reference internal" href="#ADHelper.var2isshock" title="ADHelper.var2isshock"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2isshock</span></code></a></p>
+</li>
+<li><p class="first">Write the model equation sin <a class="reference internal" href="#MFG.ADHelper.setup_eqns" title="MFG.ADHelper.setup_eqns"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">setup_eqns</span></code></a> (see <a class="reference internal" href="../tutorials/tutorial1.html#pert-setup"><span class="std std-ref">Writing the setup_eqns Function</span></a> ).</p>
+</li>
+<li><p class="first">Solve the model with some linear system <a class="reference internal" href="#MFG.ADHelper.solve_perturbation" title="MFG.ADHelper.solve_perturbation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">solve_perturbation</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li>One can also use <a class="reference internal" href="#MFG.ADHelper.get_gensys_form" title="MFG.ADHelper.get_gensys_form"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">get_gensys_form</span></code></a> to work with other solves</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Compute IRFs with <a class="reference internal" href="#MFG.ADHelper.simulate_irf" title="MFG.ADHelper.simulate_irf"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">simulate_irf</span></code></a></p>
+</li>
+</ol>
+</div></blockquote>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="MFG.ADHelper.get_gensys_form">
+<code class="descclassname">ADHelper.</code><code class="descname">get_gensys_form</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MFG.ADHelper.get_gensys_form" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the equations into the GENSYS form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>eqns</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.eqns" title="ADHelper.eqns"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">eqns</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[G0, G1, psi, pi]<blockquote>
+<div><div class="math notranslate nohighlight">
+\[G0\cdot y_{t+1} = G1\cdot y_t + psi \cdot \eta_t + pi \cdot \varepsilon_t\]</div>
+<p>Hence, the standard variable names for GENSYS.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MFG.ADHelper.get_sspace_form">
+<code class="descclassname">ADHelper.</code><code class="descname">get_sspace_form</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MFG.ADHelper.get_sspace_form" title="Permalink to this definition">¶</a></dt>
+<dd><p>From derivatives, get the state-space representation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>eqns</strong> (<em>matrix in class</em>) – derivative values from dynamics equations</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[G1, psi, pi]<ul class="simple">
+<li><a class="reference internal" href="#ADHelper.G1" title="ADHelper.G1"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">G1</span></code></a></li>
+<li><a class="reference internal" href="#ADHelper.psi" title="ADHelper.psi"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">psi</span></code></a></li>
+<li><a class="reference internal" href="#ADHelper.pi" title="ADHelper.pi"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">pi</span></code></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Intuitively, it “inverts” G0 matrix. For usages, it does not hurt to treat it as a black-box, and most instances, one would not need to call this function directly.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="#MFG.ADHelper.solve_perturbation" title="MFG.ADHelper.solve_perturbation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">solve_perturbation</span></code></a></li>
+<li><a class="reference internal" href="../tutorials/tutorial1.html#tutorial-pert-helper"><span class="std std-ref">Tutorial: Using the Perturbation Helper</span></a></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="MFG.ADHelper.krylov_reduction">
+<code class="descclassname">ADHelper.</code><code class="descname">krylov_reduction</code><span class="sig-paren">(</span><em>varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#MFG.ADHelper.krylov_reduction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduces the dimensionality of the state space using Krylov subspace method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>G1</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.G1" title="ADHelper.G1"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">G1</span></code></a></li>
+<li><strong>n_choice</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.n_choice" title="ADHelper.n_choice"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_choice</span></code></a></li>
+<li><strong>n_g</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.n_g" title="ADHelper.n_g"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_g</span></code></a></li>
+<li><strong>n_p</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.n_p" title="ADHelper.n_p"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_p</span></code></a></li>
+<li><strong>n_arnoldi</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.n_arnoldi" title="ADHelper.n_arnoldi"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_arnoldi</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>(in class)</p>
+<ul class="simple">
+<li><a class="reference internal" href="#ADHelper.reduction" title="ADHelper.reduction"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">reduction</span></code></a></li>
+<li><a class="reference internal" href="#ADHelper.inv_reduction" title="ADHelper.inv_reduction"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">inv_reduction</span></code></a></li>
+<li><a class="reference internal" href="#ADHelper.n_g_red" title="ADHelper.n_g_red"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_g_red</span></code></a></li>
+<li><a class="reference internal" href="#ADHelper.n_choice_red" title="ADHelper.n_choice_red"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_choice_red</span></code></a></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This helper is written so that one would not have to worry about the consistency of the inputs for complex functions. Check out other functions and tutorials.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="#MFG.ADHelper.solve_perturbation" title="MFG.ADHelper.solve_perturbation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">solve_perturbation</span></code></a></li>
+<li><a class="reference internal" href="../tutorials/tutorial1.html#tutorial-pert-helper"><span class="std std-ref">Tutorial: Using the Perturbation Helper</span></a></li>
+</ul>
+</div>
+<p class="rubric">References</p>
+<ul class="simple">
+<li><a class="reference internal" href="../zrefs.html#ahn2017inequality" id="id2">[Ahn et al., 2017]</a></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="MFG.ADHelper.schur_solver">
+<code class="descclassname">ADHelper.</code><code class="descname">schur_solver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MFG.ADHelper.schur_solver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solver based on Schur decomposition.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is based on Sims’s gensys, but uses pre-clean+ <a class="reference external" href="https://en.wikipedia.org/wiki/Schur_decomposition">Schur decomposition</a> rather than taking the <a class="reference external" href="https://en.wikipedia.org/wiki/Schur_decomposition#Generalized_Schur_decomposition">QZ-decomposition</a>  directly. QZ-decomposition scales worse with dimensionality of the problem.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>G1</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.G1" title="ADHelper.G1"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">G1</span></code></a></li>
+<li><strong>psi</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.psi" title="ADHelper.psi"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">psi</span></code></a></li>
+<li><strong>pi</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.pi" title="ADHelper.pi"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">pi</span></code></a></li>
+<li><strong>n_choie</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.n_choice" title="ADHelper.n_choice"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_choice</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>(in class)</p>
+<ul class="simple">
+<li><a class="reference internal" href="#ADHelper.G1" title="ADHelper.G1"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">G1</span></code></a></li>
+<li><a class="reference internal" href="#ADHelper.impact" title="ADHelper.impact"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">impact</span></code></a></li>
+<li><a class="reference internal" href="#ADHelper.F" title="ADHelper.F"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">F</span></code></a></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This class is written because users do not have to worry about setting the inputs to this function. Hence, make sure to check other functions (or <a class="reference internal" href="../tutorials/tutorial1.html#tutorial-pert-helper"><span class="std std-ref">Tutorial: Using the Perturbation Helper</span></a> ).</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="MFG.ADHelper.setup_eqns">
+<code class="descclassname">ADHelper.</code><code class="descname">setup_eqns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MFG.ADHelper.setup_eqns" title="Permalink to this definition">¶</a></dt>
+<dd><p>User-Defined function of model equations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">[eqns]<ul class="simple">
+<li><strong>eqns</strong> (matrix): derivative values from vertically stacked equations</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>See <a class="reference internal" href="../tutorials/tutorial1.html#pert-setup"><span class="std std-ref">Writing the setup_eqns Function</span></a> for more details.</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>The expected output is the derivative matrix, <span class="red">NOT</span> the dual number. Hence, one would likely need to call <code class="code docutils literal notranslate"><span class="pre">getderivs</span></code> function of the <a class="reference external" href="https://github.com/sehyoun/MATLABAutoDiff">MATLABAutoDiff</a> toolbox. For example</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">eqns</span> <span class="p">=</span> <span class="p">[</span><span class="n">eqn1</span><span class="p">;</span> <span class="n">eqn2</span><span class="p">;</span> <span class="n">eqn3</span><span class="p">];</span>
+<span class="n">eqns</span> <span class="p">=</span> <span class="n">getderivs</span><span class="p">(</span><span class="n">eqns</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="last">See <a class="reference internal" href="../tutorials/tutorial1.html#tutorial-pert-helper"><span class="std std-ref">Tutorial: Using the Perturbation Helper</span></a> for more details.</p>
+</div>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>Consider changing syntax so that user would not have to call <code class="code docutils literal notranslate"><span class="pre">getderivs</span></code></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="MFG.ADHelper.set_var2advars_dvars">
+<code class="descclassname">ADHelper.</code><code class="descname">set_var2advars_dvars</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MFG.ADHelper.set_var2advars_dvars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize automatic differentiation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>var2ss</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.var2ss" title="ADHelper.var2ss"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ss</span></code></a></li>
+<li><strong>var2loc</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.var2loc" title="ADHelper.var2loc"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2loc</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>(set in class)</p>
+<ul class="simple">
+<li><a class="reference internal" href="#ADHelper.var2advars" title="ADHelper.var2advars"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2advars</span></code></a></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="#MFG.ADHelper.set_var2loc" title="MFG.ADHelper.set_var2loc"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">set_var2loc</span></code></a></li>
+<li><a class="reference external" href="https://github.com/sehyoun/MATLABAutoDiff">https://github.com/sehyoun/MATLABAutoDiff</a></li>
+</ul>
+</div>
+<p class="rubric">References</p>
+<ul class="simple">
+<li><a class="reference internal" href="../zrefs.html#autodiffblog" id="id4">[Domke, 2009]</a></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="MFG.ADHelper.set_var2loc">
+<code class="descclassname">ADHelper.</code><code class="descname">set_var2loc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MFG.ADHelper.set_var2loc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the vector of positions, assign it locations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>var2ss</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.var2ss" title="ADHelper.var2ss"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ss</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(in class)<ul class="simple">
+<li><a class="reference internal" href="#ADHelper.var2loc" title="ADHelper.var2loc"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2loc</span></code></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This function puts variables in a nice order so that less reorganization is required, but users can just consider this as a blackbox.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="MFG.ADHelper.simulate_irf">
+<code class="descclassname">ADHelper.</code><code class="descname">simulate_irf</code><span class="sig-paren">(</span><em>T</em>, <em>N</em>, <em>shock_loc</em><span class="sig-paren">)</span><a class="headerlink" href="#MFG.ADHelper.simulate_irf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate impulse response functions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>T</strong> (<em>double</em>) – time length for simulation</li>
+<li><strong>N</strong> (<em>double</em>) – number of steps</li>
+<li><strong>shock_loc</strong> (<em>int</em>) – which shock to compute impulse response of</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>[output, time]</p>
+<ul class="simple">
+<li>output (matrix): simulated path</li>
+<li>time (vector): time vector</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="#ADHelper.shock2loc" title="ADHelper.shock2loc"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shock2loc</span></code></a></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="MFG.ADHelper.solve_perturbation">
+<code class="descclassname">ADHelper.</code><code class="descname">solve_perturbation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MFG.ADHelper.solve_perturbation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves perturbation solution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>setup_eqns</strong> (<em>in class</em>) – <a class="reference internal" href="#MFG.ADHelper.setup_eqns" title="MFG.ADHelper.setup_eqns"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">setup_eqns</span></code></a></li>
+<li><strong>var2ss</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.var2ss" title="ADHelper.var2ss"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ss</span></code></a></li>
+<li><strong>var2ischoice</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.var2ischoice" title="ADHelper.var2ischoice"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ischoice</span></code></a></li>
+<li><strong>var2isshock</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.var2isshock" title="ADHelper.var2isshock"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2isshock</span></code></a></li>
+<li><strong>state_reductions</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.state_reductions" title="ADHelper.state_reductions"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">state_reductions</span></code></a></li>
+<li><strong>choice_reductions</strong> (<em>in class</em>) – <a class="reference internal" href="#ADHelper.choice_reductions" title="ADHelper.choice_reductions"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">choice_reductions</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>(in class)</p>
+<ul class="simple">
+<li><a class="reference internal" href="#ADHelper.G1" title="ADHelper.G1"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">G1</span></code></a></li>
+<li><a class="reference internal" href="#ADHelper.impact" title="ADHelper.impact"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">impact</span></code></a></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>This function contains many things. Refer to the <a class="reference internal" href="../tutorials/tutorial1.html#tutorial-pert-helper"><span class="std std-ref">Tutorial: Using the Perturbation Helper</span></a> .</p>
+</dd></dl>
+
+</div>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="ADHelper.var2ss">
+<code class="descclassname">ADHelper.</code><code class="descname">var2ss</code><a class="headerlink" href="#ADHelper.var2ss" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">struct</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">This struct set the variables.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.var2ischoice">
+<code class="descclassname">ADHelper.</code><code class="descname">var2ischoice</code><a class="headerlink" href="#ADHelper.var2ischoice" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">struct of true/false</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Whether the variable is a choice/non-predetermined variable.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.var2isshock">
+<code class="descclassname">ADHelper.</code><code class="descname">var2isshock</code><a class="headerlink" href="#ADHelper.var2isshock" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">struct of true/false</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Whether the variable is a shock/exogenous variable.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.var2loc">
+<code class="descclassname">ADHelper.</code><code class="descname">var2loc</code><a class="headerlink" href="#ADHelper.var2loc" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">struct</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">The variable location of the stacked variable</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.var2advars">
+<code class="descclassname">ADHelper.</code><code class="descname">var2advars</code><a class="headerlink" href="#ADHelper.var2advars" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">struct</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Struct containing the variables declared as a “dual” number. See <a class="reference external" href="https://github.com/sehyoun/MATLABAutoDiff">https://github.com/sehyoun/MATLABAutoDiff</a> .</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">One can get the dual number of <code class="code docutils literal notranslate"><span class="pre">consumption</span></code> by</p>
+<div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">helper</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">consumption</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.shock2loc">
+<code class="descclassname">ADHelper.</code><code class="descname">shock2loc</code><a class="headerlink" href="#ADHelper.shock2loc" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">struct</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">A struct containing the index location of shocks. This is used with <a class="reference internal" href="#ADHelper.impact" title="ADHelper.impact"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">impact</span></code></a> .</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.eqns">
+<code class="descclassname">ADHelper.</code><code class="descname">eqns</code><a class="headerlink" href="#ADHelper.eqns" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">A matrix of the first order equation</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.n_vars">
+<code class="descclassname">ADHelper.</code><code class="descname">n_vars</code><a class="headerlink" href="#ADHelper.n_vars" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Total number of variables</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.n_choice">
+<code class="descclassname">ADHelper.</code><code class="descname">n_choice</code><a class="headerlink" href="#ADHelper.n_choice" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Number of choice/not-predetermined variables</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.n_choice_cached">
+<code class="descclassname">ADHelper.</code><code class="descname">n_choice_cached</code><a class="headerlink" href="#ADHelper.n_choice_cached" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Cache location of for <a class="reference internal" href="#ADHelper.n_choice" title="ADHelper.n_choice"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_choice</span></code></a> .</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.n_choice_red">
+<code class="descclassname">ADHelper.</code><code class="descname">n_choice_red</code><a class="headerlink" href="#ADHelper.n_choice_red" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Number of choice variables after model reductions</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.n_g">
+<code class="descclassname">ADHelper.</code><code class="descname">n_g</code><a class="headerlink" href="#ADHelper.n_g" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Number of predetermined variables</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.n_g_cached">
+<code class="descclassname">ADHelper.</code><code class="descname">n_g_cached</code><a class="headerlink" href="#ADHelper.n_g_cached" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Cache location for <a class="reference internal" href="#ADHelper.n_g" title="ADHelper.n_g"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_g</span></code></a> .</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.n_g_red">
+<code class="descclassname">ADHelper.</code><code class="descname">n_g_red</code><a class="headerlink" href="#ADHelper.n_g_red" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Number of predetermined variables after model reductions</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.n_p">
+<code class="descclassname">ADHelper.</code><code class="descname">n_p</code><a class="headerlink" href="#ADHelper.n_p" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">integer</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Number of “redundant” variables. This is clear with an example, consider a dynamics given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\frac{dx}{dt} = 2 y\\
+y = 2x\end{split}\]</div>
+<p>Though the equation has 2 variables, in fact this only has one “intrinsic” dimensionality. In this case, <span class="math notranslate nohighlight">\(y\)</span> can be solved out to get</p>
+<div class="math notranslate nohighlight">
+\[\frac{dx}{dt} = 4 x\]</div>
+<p>The class automatically cleans away these variables without dynamics <span class="math notranslate nohighlight">\(\left(\frac{d}{dt}\right)\)</span>-terms, and <a class="reference internal" href="#ADHelper.n_p" title="ADHelper.n_p"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_p</span></code></a> refers to the number of these variables.</p>
+<p class="last">With small problems where QZ-decomposition can be used, a more general form of the problem can be setup, but in this class, it is assumed that the variables can be solved out directly, i.e., G1(redundant, redundant) is invertible.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.n_pred">
+<code class="descclassname">ADHelper.</code><code class="descname">n_pred</code><a class="headerlink" href="#ADHelper.n_pred" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Number of predetermined variables</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.n_arnoldi">
+<code class="descclassname">ADHelper.</code><code class="descname">n_arnoldi</code><a class="headerlink" href="#ADHelper.n_arnoldi" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Number of arnoldi iteration step to take</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.is_cont_time">
+<code class="descclassname">ADHelper.</code><code class="descname">is_cont_time</code><a class="headerlink" href="#ADHelper.is_cont_time" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">true/false</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Whether a continuous time problem</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.state_reductions">
+<code class="descclassname">ADHelper.</code><code class="descname">state_reductions</code><a class="headerlink" href="#ADHelper.state_reductions" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">complicated</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Instruction for state reductions</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Todo:</th><td class="field-body">Will be documented further</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.choice_reductions">
+<code class="descclassname">ADHelper.</code><code class="descname">choice_reductions</code><a class="headerlink" href="#ADHelper.choice_reductions" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">complicated</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Instructions for choice variable reductions.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.G1">
+<code class="descclassname">ADHelper.</code><code class="descname">G1</code><a class="headerlink" href="#ADHelper.G1" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">matrix</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Unfortunately, G1 stands for different things at different point of computation. It can be</p>
+<blockquote>
+<div><ul class="simple">
+<li>G1 matrix after G0 has been inverted</li>
+<li>G1 dynamics matrix coming from the solution of <a class="reference internal" href="#MFG.ADHelper.schur_solver" title="MFG.ADHelper.schur_solver"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">schur_solver</span></code></a></li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Todo:</th><td class="field-body"><p class="first last">Separate out G1 so that it does not stand for different things at different time.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.psi">
+<code class="descclassname">ADHelper.</code><code class="descname">psi</code><a class="headerlink" href="#ADHelper.psi" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><span class="math notranslate nohighlight">\(\Psi\)</span> in gensys notation.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.pi">
+<code class="descclassname">ADHelper.</code><code class="descname">pi</code><a class="headerlink" href="#ADHelper.pi" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><span class="math notranslate nohighlight">\(\Pi\)</span> in gensys notation.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.G1_cached">
+<code class="descclassname">ADHelper.</code><code class="descname">G1_cached</code><a class="headerlink" href="#ADHelper.G1_cached" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Cache location for <a class="reference internal" href="#ADHelper.G1" title="ADHelper.G1"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">G1</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.psi_cached">
+<code class="descclassname">ADHelper.</code><code class="descname">psi_cached</code><a class="headerlink" href="#ADHelper.psi_cached" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Cache location for <a class="reference internal" href="#ADHelper.psi" title="ADHelper.psi"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">psi</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.pi_cached">
+<code class="descclassname">ADHelper.</code><code class="descname">pi_cached</code><a class="headerlink" href="#ADHelper.pi_cached" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Cache location for <a class="reference internal" href="#ADHelper.pi" title="ADHelper.pi"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">pi</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.impact">
+<code class="descclassname">ADHelper.</code><code class="descname">impact</code><a class="headerlink" href="#ADHelper.impact" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">impact matrix of gensys</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.eu">
+<code class="descclassname">ADHelper.</code><code class="descname">eu</code><a class="headerlink" href="#ADHelper.eu" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">existence flags</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">existence flag</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li><strong>eu(1)</strong>: existence (1 = solution exists)</li>
+<li><strong>eu(2)</strong>: uniqueness (1 = solution is unique)</li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.F">
+<code class="descclassname">ADHelper.</code><code class="descname">F</code><a class="headerlink" href="#ADHelper.F" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">How solutions are linked</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Todo:</th><td class="field-body">Will be documented</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.reduction">
+<code class="descclassname">ADHelper.</code><code class="descname">reduction</code><a class="headerlink" href="#ADHelper.reduction" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Reduction matrix which collects the instructions from <a class="reference internal" href="#ADHelper.state_reductions" title="ADHelper.state_reductions"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">state_reductions</span></code></a> and <a class="reference internal" href="#ADHelper.choice_reductions" title="ADHelper.choice_reductions"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">choice_reductions</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">See also:</th><td class="field-body"><a class="reference internal" href="#ADHelper.inv_reduction" title="ADHelper.inv_reduction"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">inv_reduction</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ADHelper.inv_reduction">
+<code class="descclassname">ADHelper.</code><code class="descname">inv_reduction</code><a class="headerlink" href="#ADHelper.inv_reduction" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body">Unwind the model reduction</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">See also:</th><td class="field-body"><a class="reference internal" href="#ADHelper.reduction" title="ADHelper.reduction"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">reduction</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="citation-requests">
+<h2>Citation Requests<a class="headerlink" href="#citation-requests" title="Permalink to this headline">¶</a></h2>
+<p>If you use the method presented here, please consider <a class="footnote-reference" href="#consider" id="id6">[1]</a> citing:</p>
+<ul class="simple">
+<li><a class="reference internal" href="../zrefs.html#ahn2017inequality" id="id7">[Ahn et al., 2017]</a></li>
+<li><a class="reference internal" href="../zrefs.html#freund2003model" id="id8">[Freund, 2003]</a></li>
+<li><a class="reference internal" href="../zrefs.html#autodiffblog" id="id9">[Domke, 2009]</a></li>
+<li><a class="reference internal" href="../zrefs.html#reiter2009solving" id="id10">[Reiter, 2009]</a></li>
+<li><a class="reference internal" href="../zrefs.html#reiter2010approximate" id="id11">[Reiter, 2010]</a></li>
+</ul>
+<p><a class="reference internal" href="../zrefs.html#reiter2009solving" id="id12">[Reiter, 2009]</a> introduced the idea of the perturbation, and <a class="reference internal" href="../zrefs.html#reiter2010approximate" id="id13">[Reiter, 2010]</a> the model reduction. Hence, people coming from economics literature should consider citing them. However, the model reduction method as introduced in <a class="reference internal" href="../zrefs.html#reiter2010approximate" id="id14">[Reiter, 2010]</a> is numerically unstable. <a class="footnote-reference" href="#cayley" id="id15">[2]</a> Therefore, a stabilization needs to be made, and this is done by using <a class="reference internal" href="../zrefs.html#freund2003model" id="id16">[Freund, 2003]</a>. I, jointly with <a class="reference external" href="https://gregkaplan.uchicago.edu/">Greg Kaplan</a>, <a class="reference external" href="https://www.princeton.edu/~moll">Benjamin Moll</a> , <a class="reference external" href="http://faculty.chicagobooth.edu/thomas.winberry/">Thomas Winberry</a> , and Christian Wolf, put everything together in <a class="reference internal" href="../zrefs.html#ahn2017inequality" id="id17">[Ahn et al., 2017]</a>. Of course, none of this is possible if we can not take the derivatives in our life-time. <a class="reference internal" href="../zrefs.html#rall1981automatic" id="id18">[Rall, 1981]</a> introduced the idea of automating differentiation, which is what allows us to differentiate within a reasonable time (which I found out via <a class="reference internal" href="../zrefs.html#autodiffblog" id="id19">[Domke, 2009]</a> . I requested the citation toward the blog since it explains the intuition clearly and concisely.).</p>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="consider" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[1]</a></td><td>The citation requirements can balloon if we were to cite everything from the past, so use your discretion with the citations.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="cayley" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[2]</a></td><td>The proof presented in the paper is based on the Cayley-Hamilton theorem, and hence does not apply when there are rounding errors.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../tutorials/tutorial1.html" class="btn btn-neutral" title="Tutorial: Using the Perturbation Helper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017-2018, SeHyoun Ahn.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1 alpha',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
