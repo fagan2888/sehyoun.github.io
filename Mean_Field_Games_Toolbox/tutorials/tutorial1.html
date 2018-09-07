@@ -96,7 +96,11 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial: Using the Perturbation Helper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subclassing-the-adhelper">Subclassing the ADHelper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preparing-variables">Preparing Variables</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#writing-the-setup-eqns-function">Writing the <code class="docutils literal notranslate"><span class="pre">setup_eqns</span></code> Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solving-the-model">Solving the Model</a></li>
 </ul>
 </li>
 </ul>
@@ -169,10 +173,258 @@
             
   <div class="section" id="tutorial-using-the-perturbation-helper">
 <span id="tutorial-pert-helper"></span><h1>Tutorial: Using the Perturbation Helper<a class="headerlink" href="#tutorial-using-the-perturbation-helper" title="Permalink to this headline">¶</a></h1>
-<p>This document uses object-oriented programming syntax of MATLAB. Refer to <a class="reference external" href="https://www.mathworks.com/discovery/object-oriented-programming.html">MATLAB documentation</a> more details.</p>
+<p>This document uses the object-oriented programming syntax of MATLAB. Necessary things are introduced, but refer to the <a class="reference external" href="https://www.mathworks.com/discovery/object-oriented-programming.html">MATLAB documentation</a> more details.</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>One should never differentiate large economic models by hand. Most economic toolboxes like DYNARE and RISE come with automation tools for differentiation. For example, DYNARE uses differentiation rules written in C++ to generate MATLAB codes to differentiate model expressions. However, the m-file generation methods are impossible to generalize to bigger problems where we need to differentiate (sparse) matrix-vector multiplications. Therefore, I wrote a MATLAB code to automate the differentiation <a class="reference external" href="https://github.com/sehyoun/MATLABAutoDiff">MATLABAutoDiff</a> . The <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper" title="MFG.ADHelper"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">ADHelper</span></code></a> is written to help with data organization so that one would not need to deal directly with “raw” indices, and to help with organization of ordering as required by <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.krylov_reduction" title="MFG.ADHelper.krylov_reduction"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">krylov_reduction</span></code></a> and <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.schur_solver" title="MFG.ADHelper.schur_solver"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">schur_solver</span></code></a> as introduced in <a class="reference internal" href="../zrefs.html#ahn2017inequality" id="id1">[Ahn et al., 2017]</a> . Though this class is written mostly for heterogeneous agent models in continuous time, we will solve the 3-equation New Keynesian model in this tutorial as people are more familiar with that setup. <a class="footnote-reference" href="#othertoolbox" id="id2">[1]</a></p>
+</div>
+<div class="section" id="subclassing-the-adhelper">
+<h2>Subclassing the ADHelper<a class="headerlink" href="#subclassing-the-adhelper" title="Permalink to this headline">¶</a></h2>
+<p>Before we can get started with the main section, we need a slight detour with object-oriented programming syntax. <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper" title="MFG.ADHelper"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">ADHelper</span></code></a> is a class that is intended to be subclassed, and I routinely subclass the object that represent “economy” with this class. In the MATLAB object-oriented programming syntax, this is done by</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">classdef</span> <span class="n">economy</span> <span class="o">&lt;</span> <span class="n">ADHelper</span>
+    <span class="k">properties</span>
+    <span class="k">end</span>
+
+    <span class="k">methods</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>in a <code class="code docutils literal notranslate"><span class="pre">economy.m</span></code> file. A <a class="reference external" href="https://www.mathworks.com/help/matlab/matlab_oop/class-constructor-methods.html">class constructor</a> is run when an object is instantiated. Hence, we can define all the relevant parameters with the constructor. For example, we can define set parameters <code class="code docutils literal notranslate"><span class="pre">taylor_on_inflation</span></code> to 1.5 and <code class="code docutils literal notranslate"><span class="pre">taylor_on_gdp</span></code> 0 by</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">classdef</span> <span class="n">economy</span> <span class="o">&lt;</span> <span class="n">ADHelper</span>
+    <span class="k">properties</span>
+    <span class="k">end</span>
+    <span class="k">methods</span>
+<span class="k">        function</span><span class="w"> </span>obj <span class="p">=</span><span class="w"> </span><span class="nf">economy</span><span class="p">()</span><span class="w"></span>
+<span class="w">            </span><span class="n">obj</span><span class="p">.</span><span class="n">taylor_on_inflation</span> <span class="p">=</span> <span class="mf">1.8</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">taylor_on_gdp</span> <span class="p">=</span> <span class="mf">0.63</span><span class="p">;</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>However, if you run this, this will lead to an error because the parameters are not declared as properties. Hence, one needs to define them as properties</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">classdef</span> <span class="n">economy</span> <span class="o">&lt;</span> <span class="n">ADHelper</span>
+    <span class="k">properties</span>
+        <span class="n">taylor_on_gdp</span>
+        <span class="n">taylor_on_inflation</span>
+    <span class="k">end</span>
+    <span class="k">methods</span>
+<span class="k">        function</span><span class="w"> </span>obj <span class="p">=</span><span class="w"> </span><span class="nf">economy</span><span class="p">()</span><span class="w"></span>
+<span class="w">            </span><span class="n">obj</span><span class="p">.</span><span class="n">taylor_on_inflation</span> <span class="p">=</span> <span class="mf">1.5</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">taylor_on_gdp</span> <span class="p">=</span> <span class="mf">1.5</span><span class="p">;</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>As the <code class="code docutils literal notranslate"><span class="pre">economy</span></code> is a subclass of the <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper" title="MFG.ADHelper"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">ADHelper</span></code></a>, it will have many properties and functions already available to it. Refer to the technical documentation (<a class="reference internal" href="../perturbation/perturbation.html#pert-helper"><span class="std std-ref">Perturbation Method</span></a> ) for all available properties and methods. Lastly, one instantiates an instance of the class by</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">econ</span> <span class="p">=</span> <span class="n">economy</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="preparing-variables">
+<h2>Preparing Variables<a class="headerlink" href="#preparing-variables" title="Permalink to this headline">¶</a></h2>
+<p>Unlike the other differentiation methods as in DYNARE, the derivatives are computed at an given point. Hence, the point to differentiate needs to be decided before differentiation. Under the perturbation method in economics, that point is the steady-state. Hence, we need to start by defining steady-state values. This is done in <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper" title="MFG.ADHelper"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">ADHelper</span></code></a> class using <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.var2ss" title="ADHelper.var2ss"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ss</span></code></a> . <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.var2ss" title="ADHelper.var2ss"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ss</span></code></a> is a struct that one need to fill with variable names and steady state values</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">econ</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="n">variable_name</span> <span class="p">=</span> <span class="n">steady_state_value</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For example, if the steady-state value of <code class="code docutils literal notranslate"><span class="pre">inflation</span></code> is zero, we set</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">econ</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="n">inflation</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For the DYNARE crowd, this can be considered as implementing the <code class="code docutils literal notranslate"><span class="pre">var</span></code> and <code class="code docutils literal notranslate"><span class="pre">initval</span></code> portion of the model file at the same time. One needs to do these for all endogenous and exogenous variables. Hence, for example, for the monetary policy shock needs to be coded as</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">econ</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="n">mp_shock</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper" title="MFG.ADHelper"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">ADHelper</span></code></a>, the exogenous variables are denoted with <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.var2isshock" title="ADHelper.var2isshock"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2isshock</span></code></a> . The default is <code class="code docutils literal notranslate"><span class="pre">false</span></code> , so one only need to set the flag for the exogenous variables to <code class="code docutils literal notranslate"><span class="pre">true</span></code> ,i.e.,</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">econ</span><span class="p">.</span><span class="n">var2isshock</span><span class="p">.</span><span class="n">mp_shock</span> <span class="p">=</span> <span class="n">true</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Again, for the DYNARE crowd, this is equivalent to declaring <code class="code docutils literal notranslate"><span class="pre">mp_shock</span></code> as an <code class="code docutils literal notranslate"><span class="pre">varexo</span></code> . Now, in DYNARE, there is no special treatment for predetermined vs decision variables. This is because there are algorithms, e.g., QZ-decomposition, without requiring the predeterminedness. However, for large scale problems arising with heterogeneous agent models, QZ-decomposition scales worse than Schur-decomposition, and for problems that require model-reductions (see <a class="reference internal" href="../zrefs.html#ahn2017inequality" id="id3">[Ahn et al., 2017]</a> ), it is not possible to use QZ-decomposition at all. Hence, we require labels for decision variables for large scale problems. <a class="footnote-reference" href="#id9" id="id4">[2]</a> The decision variables are labeled with <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.var2ischoice" title="ADHelper.var2ischoice"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ischoice</span></code></a> . For example,</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">econ</span><span class="p">.</span><span class="n">var2ischoice</span><span class="p">.</span><span class="n">consumption</span> <span class="p">=</span> <span class="n">true</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Just the way one works through <code class="code docutils literal notranslate"><span class="pre">var</span></code> , <code class="code docutils literal notranslate"><span class="pre">varexo</span></code> , and <code class="code docutils literal notranslate"><span class="pre">initval</span></code> in DYNARE. One needs to do this for all variables (and do not have spurious variables in <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.var2ss" title="ADHelper.var2ss"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ss</span></code></a> ). Just in case there is a DYNARE person wondering, since model equations will not go through a parser, one do not need to declare <code class="code docutils literal notranslate"><span class="pre">parameters</span></code> . In fact, I usually just set it as a class property and use it everywhere as I have set with <code class="code docutils literal notranslate"><span class="pre">taylor_on_inflation</span></code> above. One just need to do this before <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.solve_perturbation" title="MFG.ADHelper.solve_perturbation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">solve_perturbation</span></code></a> is called. I usually create <code class="code docutils literal notranslate"><span class="pre">find_steady_state</span></code> method within the subclass. In this example, I will put this in the constructor. Putting everything up to this point so far together, we have</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">classdef</span> <span class="n">simple_nk_economy</span> <span class="o">&lt;</span> <span class="n">ADHelper</span>
+    <span class="k">properties</span>
+        <span class="n">tau</span>
+        <span class="n">kappa</span>
+        <span class="n">taylor_on_inflation</span>
+        <span class="n">taylor_on_gdp</span>
+        <span class="n">beta_util</span>
+        <span class="n">inflation_ss</span>
+        <span class="n">interest_ss</span>
+        <span class="n">persistence_fiscal</span>
+        <span class="n">persistence_interest</span>
+        <span class="n">persistence_tfp</span>
+        <span class="n">std_monetary_policy_shock</span>
+        <span class="n">std_government_shock</span>
+        <span class="n">std_tfp_shock</span>
+    <span class="k">end</span>
+
+    <span class="k">methods</span>
+<span class="k">        function</span><span class="w"> </span>obj <span class="p">=</span><span class="w"> </span><span class="nf">simple_nk_economy</span><span class="p">()</span><span class="w"></span>
+<span class="w">            </span><span class="c">% Parameter Values</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">tau</span> <span class="p">=</span> <span class="mf">2.83</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">kappa</span> <span class="p">=</span> <span class="mf">0.78</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">taylor_on_inflation</span> <span class="p">=</span> <span class="mf">1.80</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">taylor_on_gdp</span> <span class="p">=</span> <span class="mf">0.63</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">beta_util</span> <span class="p">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mf">0.42</span><span class="o">/</span><span class="mi">400</span><span class="p">);</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">inflation_ss</span> <span class="p">=</span> <span class="mi">1</span><span class="o">+</span><span class="mf">3.3</span><span class="o">/</span><span class="mi">400</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">interest_ss</span> <span class="p">=</span> <span class="mi">1</span><span class="o">+</span><span class="mf">0.52</span><span class="o">/</span><span class="mi">400</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">persistence_interest</span> <span class="p">=</span> <span class="mf">0.77</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">persistence_fiscal</span> <span class="p">=</span> <span class="mf">0.98</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">persistence_tfp</span> <span class="p">=</span> <span class="mf">0.88</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">std_monetary_policy_shock</span> <span class="p">=</span> <span class="mf">0.0022</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">std_government_shock</span> <span class="p">=</span> <span class="mf">0.0071</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">std_tfp_shock</span> <span class="p">=</span> <span class="mf">0.0031</span><span class="p">;</span>
+
+            <span class="c">% Set Pre-determined Variables</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2ischoice</span><span class="p">.</span><span class="nb">pi</span> <span class="p">=</span> <span class="n">true</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2ischoice</span><span class="p">.</span><span class="n">y</span> <span class="p">=</span> <span class="n">true</span><span class="p">;</span>
+
+            <span class="c">% Set Exogenous Variables</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2isshock</span><span class="p">.</span><span class="n">g_shock</span> <span class="p">=</span> <span class="n">true</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2isshock</span><span class="p">.</span><span class="n">z_shock</span> <span class="p">=</span> <span class="n">true</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2isshock</span><span class="p">.</span><span class="n">mp_shock</span> <span class="p">=</span> <span class="n">true</span><span class="p">;</span>
+
+            <span class="c">% This problem is for discrete time</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">is_cont_time</span> <span class="p">=</span> <span class="n">false</span><span class="p">;</span>
+        <span class="k">end</span>
+
+<span class="k">        function</span><span class="w"> </span><span class="nf">find_steady_state</span><span class="p">(</span>obj<span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="c">% Set steady-state values</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="n">y</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="nb">pi</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="n">r</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="n">g</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="n">z</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="n">g_shock</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="n">z_shock</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">var2ss</span><span class="p">.</span><span class="n">mp_shock</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="writing-the-setup-eqns-function">
 <span id="pert-setup"></span><h2>Writing the <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.setup_eqns" title="MFG.ADHelper.setup_eqns"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setup_eqns</span></code></a> Function<a class="headerlink" href="#writing-the-setup-eqns-function" title="Permalink to this headline">¶</a></h2>
-<p>For the people from DYNARE/RISE tradition(?), this function can be considered as the “model” section of DYNARE/RISE model files. Unlike DYNARE/RISE, there is no parsing at this stage of the program, so one needs to write MATLAB functions with the restriction that it has to be supported by <a class="reference external" href="https://github.com/sehyoun/MATLABAutoDiff">MATLABAutoDiff</a> . However, that’s the only restriction, and one can write any sort of expressions.</p>
+<p>Though one can use other approaches that uses lower-level function calls, one can just rely on <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.solve_perturbation" title="MFG.ADHelper.solve_perturbation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">solve_perturbation</span></code></a> for most applications. This function requires the model equations that define dynamics. This is set by write <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.setup_eqns" title="MFG.ADHelper.setup_eqns"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setup_eqns</span></code></a> in the subclass, i.e.,</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">classdef</span> <span class="n">economy</span> <span class="o">&lt;</span> <span class="n">ADHelper</span>
+    <span class="c">...</span>
+    <span class="k">methods</span>
+        <span class="c">...</span>
+<span class="k">        function</span><span class="w"> </span><span class="nf">setup_eqns</span><span class="p">(</span>obj<span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="c">% Fill in here</span>
+
+            <span class="n">obj</span><span class="p">.</span><span class="n">eqns</span> <span class="p">=</span> <span class="n">getderivs</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">eqns</span><span class="p">);</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>As <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper" title="MFG.ADHelper"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">ADHelper</span></code></a> calls this functions after all the pre-processing is done. At this point, <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.var2advars" title="ADHelper.var2advars"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2advars</span></code></a> is populated and available to use which is a wrapper over <a class="reference external" href="https://github.com/sehyoun/MATLABAutoDiff">MATLABAutoDiff</a> so that one do not have to access things by raw indices. One can access endogenous variable, via <code class="code docutils literal notranslate"><span class="pre">obj.var2advars.variable_name</span></code> . Also, at this point, the expression for <span class="math notranslate nohighlight">\(\displaystyle \left(\frac{d}{dt} var\right)\)</span>  is populated by prepending <code class="code docutils literal notranslate"><span class="pre">d</span></code> in front of the variable name for continuous time. In discrete time, one can consider <code class="code docutils literal notranslate"><span class="pre">d</span></code> notation as one time period forward, i.e., <code class="code docutils literal notranslate"><span class="pre">(+1)</span></code> in DYNARE. Given this notation, we can for example, write the IS curve</p>
+<div class="math notranslate nohighlight">
+\[\widehat{y}_t = \mathbb{E}_t[\widehat{y}_{t+1}] - \frac{1}{\tau}\left(\widehat{R}_t - \mathbb{E}_t[\widehat{\pi}_{t+1}] - \mathbb{E}_t[\widehat{z}_{t+1}]\right) + \widehat{g}_t - \mathbb{E}_t[\widehat{g}_{t+1}]\]</div>
+<p>as</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">y</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dy</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">obj</span><span class="p">.</span><span class="n">tau</span><span class="o">*</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">r</span> <span class="c">...</span>
+                   <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dpi</span> <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dz</span><span class="p">)</span> <span class="c">...</span>
+                   <span class="o">+</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">g</span> <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dg</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Note that <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.setup_eqns" title="MFG.ADHelper.setup_eqns"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setup_eqns</span></code></a> is executed completely within MATLAB without any parsing, so one can define intermediate variables instead of typing thing over and over again (without special syntax like <code class="code docutils literal notranslate"><span class="pre">#</span></code> ). To reduce typing, one can also write</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+<span class="n">y_1</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dy</span><span class="p">;</span>
+<span class="n">r</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">r</span><span class="p">;</span>
+<span class="n">pi_1</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dpi</span><span class="p">;</span>
+<span class="n">z_1</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dz</span><span class="p">;</span>
+<span class="n">g</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">g</span><span class="p">;</span>
+<span class="n">g_1</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dg</span><span class="p">;</span>
+
+<span class="n">y</span> <span class="p">=</span> <span class="n">y_1</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">obj</span><span class="p">.</span><span class="n">tau</span><span class="o">*</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">pi_1</span> <span class="o">-</span> <span class="n">z_1</span><span class="p">)</span> <span class="o">+</span> <span class="n">g</span> <span class="o">-</span> <span class="n">g_1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The latter is probably easier to understand as there is less clutter in equations. Again, <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.setup_eqns" title="MFG.ADHelper.setup_eqns"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setup_eqns</span></code></a> is executed within MATLAB, so one is free to do anything without the restrictions of the model languages through a parser. Not heeding my own advise of reducing clutter, the function can be finished for the three equation model as</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">classdef</span> <span class="n">simple_nk_economy</span> <span class="o">&lt;</span> <span class="n">ADHelper</span>
+    <span class="c">...</span>
+    <span class="k">methods</span>
+        <span class="c">...</span>
+<span class="k">        function</span><span class="w"> </span><span class="nf">setup_eqns</span><span class="p">(</span>obj<span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="c">% IS Curve</span>
+            <span class="n">is_curve</span> <span class="p">=</span> <span class="o">-</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dy</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">obj</span><span class="p">.</span><span class="n">tau</span><span class="o">*</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">r</span> <span class="c">...</span>
+                       <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dpi</span> <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dz</span><span class="p">)</span> <span class="o">+</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">g</span> <span class="c">...</span>
+                       <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dg</span><span class="p">;</span>
+
+            <span class="c">% Philips Curve</span>
+            <span class="n">phil</span> <span class="p">=</span> <span class="o">-</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="nb">pi</span> <span class="o">+</span> <span class="n">obj</span><span class="p">.</span><span class="n">beta_util</span><span class="o">*</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dpi</span> <span class="c">...</span>
+                <span class="o">+</span> <span class="n">obj</span><span class="p">.</span><span class="n">kappa</span><span class="o">*</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">g</span><span class="p">);</span>
+
+            <span class="c">% Taylor Rule</span>
+            <span class="n">taylor</span> <span class="p">=</span> <span class="o">-</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dr</span> <span class="o">+</span> <span class="n">obj</span><span class="p">.</span><span class="n">persistence_interest</span><span class="o">*</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">r</span> <span class="c">...</span>
+                <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">obj</span><span class="p">.</span><span class="n">persistence_interest</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">taylor_on_inflation</span><span class="o">*</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dpi</span> <span class="c">...</span>
+                <span class="o">+</span> <span class="n">obj</span><span class="p">.</span><span class="n">taylor_on_gdp</span><span class="o">*</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dy</span> <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dg</span><span class="p">))</span> <span class="c">...</span>
+                <span class="o">+</span> <span class="n">obj</span><span class="p">.</span><span class="n">std_monetary_policy_shock</span><span class="o">*</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">mp_shock</span><span class="p">;</span>
+
+            <span class="c">% Fiscal Policy</span>
+            <span class="n">gov_process</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dg</span> <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">persistence_fiscal</span><span class="o">*</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">g</span> <span class="c">...</span>
+                <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">std_government_shock</span><span class="o">*</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">g_shock</span><span class="p">;</span>
+
+            <span class="c">% TFP Shock</span>
+            <span class="n">tfp_process</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">dz</span> <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">persistence_tfp</span><span class="o">*</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">z</span> <span class="c">...</span>
+                <span class="o">-</span> <span class="n">obj</span><span class="p">.</span><span class="n">std_tfp_shock</span><span class="o">*</span><span class="n">obj</span><span class="p">.</span><span class="n">var2advars</span><span class="p">.</span><span class="n">z_shock</span><span class="p">;</span>
+
+            <span class="c">% Combine Equations</span>
+            <span class="n">obj</span><span class="p">.</span><span class="n">eqns</span> <span class="p">=</span> <span class="n">getderivs</span><span class="p">([</span><span class="n">is_curve</span><span class="p">;</span> <span class="n">phil</span><span class="p">;</span> <span class="n">taylor</span><span class="p">;</span> <span class="n">gov_process</span><span class="p">;</span> <span class="n">tfp_process</span><span class="p">]);</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>Every other parts of the lines will be similar to the syntax of DYNARE model language by replacing <code class="code docutils literal notranslate"><span class="pre">(+1)</span></code> with <code class="code docutils literal notranslate"><span class="pre">d</span></code> except for the last line. <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.var2advars" title="ADHelper.var2advars"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2advars</span></code></a> is an myAD object, and <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.eqns" title="ADHelper.eqns"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">eqns</span></code></a> need to be set as the derivatives. We can get the derivatives by using <code class="code docutils literal notranslate"><span class="pre">getderivs</span></code> function of <a class="reference external" href="https://github.com/sehyoun/MATLABAutoDiff">MATLABAutoDiff</a> , and the resulting is the last line. For more explanation of the <a class="reference external" href="https://github.com/sehyoun/MATLABAutoDiff">MATLABAutoDiff</a> , refer to the github page and the contained PDF documentation.</p>
+</div>
+<div class="section" id="solving-the-model">
+<h2>Solving the Model<a class="headerlink" href="#solving-the-model" title="Permalink to this headline">¶</a></h2>
+<p>Writing the <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.setup_eqns" title="MFG.ADHelper.setup_eqns"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setup_eqns</span></code></a> is the only involved part, and we are ready to solve the model with the linear perturbation method. First, we instantiate the <code class="code docutils literal notranslate"><span class="pre">simple_nk_economy</span></code> class and set steady-state by</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">economy</span> <span class="p">=</span> <span class="n">simple_nk_economy</span><span class="p">;</span>
+<span class="n">economy</span><span class="p">.</span><span class="n">find_steady_state</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Then, we can just call <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.solve_perturbation" title="MFG.ADHelper.solve_perturbation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">solve_perturbation</span></code></a> function</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">economy</span><span class="p">.</span><span class="n">solve_perturbation</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Underneath the hood, the problem is solved with <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.get_sspace_form" title="MFG.ADHelper.get_sspace_form"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">get_sspace_form</span></code></a> and then using <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.schur_solver" title="MFG.ADHelper.schur_solver"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">schur_solver</span></code></a> . The dynamics matrix and the transfer function is saved as <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.G1" title="ADHelper.G1"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">G1</span></code></a> and <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.impact" title="ADHelper.impact"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">impact</span></code></a> following the same variable names as that from Gensys. We can also just compute the impulse-response functions by using <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.simulate_irf" title="MFG.ADHelper.simulate_irf"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">simulate_irf</span></code></a> . At this stage, one can using <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.shock2loc" title="ADHelper.shock2loc"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shock2loc</span></code></a> and <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.var2loc" title="ADHelper.var2loc"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2loc</span></code></a> to avoid raw-indices. For example, to plot the irf of GDP on the monetary policy shock, we can do</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">simulate_time</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">irf_mp_shock</span> <span class="p">=</span> <span class="n">economy</span><span class="p">.</span><span class="n">simulate_irf</span><span class="p">(</span><span class="n">simulate_time</span><span class="p">,</span> <span class="n">simulate_time</span><span class="p">,</span> <span class="n">economy</span><span class="p">.</span><span class="n">shock2loc</span><span class="p">.</span><span class="n">mp_shock</span><span class="p">);</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">irf_mp_shock</span><span class="p">(</span><span class="n">economy</span><span class="p">.</span><span class="n">var2loc</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="p">:));</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../images/tutorial_pert_helper_fig_1.png"><img alt="../images/tutorial_pert_helper_fig_1.png" class="align-center" src="../images/tutorial_pert_helper_fig_1.png" style="width: 100%;" /></a>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Lastly, though one can use the underlying codes with discrete time problems and I have checked the output of this exercise with those from the <a class="reference external" href="https://github.com/jmaih/RISE_toolbox">RISE toolbox</a> , I actually recommend one to continue to use the DYNARE or RISE for small scale discrete time problems as those toolboxes were written for those applications and have been more. <a class="footnote-reference" href="#id10" id="id8">[3]</a> This was just a tutorial to show the syntax of the <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper" title="MFG.ADHelper"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">ADHelper</span></code></a> class. Of course, for large-scale problems like heterogeneous agent models, one can’t use DYNARE or RISE.</p>
+</div>
+<table class="docutils footnote" frame="void" id="othertoolbox" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>For small scale problems in discrete time, one can stick with pre-existing toolboxes like DYNARE and RISE as they have a lot more features.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[2]</a></td><td>In fact, for small scale problem, one can just set set <a class="reference internal" href="../perturbation/perturbation.html#ADHelper.var2ischoice" title="ADHelper.var2ischoice"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">var2ischoice</span></code></a> randomly, and just use other solvers using <a class="reference internal" href="../perturbation/perturbation.html#MFG.ADHelper.get_gensys_form" title="MFG.ADHelper.get_gensys_form"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">get_gensys_form</span></code></a> , but we will not elaborate on that here.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[3]</a></td><td>As much as people can try to avoid bugs, it is impossible to be 100% bug free without a lot of market test. In this sense, DYNARE has been through a extensive market test from its bigger user base.</td></tr>
+</tbody>
+</table>
 </div>
 </div>
 
