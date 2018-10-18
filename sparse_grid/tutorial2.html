@@ -99,7 +99,12 @@
 <li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="tutorial1.html">Grid Construction and Differential Operators</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Adaptive Sparse Grid</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#function-approximation">Function Approximation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dimensional-example">1-Dimensional example</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#shifting-domain">Shifting Domain</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">2-Dimensional Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prelude-to-next-tutorial">Prelude to Next Tutorial</a></li>
 </ul>
 </li>
 </ul>
@@ -173,61 +178,113 @@
             
   <div class="section" id="adaptive-sparse-grid">
 <h1>Adaptive Sparse Grid<a class="headerlink" href="#adaptive-sparse-grid" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><strong>File Location</strong>: sparse_grid/tutorials/tutorial2.m</li>
-<li><strong>Expected Reading Time</strong>: XXXX mins.</li>
+<ul>
+<li><p class="first"><strong>File Location</strong>:</p>
+<blockquote>
+<div><ul class="simple">
+<li>sparse_grid/tutorials/tutorial2_1.m</li>
+<li>sparse_grid/tutorials/tutorial2_2.m</li>
 </ul>
-<p>The Sparse Grid Toolbox is designed to allow practitioners use sparse grid approximations without requiring an understanding of the underlying mathematical/implementational theory. People who want to get the intuitions for sparse grids should read section 3 of [ahn2018sparse].</p>
-<div class="section" id="function-approximation">
-<h2>Function Approximation<a class="headerlink" href="#function-approximation" title="Permalink to this headline">¶</a></h2>
-<p>As an example of function approximation, we will approximate <span class="math notranslate nohighlight">\(f(x,y) = \sin(x) + \cos(y)\)</span> on <span class="math notranslate nohighlight">\([0,1]^2\)</span> with sparse grids. To start, we need to add the folder to the toolbox in path, and initialize a <code class="code docutils literal notranslate"><span class="pre">sparse_grid</span></code> object by</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">addpath</span><span class="p">(</span><span class="s">&#39;/path/to/folder/sparse_grid/src&#39;</span><span class="p">);</span>
-<span class="n">grid</span> <span class="p">=</span> <span class="n">sparse_grid</span><span class="p">;</span>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Expected Reading Time</strong>: XXXX mins.</p>
+</li>
+</ul>
+<p>In this tutorial, we will learn how to work with define adaptive grids. The fundamental structure of the sparse grid is the set of basis functions, which is represented by <a class="reference internal" href="technical.html#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a>. Hence, in theory, one can update the <a class="reference internal" href="technical.html#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a> directly to update a basis function. However, the toolbox comes with some functions</p>
+<ul class="simple">
+<li><a class="reference internal" href="technical.html#sparse_grid.sparse_grid.adapt_by_metric" title="sparse_grid.sparse_grid.adapt_by_metric"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">adapt_by_metric</span></code></a></li>
+<li></li>
+</ul>
+<p>to automate some commonly used adaptation methods. In this tutorial, we will cover the idea behind the local adaptivity.</p>
+<div class="section" id="dimensional-example">
+<h2>1-Dimensional example<a class="headerlink" href="#dimensional-example" title="Permalink to this headline">¶</a></h2>
+<p>We will first start with a 1-dimensional function (for easy visualization), consider approximating</p>
+<div class="math notranslate nohighlight">
+\[f(x_1) = \log(x + 0.001)\]</div>
+<a class="reference internal image-reference" href="images/tutorial2_fig_1.png"><img alt="images/tutorial2_fig_1.png" class="align-center" src="images/tutorial2_fig_1.png" style="width: 100%;" /></a>
+<p>This function is not so nice to approximate. One intuitive idea to approximate the function is by repeatedly approximating the function with triangles. For example, first approximate with a large triangle centered at 0.5 and spans [0,1]</p>
+<a class="reference internal image-reference" href="images/tutorial2_fig_2.png"><img alt="images/tutorial2_fig_2.png" class="align-center" src="images/tutorial2_fig_2.png" style="width: 100%;" /></a>
+<p>This approximation misses quite a lot. However, one can introduce a sub-triangles centered at 0.25 spanning [0,0.5] and similarly at 0.75.</p>
+<a class="reference internal image-reference" href="images/tutorial2_fig_3.png"><img alt="images/tutorial2_fig_3.png" class="align-center" src="images/tutorial2_fig_3.png" style="width: 100%;" /></a>
+<p>We can see that the function is already being approximated really well for x bigger than 0.5. In this case, we do not have to add new sub-triangle there. From the figure, we can see that we know where the function is being approximated well by looking at the height of the sub-triangle. The height of the left sub-triangle is bigger than the right. We can use this to adaptively add new grid points, i.e., add grid points if and only if the height of the triangle is larger than a given cutoff. Following the procedure results in</p>
+<a class="reference internal image-reference" href="images/tutorial2_fig_4.png"><img alt="images/tutorial2_fig_4.png" class="align-center" src="images/tutorial2_fig_4.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_5.png"><img alt="images/tutorial2_fig_5.png" class="align-center" src="images/tutorial2_fig_5.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_6.png"><img alt="images/tutorial2_fig_6.png" class="align-center" src="images/tutorial2_fig_6.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_7.png"><img alt="images/tutorial2_fig_7.png" class="align-center" src="images/tutorial2_fig_7.png" style="width: 100%;" /></a>
+<div class="section" id="shifting-domain">
+<h3>Shifting Domain<a class="headerlink" href="#shifting-domain" title="Permalink to this headline">¶</a></h3>
+<p>When one were linearly interpolation the <span class="math notranslate nohighlight">\(\log(x+0.001)\)</span>, one would not do it over an uniform grid. The local adaptivity procedure will find the good non-uniformly spaced grid, but the idea of adjusting transforming the domain to help with approximation is a general concept that can be combined with the “repeated-triangle” approximation.</p>
+<p>For example, if one were to use</p>
+<div class="math notranslate nohighlight">
+\[\frac{e^{20\cdot x} - 1}{e^{20} - 1}\]</div>
+<p>and follow the procedure above will result in the following sequence of approximations</p>
+<a class="reference internal image-reference" href="images/tutorial2_fig_8.png"><img alt="images/tutorial2_fig_8.png" class="align-center" src="images/tutorial2_fig_8.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_9.png"><img alt="images/tutorial2_fig_9.png" class="align-center" src="images/tutorial2_fig_9.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_10.png"><img alt="images/tutorial2_fig_10.png" class="align-center" src="images/tutorial2_fig_10.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_11.png"><img alt="images/tutorial2_fig_11.png" class="align-center" src="images/tutorial2_fig_11.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_12.png"><img alt="images/tutorial2_fig_12.png" class="align-center" src="images/tutorial2_fig_12.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_13.png"><img alt="images/tutorial2_fig_13.png" class="align-center" src="images/tutorial2_fig_13.png" style="width: 100%;" /></a>
+<p>We can see from the sequence that the triangles are better “balanced” as before. Again, in asymptotic theory, the approximation with and without the adjustment will do well in approximating the domain, but one should use any a priori information one has in approximating to adjust domain in practice.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>2-Dimensional Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>The (adaptive) sparse grid is a high-dimensional analogue of this procedure, and we will actually implement things in code.</p>
+<p>Consider approximating</p>
+<div class="math notranslate nohighlight">
+\[f(x_1, x_2) = e^{\sin(10\cdot x_1^2) + \cos(8\cdot x_2)}\]</div>
+<p>As before, we start by initializing the class and define the given function</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">grid</span> <span class="p">=</span> <span class="n">sparse_grid</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+<span class="o">&gt;&gt;</span> <span class="n">grid</span><span class="p">.</span><span class="n">d_midpoint_input</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span> <span class="p">=</span> <span class="p">@</span><span class="n">df_dx_center</span><span class="p">;</span>
+<span class="o">&gt;&gt;</span> <span class="n">grid</span><span class="p">.</span><span class="n">dd_center_input</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span> <span class="p">=</span> <span class="p">@</span><span class="n">d2f_dx2</span><span class="p">;</span>
+<span class="o">&gt;&gt;</span> <span class="n">grid</span><span class="p">.</span><span class="n">recompute_grid</span><span class="p">();</span>
+<span class="o">&gt;&gt;</span> <span class="n">f</span> <span class="p">=</span> <span class="p">@(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span> <span class="nb">exp</span><span class="p">(</span><span class="nb">sin</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="n">x1</span><span class="o">.^</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">cos</span><span class="p">(</span><span class="mi">8</span><span class="o">*</span><span class="n">x2</span><span class="p">));</span>
 </pre></div>
 </div>
-<p>To build a sparse grid of level 5 in 2 dimensions, we call <a class="reference internal" href="technical.html#sparse_grid.sparse_grid.init_grid" title="sparse_grid.sparse_grid.init_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">init_grid</span></code></a></p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">init_grid</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+<p>Again, we can visualize the function again by (the figure below is marked up a little because 3D scatter plots are impossible to see without rotating)</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">x_1</span> <span class="p">=</span> <span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">};</span>
+<span class="o">&gt;&gt;</span> <span class="n">x_2</span> <span class="p">=</span> <span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">};</span>
+<span class="o">&gt;&gt;</span> <span class="n">f_grid</span> <span class="p">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span><span class="p">);</span>
+<span class="o">&gt;&gt;</span> <span class="n">scatter3</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span><span class="p">,</span> <span class="n">f_grid</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>For a memory device the argument is in alphabetical order, i.e., <code class="code docutils literal notranslate"><span class="pre">init_grid(dimension,</span> <span class="pre">level)</span></code>. Through this function call, the class takes care of everything under the hood. Hence, the evaluation operators and differentiation operators are set.</p>
-<p>First, let’s make a plot of the <span class="math notranslate nohighlight">\(f(x,y)\)</span>. The position of the grid points are saved in <a class="reference internal" href="technical.html#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a> in matrix with columns corresponding to dimensions and rows grid points. Hence, we can evaluate the function at the corresponding grid points via</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f_val</span> <span class="p">=</span> <span class="nb">sin</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">})</span> <span class="o">+</span> <span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">});</span>
+<a class="reference internal image-reference" href="images/tutorial2_fig_14.png"><img alt="images/tutorial2_fig_14.png" class="align-center" src="images/tutorial2_fig_14.png" style="width: 100%;" /></a>
+<p>Given the grid and the function values, we can compute the weights/contribution of each basis function (height of the triangle in the previous section) by using the <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">compute_hier_weights</span></code></p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">h_weights</span> <span class="p">=</span> <span class="n">grid</span><span class="p">.</span><span class="n">compute_hier_weights</span><span class="p">(</span><span class="n">f_grid</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>and visualize</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">scatter3</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span> <span class="n">f_val</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">);</span>
+<p>We can also visualize the hierarchical weights (this is not so helpful visualization)</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">scatter</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">grid</span><span class="p">.</span><span class="n">n_points</span><span class="p">,</span> <span class="n">h_weights</span><span class="p">);</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="images/tutorial1_fig_1.png"><img alt="images/tutorial1_fig_1.png" class="align-center" src="images/tutorial1_fig_1.png" style="width: 100%;" /></a>
-<p>We can evaluate the forward finite difference operator by using <a class="reference internal" href="technical.html#sparse_grid.d_forward" title="sparse_grid.d_forward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></a>. Since it is a cell-array with differential operators, we can evaluate the forward difference operator in x-dimension and compare to the true value of <span class="math notranslate nohighlight">\(cos(x)\)</span></p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">forward_derivatives</span> <span class="p">=</span> <span class="n">grid</span><span class="p">.</span><span class="n">d_forward</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">*</span><span class="n">f_val</span><span class="p">;</span>
-<span class="n">scatter3</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span> <span class="n">forward_derivatives</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">);</span>
-<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
-<span class="n">scatter3</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span> <span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">});</span>
+<a class="reference internal image-reference" href="images/tutorial2_fig_15.png"><img alt="images/tutorial2_fig_15.png" class="align-center" src="images/tutorial2_fig_15.png" style="width: 100%;" /></a>
+<p>As shown in <a class="reference internal" href="zrefs.html#ahn2018sparse" id="id2">[Ahn, 2018]</a> (and the picture given above), the weights approximate the second-order derivatives, and the locations with large second order derivatives are exactly where one should have more grid points (local-adaptivity) in approximating a function. Hence, one can use the values of the hierarchical weights to add children basis functions, i.e., one can add more grid points where the weight is bigger than a threshold (and remove from low values). Since this is a common procedure, it implemented as <a class="reference internal" href="technical.html#sparse_grid.sparse_grid.adapt_by_metric" title="sparse_grid.sparse_grid.adapt_by_metric"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">adapt_by_metric</span></code></a> function. We can add children basis functions and remove basis functions by</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">adaptivity_crit</span> <span class="p">=</span> <span class="mf">1e-3</span><span class="p">;</span>
+<span class="o">&gt;&gt;</span> <span class="n">grid</span><span class="p">.</span><span class="n">adapt_by_metric</span><span class="p">(</span><span class="n">f_grid</span><span class="p">,</span> <span class="n">adaptivity_crit</span><span class="p">,</span> <span class="n">adaptivity_crit</span><span class="o">/</span><span class="mi">3</span><span class="p">);</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="images/tutorial1_fig_2.png"><img alt="images/tutorial1_fig_2.png" class="align-center" src="images/tutorial1_fig_2.png" style="width: 100%;" /></a>
-<p>Similarly, one can compute the backward difference operator</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">backward_derivatives</span> <span class="p">=</span> <span class="n">grid</span><span class="p">.</span><span class="n">d_backward</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">*</span><span class="n">f_val</span><span class="p">;</span>
-<span class="n">scatter3</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span> <span class="n">backward_derivatives</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">);</span>
-<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
-<span class="n">scatter3</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span> <span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">});</span>
+<p>The function adds children of the grid points with weights larger than <code class="code docutils literal notranslate"><span class="pre">adaptivity_crit</span></code>, and removes grid points with weights smaller than <code class="code docutils literal notranslate"><span class="pre">adaptivity_crit/3</span></code>. To make functions more modular, this function does not automatically update the grid related quantities like <a class="reference internal" href="technical.html#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a>, and one needs to call <a class="reference internal" href="technical.html#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a> to reinitialize the grid for use.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">grid</span><span class="p">.</span><span class="n">recompute_grid</span><span class="p">();</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="images/tutorial1_fig_3.png"><img alt="images/tutorial1_fig_3.png" class="align-center" src="images/tutorial1_fig_3.png" style="width: 100%;" /></a>
-<p>As we can see from the forward and backward difference operators, the solution is only first-order accurate (hence, we see a difference from the true derivative). However, the monotoncity requirement of discretization frequently require directional differences, and subsequently needed. However, even with the directional derivatives, the scheme itself (we are not computing a point estimate of derivatives) is accurate.</p>
-<p>Finally, the second-order difference operator can be computed using <a class="reference internal" href="technical.html#sparse_grid.dd_center" title="sparse_grid.dd_center"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center</span></code></a>.</p>
-<a class="reference internal image-reference" href="images/tutorial1_fig_4.png"><img alt="images/tutorial1_fig_4.png" class="align-center" src="images/tutorial1_fig_4.png" style="width: 100%;" /></a>
-<p>However, the boundaries are in a different scale than the internal values. This is because of the reflecting boundary condition. <a class="reference internal" href="technical.html#sparse_grid.dd_center" title="sparse_grid.dd_center"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center</span></code></a> automatically adjusts the boundary condition for reflecting boundary. We can set the boundary values to 0 for visualization by using <a class="reference internal" href="technical.html#sparse_grid.boundaries" title="sparse_grid.boundaries"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">boundaries</span></code></a></p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">ddf</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">boundaries</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">})</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>    <span class="c">% upper boundary</span>
-<span class="n">ddf</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">boundaries</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>    <span class="c">% lower boundary</span>
-
-<span class="n">scatter3</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span> <span class="n">ddf</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">);</span>
-<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
-<span class="n">scatter3</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span> <span class="o">-</span><span class="nb">sin</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">1</span><span class="p">}));</span>
-</pre></div>
+<p>This is it for adaptively extending the basis functions. One just need to call</p>
+<ul class="simple">
+<li><a class="reference internal" href="technical.html#sparse_grid.sparse_grid.adapt_by_metric" title="sparse_grid.sparse_grid.adapt_by_metric"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">adapt_by_metric</span></code></a></li>
+<li><a class="reference internal" href="technical.html#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a></li>
+</ul>
+<p>repeatedly to making build the grids. Running the process results in (click to zoom in)</p>
+<a class="reference internal image-reference" href="images/tutorial2_fig_16.png"><img alt="images/tutorial2_fig_16.png" class="align-center" src="images/tutorial2_fig_16.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_17.png"><img alt="images/tutorial2_fig_17.png" class="align-center" src="images/tutorial2_fig_17.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_18.png"><img alt="images/tutorial2_fig_18.png" class="align-center" src="images/tutorial2_fig_18.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_19.png"><img alt="images/tutorial2_fig_19.png" class="align-center" src="images/tutorial2_fig_19.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_20.png"><img alt="images/tutorial2_fig_20.png" class="align-center" src="images/tutorial2_fig_20.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/tutorial2_fig_21.png"><img alt="images/tutorial2_fig_21.png" class="align-center" src="images/tutorial2_fig_21.png" style="width: 100%;" /></a>
+<p>We can see that initially the interpolation misses a little, but as the grid points are adaptively added. The final function is approximated really accurately.</p>
 </div>
-<a class="reference internal image-reference" href="images/tutorial1_fig_5.png"><img alt="images/tutorial1_fig_5.png" class="align-center" src="images/tutorial1_fig_5.png" style="width: 100%;" /></a>
+<div class="section" id="prelude-to-next-tutorial">
+<h2>Prelude to Next Tutorial<a class="headerlink" href="#prelude-to-next-tutorial" title="Permalink to this headline">¶</a></h2>
+<p>One thing to remember in the local adaptation is that no single adaptation method will perfect. For example, if one were to approximate <span class="math notranslate nohighlight">\(\sin(2\pi x)\)</span>. Then, the adaptation will halt immediately as <span class="math notranslate nohighlight">\(\sin(2\pi\cdot 0.5) = \sin(\pi) =0\)</span>. Hence, one always need to be careful that the adaptation method can fail. Of course, this is an extreme example, and I have not run into any case where the procedure failed that spectacularly.</p>
+<p>However, there is a case, where this adaptation method is sub-par to another method. The starting point of the process is that we know that function values exactly at those points. This is not the case when one solves the Hamilton-Jacobi-Bellman (HJB) equation. One only has an approximate value of the true function at the nodes. For these problems, a different adaptation method works better, and that’s the topic of the next tutorial XXXXXXXXXXXXXX.</p>
 </div>
 </div>
 

@@ -163,13 +163,12 @@
             
   <div class="section" id="potential-updates">
 <h1>Potential Updates<a class="headerlink" href="#potential-updates" title="Permalink to this headline">¶</a></h1>
-<p>This toolbox is written mainly for personal and work related use at <a class="reference external" href="https://norges-bank.no">Norges Bank</a>. Hence, things are written for specific applications. General extensions are left for future if the expected payoff for the current application is small. Create an issue in <a class="reference external" href="https://github.com/sehyoun/sparse_grid">github</a> if you believe some extension might be useful for you application.</p>
+<p>This toolbox is written mainly for personal and work-related use at <a class="reference external" href="https://norges-bank.no">Norges Bank</a>. Hence, things are written for specific applications. General extensions are left for future if the expected payoff for the current application is small. Create an issue in <a class="reference external" href="https://github.com/sehyoun/sparse_grid">github</a> if you believe some extension might be useful for you application.</p>
 <div class="admonition-todo admonition" id="index-0">
 <p class="first admonition-title">Todo</p>
 <ul class="last simple">
-<li>Separate out <a class="reference internal" href="technical.html#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a> to allow computing only the required operators.</li>
-<li>Create an option to treat the boundary condition differently for <a class="reference internal" href="technical.html#sparse_grid.dd_center" title="sparse_grid.dd_center"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center</span></code></a>. Currently, it assumes that the boundary is a reflecting boundary.</li>
 <li>Only multithreading is supported via openmp. In theory, the problem can be extensioned with MPI to use even more compute nodes. Currently, the internal problem size is not large enough to require MPI setup.</li>
+<li>The current implementation of the differential operators give a huge freedom as one can just pass in a function to define a new differential operator on the sparse grid. This comes at some cost, but this is not a large enough bottleneck for our application, but it might be for other applications (profile!).</li>
 <li>Adaptation is done in an (asymptotical) inefficient manner. As the scale of the problem increases, this part can take a larger share of the program execution, but currently, adaptation takes less than a fraction of one percent of the execution time.</li>
 </ul>
 </div>

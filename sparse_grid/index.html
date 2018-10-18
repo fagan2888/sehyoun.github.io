@@ -169,15 +169,15 @@
             
   <div class="section" id="sparse-grid-finite-difference-codes">
 <h1>Sparse Grid Finite Difference Codes<a class="headerlink" href="#sparse-grid-finite-difference-codes" title="Permalink to this headline">¶</a></h1>
-<p>This is a set of MATLAB codes that automates sparse grids so that practitioners can use the sparse grids without having to know the implementation details. This set of codes were originally written to test using sparse grids in solving Hamilton-Jacobi-Bellman equations. So far even things are only optimized if they are a bottleneck in the entire process of solving HJB equations. As there is one implementation that would be fastest for all applications, people who are interested in other applications might want to check out:</p>
+<p>This is a set of MATLAB codes that automates sparse grids so that practitioners can use the sparse grids without having to know the implementation details. This set of codes were originally written to test using sparse grids in solving Hamilton-Jacobi-Bellman equations. Adapting any toolbox can require a large up-front time-cost, so you should skim over <a class="reference external" href="https://sehyoun.com/adaptive_finite_volume/tutorials.html#tutorials" title="(in Adaptive Finite Volume Toolbox v0.1)"><span>Tutorials</span></a> to see if this toolbox is relevant for your application. From my previous search of toolboxes on sparse grids, you might want to check out:</p>
 <ul class="simple">
 <li><a class="reference external" href="http://sgpp.sparsegrids.org/">SG++</a></li>
 <li><a class="reference external" href="https://tasmanian.ornl.gov/">Tasmanian</a></li>
 </ul>
-<p>Unfortunately, neither of them contain implementation of finite difference operators, but extending them should be straightforward following [ahn2018sparse]. For low-dimensional problems, there should not be much difference in speed between this implementation and the C++ implementation given above.</p>
-<p>For people who are only interested in the mean-field games application or solving Hamilton-Jacobi-Bellman equations (with finite difference method), you can consider my other toolbox</p>
+<p>that have more/other features, but do not have finite difference operators implemented. <a class="footnote-reference" href="#extension" id="id1">[1]</a></p>
+<p>If you are coming from the economics literature on solving economic models with heterogeneous agents or solving Hamilton-Jacobi-Bellman equations (using finite difference methods), you should also consider my other toolbox</p>
 <ul class="simple">
-<li>MFG solver <a class="reference external" href="https://sehyoun.com">NOT PUBLIC YET</a></li>
+<li>Mean-Field Games Toolbox <a class="reference external" href="https://sehyoun.com">NOT PUBLIC YET</a></li>
 </ul>
 <p>to which this toolbox makes references.</p>
 <div class="toctree-wrapper compound">
@@ -206,6 +206,13 @@
 <li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
 <li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="extension" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>One can extend the alternate implementations for the first-order accuracy difference schemes only using interpolations following <a class="reference internal" href="zrefs.html#ahn2018sparse" id="id2">[Ahn, 2018]</a> .</td></tr>
+</tbody>
+</table>
 </div>
 
 

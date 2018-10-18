@@ -172,10 +172,6 @@
 <p class="first admonition-title">Warning</p>
 <p class="last">Certain functions make certain assumptions about the internal states. Under the object-oriented programming, this is solved by using “getters/setters” while forbidding access to internal states. Since the class is small/simple, I left all attributes accessible at any time, and opted to document on the function side. Everything can be redefined from <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a> and <a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a>, so when in doubt make sure that they are correct and call <a class="reference internal" href="#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a>.</p>
 </div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Currently, the object constructs all difference operators even though this is a costly to do so. This is for simplicity of the function calls. This might be updated in the future.</p>
-</div>
 <div class="section" id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <dl class="attribute">
@@ -234,6 +230,37 @@
 <div class="last highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_backward</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">*</span><span class="nb">cos</span><span class="p">(</span><span class="n">grid</span><span class="p">.</span><span class="n">x_i</span><span class="p">{</span><span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparse_grid.d_backward_input">
+<code class="descclassname">sparse_grid.</code><code class="descname">d_backward_input</code><a class="headerlink" href="#sparse_grid.d_backward_input" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">(<a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a><span class="math notranslate nohighlight">\(\times 1\)</span>) cell-array of function handles</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Description:</th><td class="field-body"><p class="first">Cell array of function handle for computing the differential operator in 1-dimension. The differential operators are computed only for non-empty cell entries. Hence, only populate the necessary cells. For most usages, it should be set as <a class="reference internal" href="#sparse_grid.df_dx_backward" title="sparse_grid.df_dx_backward"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">df_dx_backward</span></code></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"><p class="first">To compute the <a class="reference internal" href="#sparse_grid.d_backward" title="sparse_grid.d_backward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_backward</span></code></a> only for the second coordinate direction</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="p">.</span><span class="n">d_backward_input</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span> <span class="p">=</span> <span class="p">@</span><span class="n">df_dx_backward</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">See also:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward_input</span></code></li>
+<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_midpoint_input</span></code></li>
+<li><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center_input</span></code></li>
+<li><a class="reference internal" href="#sparse_grid.df_dx_backward" title="sparse_grid.df_dx_backward"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">df_dx_backward</span></code></a></li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -527,7 +554,7 @@
 </div>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Reference:</th><td class="field-body"><p class="first last">See section XXXX of [ahn2018sparse]</p>
+<tr class="field-even field"><th class="field-name">Reference:</th><td class="field-body"><p class="first last">See section XXXX of <a class="reference internal" href="zrefs.html#ahn2018sparse" id="id1">[Ahn, 2018]</a></p>
 </td>
 </tr>
 </tbody>
@@ -599,7 +626,7 @@
 </div>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Reference:</th><td class="field-body"><p class="first last">See [ahn2018sparse] more details.</p>
+<tr class="field-even field"><th class="field-name">Reference:</th><td class="field-body"><p class="first last">See <a class="reference internal" href="zrefs.html#ahn2018sparse" id="id2">[Ahn, 2018]</a> more details.</p>
 </td>
 </tr>
 </tbody>
@@ -733,7 +760,44 @@ function</p>
 </table>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">In most regular applications, one can call <code class="xref mat mat-func docutils literal notranslate"><span class="pre">build_upwind</span></code> in <a class="reference external" href="https://sehyoun.com">MFG</a> class, and users do not need to handle this directly.</p>
+<p class="last">In most regular applications, one can call <code class="xref mat mat-func docutils literal notranslate"><span class="pre">build_upwind</span></code> in <a class="reference external" href="https://sehyoun.com/Mean_Field_Games_Toolbox">MFG</a> class, and users do not need to handle this directly.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.compute_finite_difference_operator">
+<code class="descclassname">sparse_grid.</code><code class="descname">compute_finite_difference_operator</code><span class="sig-paren">(</span><em>direction</em>, <em>difference_schemes</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.compute_finite_difference_operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>INTERNAL FUNCTION: Computes Finite Difference Operators</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direction</strong> (<em>integer</em>) – coordinate direction to compute the differential operators</li>
+<li><strong>difference_schemes</strong> (<em>function_handle | cell of function_handles</em>) – difference schemes</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>[output]</p>
+<ul class="simple">
+<li><strong>output</strong> (sparse matrix): cell array of sparse matrices of differential operators</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<ul class="last simple">
+<li>This is an internal function; one probably should use <a class="reference internal" href="#sparse_grid.sparse_grid.reset_diff_ops" title="sparse_grid.sparse_grid.reset_diff_ops"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">reset_diff_ops</span></code></a> . See XXXXXXXXX for more details.</li>
+</ul>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="#sparse_grid.sparse_grid.reset_diff_ops" title="sparse_grid.sparse_grid.reset_diff_ops"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">reset_diff_ops</span></code></a></li>
+</ul>
 </div>
 </dd></dl>
 
@@ -743,7 +807,7 @@ function</p>
 <dd><p>INTERNAL FUNCTION: Computes node points of the sparse grid</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This value is already set as <a class="reference internal" href="#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a> when <a class="reference internal" href="#sparse_grid.sparse_grid.init_grid" title="sparse_grid.sparse_grid.init_grid"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">init_grid</span></code></a> or <a class="reference internal" href="#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">recompute_grid</span></code></a> are called.</p>
+<p class="last">This value is already set as <a class="reference internal" href="#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a> when <a class="reference internal" href="#sparse_grid.sparse_grid.init_grid" title="sparse_grid.sparse_grid.init_grid"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">init_grid</span></code></a> or <a class="reference internal" href="#sparse_grid.sparse_grid.reset_grid" title="sparse_grid.sparse_grid.reset_grid"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">reset_grid</span></code></a> are called.</p>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -805,6 +869,141 @@ function</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="sparse_grid.d2f_dx2">
+<code class="descclassname">sparse_grid.</code><code class="descname">d2f_dx2</code><span class="sig-paren">(</span><em>x_1d</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.d2f_dx2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Second-Order Differential Operator for 1D</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x_1d</strong> (<em>double</em>) – <strong>sorted</strong> node points of the discretization</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[rows, cols, vals]<ul class="simple">
+<li><strong>rows</strong> (integer): row index of the non-zero values of the differential operator matrix</li>
+<li><strong>cols</strong> (integer): column index of the non-zero values of the differential operator matrix</li>
+<li><strong>vals</strong> (integer): values of the non-zero values of the differential operator matrix</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li>Tutorial xXXXXXXXXX</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparse_grid.d2f_dx2_reflecting">
+<code class="descclassname">sparse_grid.</code><code class="descname">d2f_dx2_reflecting</code><span class="sig-paren">(</span><em>x_1d</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.d2f_dx2_reflecting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Second-Order Differential Operator for 1D</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x_1d</strong> (<em>double</em>) – <strong>sorted</strong> node points of the discretization</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[rows, cols, vals]<ul class="simple">
+<li><strong>rows</strong> (integer): row index of the non-zero values of the differential operator matrix</li>
+<li><strong>cols</strong> (integer): column index of the non-zero values of the differential operator matrix</li>
+<li><strong>vals</strong> (integer): values of the non-zero values of the differential operator matrix</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li>Tutorial xXXXXXXXXX</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparse_grid.df_dx_backward">
+<code class="descclassname">sparse_grid.</code><code class="descname">df_dx_backward</code><span class="sig-paren">(</span><em>x_1d</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.df_dx_backward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backward Differential Operator for 1D</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x_1d</strong> (<em>double</em>) – <strong>sorted</strong> node points of the discretization</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[rows, cols, vals]<ul class="simple">
+<li><strong>rows</strong> (integer): row index of the non-zero values of the differential operator matrix</li>
+<li><strong>cols</strong> (integer): column index of the non-zero values of the differential operator matrix</li>
+<li><strong>vals</strong> (integer): values of the non-zero values of the differential operator matrix</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li>Tutorial xXXXXXXXXX</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparse_grid.df_dx_center">
+<code class="descclassname">sparse_grid.</code><code class="descname">df_dx_center</code><span class="sig-paren">(</span><em>x_1d</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.df_dx_center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Centered Differential Operator for 1D</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x_1d</strong> (<em>double</em>) – <strong>sorted</strong> node points of the discretization</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[rows, cols, vals]<ul class="simple">
+<li><strong>rows</strong> (integer): row index of the non-zero values of the differential operator matrix</li>
+<li><strong>cols</strong> (integer): column index of the non-zero values of the differential operator matrix</li>
+<li><strong>vals</strong> (integer): values of the non-zero values of the differential operator matrix</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li>Tutorial xXXXXXXXXX</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparse_grid.df_dx_forward">
+<code class="descclassname">sparse_grid.</code><code class="descname">df_dx_forward</code><span class="sig-paren">(</span><em>x_1d</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.df_dx_forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward Differential Operator for 1D</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x_1d</strong> (<em>double</em>) – <strong>sorted</strong> node points of the discretization</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">[rows, cols, vals]<ul class="simple">
+<li><strong>rows</strong> (integer): row index of the non-zero values of the differential operator matrix</li>
+<li><strong>cols</strong> (integer): column index of the non-zero values of the differential operator matrix</li>
+<li><strong>vals</strong> (integer): values of the non-zero values of the differential operator matrix</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li>Tutorial xXXXXXXXXX</li>
+</ul>
+</div>
+</dd></dl>
+
 <dl class="method">
 <dt id="sparse_grid.sparse_grid.fill_ancestors">
 <code class="descclassname">sparse_grid.</code><code class="descname">fill_ancestors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.fill_ancestors" title="Permalink to this definition">¶</a></dt>
@@ -844,7 +1043,7 @@ function</p>
 <ul class="simple">
 <li>ind_f : (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a> x 1) vector whether forward direction
 should be used</li>
-<li>ind_b : (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a> x 1) vector whether backward direciton
+<li>ind_b : (<a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a> x 1) vector whether backward direction
 should be used</li>
 </ul>
 </p>
@@ -857,7 +1056,7 @@ should be used</li>
 <ul class="last simple">
 <li>For <span class="math notranslate nohighlight">\(\mu\)</span> that’s not defined separately, you can just call
 find_upwind(mu,mu,dimension)</li>
-<li>One probably want to call methods directly in <a class="reference external" href="https://sehyoun.com">MFG</a> XXXXXXX class instead of working with grids directly.</li>
+<li>One probably want to call methods directly in <code class="xref mat mat-func docutils literal notranslate"><span class="pre">build_upwind</span></code> XXXXXXX in <a class="reference external" href="https://sehyoun.com/Mean_Field_Games_Toolbox">MFG</a> class instead of working with grids directly.</li>
 </ul>
 </div>
 </dd></dl>
@@ -865,28 +1064,25 @@ find_upwind(mu,mu,dimension)</li>
 <dl class="method">
 <dt id="sparse_grid.sparse_grid.init_grid">
 <code class="descclassname">sparse_grid.</code><code class="descname">init_grid</code><span class="sig-paren">(</span><em>n_dim</em>, <em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.init_grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize a sparse grid</p>
+<dd><p>INTERNAL FUNCTION: Initialize a sparse grid</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>n_dim</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a></li>
+<li><strong>n_dim</strong> (<em>integer</em>) – <a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a></li>
 <li><strong>level</strong> (<em>integer</em>) – level of sparse grid</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Sets in class</p>
 <ul class="simple">
+<li><a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.boundaries" title="sparse_grid.boundaries"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">boundaries</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a></li>
-<li><a class="reference internal" href="#sparse_grid.d_forward" title="sparse_grid.d_forward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></a></li>
-<li><a class="reference internal" href="#sparse_grid.d_backward" title="sparse_grid.d_backward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_backward</span></code></a></li>
-<li><a class="reference internal" href="#sparse_grid.d_midpoint" title="sparse_grid.d_midpoint"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_midpoint</span></code></a></li>
-<li><a class="reference internal" href="#sparse_grid.dd_center" title="sparse_grid.dd_center"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center</span></code></a></li>
 </ul>
 </p>
 </td>
@@ -898,13 +1094,13 @@ find_upwind(mu,mu,dimension)</li>
 <dl class="method">
 <dt id="sparse_grid.sparse_grid.recompute_grid">
 <code class="descclassname">sparse_grid.</code><code class="descname">recompute_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.recompute_grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>INTERNAL FUNCTION: Set up sparse grid structure details</p>
+<dd><p>Reset both the grid and the differential operators.</p>
+<p>This is the “<span class="red">nuclear</span>” option. One only needs to make sure that <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a> and <a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a> are set as intended.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>n_dim</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a></li>
 <li><strong>spgrid</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a></li>
 <li><strong>shifters</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a></li>
 </ul>
@@ -912,10 +1108,10 @@ find_upwind(mu,mu,dimension)</li>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Sets in class</p>
 <ul class="simple">
+<li><a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.boundaries" title="sparse_grid.boundaries"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">boundaries</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a></li>
-<li><a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.d_forward" title="sparse_grid.d_forward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.d_backward" title="sparse_grid.d_backward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_backward</span></code></a></li>
 <li><a class="reference internal" href="#sparse_grid.d_midpoint" title="sparse_grid.d_midpoint"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_midpoint</span></code></a></li>
@@ -926,6 +1122,88 @@ find_upwind(mu,mu,dimension)</li>
 </tr>
 </tbody>
 </table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="#sparse_grid.sparse_grid.reset_grid" title="sparse_grid.sparse_grid.reset_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">reset_grid</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.sparse_grid.reset_diff_ops" title="sparse_grid.sparse_grid.reset_diff_ops"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">reset_diff_ops</span></code></a></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.reset_diff_ops">
+<code class="descclassname">sparse_grid.</code><code class="descname">reset_diff_ops</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.reset_diff_ops" title="Permalink to this definition">¶</a></dt>
+<dd><p>INTERNAL FUNCTION: Reset differential operators</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>spgrid</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a></li>
+<li><strong>shifters</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a></li>
+<li><strong>d_forward_input</strong> (<em>implicit</em>) – <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward_input</span></code></li>
+<li><strong>d_backward_input</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.d_backward_input" title="sparse_grid.d_backward_input"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_backward_input</span></code></a></li>
+<li><strong>d_midpoint_input</strong> (<em>implicit</em>) – <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_midpoint_input</span></code></li>
+<li><strong>dd_center_input</strong> (<em>implicit</em>) – <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center_input</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Sets in class</p>
+<ul class="simple">
+<li><a class="reference internal" href="#sparse_grid.d_forward" title="sparse_grid.d_forward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_forward</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_backward" title="sparse_grid.d_backward"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_backward</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.d_midpoint" title="sparse_grid.d_midpoint"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">d_midpoint</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.dd_center" title="sparse_grid.dd_center"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">dd_center</span></code></a></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="#sparse_grid.sparse_grid.reset_grid" title="sparse_grid.sparse_grid.reset_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">reset_grid</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.reset_grid">
+<code class="descclassname">sparse_grid.</code><code class="descname">reset_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.reset_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>INTERNAL FUNCTION: Reset grid related information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>spgrid</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a></li>
+<li><strong>shifters</strong> (<em>implicit</em>) – <a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Sets in class</p>
+<ul class="simple">
+<li><a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.boundaries" title="sparse_grid.boundaries"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">boundaries</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.val" title="sparse_grid.val"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">val</span></code></a></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference internal" href="#sparse_grid.sparse_grid.reset_diff_ops" title="sparse_grid.sparse_grid.reset_diff_ops"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">reset_diff_ops</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -964,7 +1242,7 @@ find_upwind(mu,mu,dimension)</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interp_points</strong> (<em>matrix</em>) – <p>points to interpolate to</p>
 <ul class="simple">
 <li>row: grid points</li>
-<li>column: coordinate dimenion</li>
+<li>column: coordinate dimension</li>
 </ul>
 </td>
 </tr>
@@ -987,6 +1265,36 @@ find_upwind(mu,mu,dimension)</li>
 <li>A function for interpolating once might be implemented in the future.</li>
 </ul>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparse_grid.sparse_grid.sparse_grid">
+<code class="descclassname">sparse_grid.</code><code class="descname">sparse_grid</code><span class="sig-paren">(</span><em>n_dim</em>, <em>n_level</em><span class="sig-paren">)</span><a class="headerlink" href="#sparse_grid.sparse_grid.sparse_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor for the sparse_grid class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n_dim</strong> (<em>integer</em>) – <a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a></li>
+<li><strong>n_level</strong> (<em>integer</em>) – level of sparse grid</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Sets in class</p>
+<ul class="simple">
+<li><a class="reference internal" href="#sparse_grid.n_dim" title="sparse_grid.n_dim"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_dim</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.x_i" title="sparse_grid.x_i"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">x_i</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.boundaries" title="sparse_grid.boundaries"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">boundaries</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.n_points" title="sparse_grid.n_points"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n_points</span></code></a></li>
+<li><a class="reference internal" href="#sparse_grid.shifters" title="sparse_grid.shifters"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">shifters</span></code></a></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1047,7 +1355,7 @@ find_upwind(mu,mu,dimension)</li>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <ul class="last simple">
-<li>This function just updates <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a>, so <a class="reference internal" href="#sparse_grid.sparse_grid.recompute_grid" title="sparse_grid.sparse_grid.recompute_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">recompute_grid</span></code></a> needs to be called before accessing other parts of the sparse_grid.</li>
+<li>This function just updates <a class="reference internal" href="#sparse_grid.spgrid" title="sparse_grid.spgrid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">spgrid</span></code></a>, so <a class="reference internal" href="#sparse_grid.sparse_grid.reset_grid" title="sparse_grid.sparse_grid.reset_grid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">reset_grid</span></code></a> needs to be called before accessing other parts of the sparse_grid.</li>
 </ul>
 </div>
 </dd></dl>
