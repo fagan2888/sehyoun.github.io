@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Adaptive Refinement &mdash; Adaptive Finite Volume Toolbox 0.1 alpha documentation</title>
+  <title>OU Process with Adaptive Refinements &mdash; Adaptive Finite Volume Toolbox 0.1 alpha documentation</title>
   
 
   
@@ -28,7 +28,9 @@
   <link rel="stylesheet" href="/static/sphinx_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="/static/sphinx_static/css/mystyle.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Technical Documentation" href="technical.html" />
+    <link rel="prev" title="Steady-State Distribution of Ornstein-Uhlenbeck Process" href="tutorial2.html" /> 
 
   
   <script src="/static/sphinx_static/js/modernizr.min.js"></script>
@@ -81,9 +83,14 @@
               
             
             
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial1.html">Grid Construction and Basic Interactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial2.html">Steady-State Distribution of Ornstein-Uhlenbeck Process</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">OU Process with Adaptive Refinements</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="technical.html">Technical Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zrefs.html">Bibliography</a></li>
@@ -132,7 +139,9 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Adaptive Refinement</li>
+          <li><a href="tutorials.html">Tutorials</a> &raquo;</li>
+        
+      <li>OU Process with Adaptive Refinements</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -168,9 +177,9 @@
     margin-right: 4px;  /* make room for the exclamation icon */
 }
 </style>
-<div class="section" id="adaptive-refinement">
-<h1>Adaptive Refinement<a class="headerlink" href="#adaptive-refinement" title="Permalink to this headline">¶</a></h1>
-<p>Expected Read Time: <a href="#id1"><span class="problematic" id="id2">:red:`XXXXX`</span></a></p>
+<div class="section" id="ou-process-with-adaptive-refinements">
+<h1>OU Process with Adaptive Refinements<a class="headerlink" href="#ou-process-with-adaptive-refinements" title="Permalink to this headline">¶</a></h1>
+<p>Expected Read Time: <span class="red">XXXXX</span></p>
 <p>In this tutorial, we will work through an example of applying adaptive refinements and as a starting point will take the bad parameter values from the previous tutorial. Recall that we are solving for the steady-state distribution of resulting from the Ornstein-Uhlenbeck Process</p>
 <div class="math notranslate nohighlight">
 \[\frac{\partial f}{\partial t} = -\sum_{i=1}^2 \theta_i \frac{\partial}{\partial x_i} \left[(\mu_i - x_i)\cdot f\right] + \sum_{i=1}^2 \frac{\sigma_i^2}{2} \frac{\partial^2 f}{\partial x_i^2}\]</div>
@@ -220,7 +229,7 @@
 <span class="o">&gt;&gt;</span> <span class="n">scatter3</span><span class="p">(</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">1</span><span class="p">),</span><span class="n">x_i</span><span class="p">(:,</span><span class="mi">2</span><span class="p">),</span><span class="n">g_true</span><span class="p">(</span><span class="n">x_i</span><span class="p">),</span><span class="s">&#39;.&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="afv_tutorial3_fig_0.png"><img alt="afv_tutorial3_fig_0.png" class="align-center" src="afv_tutorial3_fig_0.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial3_fig_0.png"><img alt="images/afv_tutorial3_fig_0.png" class="align-center" src="images/afv_tutorial3_fig_0.png" style="width: 100%;" /></a>
 <p>One should reduce the domain for this problem instead of using adaptive refinements, but in this problem, we will adaptively refine the grid by splitting the grid points where necessary. This requires one to use some sort of metric to consider the expected gain from splitting a cell. The normalized weight of a cell works well, i.e.,</p>
 <div class="math notranslate nohighlight">
 \[\text{metric} = g \cdot \text{drift}\]</div>
@@ -260,13 +269,13 @@
 </pre></div>
 </div>
 <p>resulting in</p>
-<a class="reference internal image-reference" href="afv_tutorial3_fig_1.png"><img alt="afv_tutorial3_fig_1.png" class="align-center" src="afv_tutorial3_fig_1.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial3_fig_1.png"><img alt="images/afv_tutorial3_fig_1.png" class="align-center" src="images/afv_tutorial3_fig_1.png" style="width: 100%;" /></a>
 <p>Iterating a few more times, we can clearly see that the adaptive refinements lead to accuracy gains without adding points in regions that already have zero mass.</p>
-<a class="reference internal image-reference" href="afv_tutorial3_fig_2.png"><img alt="afv_tutorial3_fig_2.png" class="align-center" src="afv_tutorial3_fig_2.png" style="width: 100%;" /></a>
-<a class="reference internal image-reference" href="afv_tutorial3_fig_3.png"><img alt="afv_tutorial3_fig_3.png" class="align-center" src="afv_tutorial3_fig_3.png" style="width: 100%;" /></a>
-<a class="reference internal image-reference" href="afv_tutorial3_fig_4.png"><img alt="afv_tutorial3_fig_4.png" class="align-center" src="afv_tutorial3_fig_4.png" style="width: 100%;" /></a>
-<a class="reference internal image-reference" href="afv_tutorial3_fig_5.png"><img alt="afv_tutorial3_fig_5.png" class="align-center" src="afv_tutorial3_fig_5.png" style="width: 100%;" /></a>
-<a class="reference internal image-reference" href="afv_tutorial3_fig_5.png"><img alt="afv_tutorial3_fig_5.png" class="align-center" src="afv_tutorial3_fig_5.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial3_fig_2.png"><img alt="images/afv_tutorial3_fig_2.png" class="align-center" src="images/afv_tutorial3_fig_2.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial3_fig_3.png"><img alt="images/afv_tutorial3_fig_3.png" class="align-center" src="images/afv_tutorial3_fig_3.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial3_fig_4.png"><img alt="images/afv_tutorial3_fig_4.png" class="align-center" src="images/afv_tutorial3_fig_4.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial3_fig_5.png"><img alt="images/afv_tutorial3_fig_5.png" class="align-center" src="images/afv_tutorial3_fig_5.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial3_fig_6.png"><img alt="images/afv_tutorial3_fig_6.png" class="align-center" src="images/afv_tutorial3_fig_6.png" style="width: 100%;" /></a>
 </div>
 
 
@@ -274,6 +283,15 @@
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="technical.html" class="btn btn-neutral float-right" title="Technical Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial2.html" class="btn btn-neutral" title="Steady-State Distribution of Ornstein-Uhlenbeck Process" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
