@@ -182,7 +182,7 @@
 <h1>OU Process with Boundary Conditions<a class="headerlink" href="#ou-process-with-boundary-conditions" title="Permalink to this headline">¶</a></h1>
 <p>Expected Read Time: <span class="red">XXXXX</span></p>
 <p>In this tutorial, we will work through how to handle the boundary condition. We will still work with the Ornstein-Uhlenbeck process, but introduce “birth” of agents the edge <span class="math notranslate nohighlight">\(x_1 = 0\)</span> and <span class="math notranslate nohighlight">\(x_2 \in [0, 0.5]\)</span>. To make the equation to have a steady state distribution, we also introduce death rate (constant proportion). Looking at the steady-state distribution would actually be easier to follow. In the figure below, we have the resulting steady-state distribution from the dynamics.</p>
-<a class="reference internal image-reference" href="images/afv_tutorial4_fig_1.png"><img alt="images/afv_tutorial4_fig_1.png" class="align-center" src="images/afv_tutorial4_fig_1.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial4_fig_2.png"><img alt="images/afv_tutorial4_fig_2.png" class="align-center" src="images/afv_tutorial4_fig_2.png" style="width: 100%;" /></a>
 <p>One see clear mass of people in the “birth edge,” and mass moving toward the center of the OU process. The actual shape of the resulting steady-state will depend on the actually parameter values.</p>
 <p>Implementing these additions are also simple using the  <a class="reference internal" href="technical.html#afv_grid.compute_transition_matrix_boundary" title="afv_grid.compute_transition_matrix_boundary"><code class="xref mat mat-func docutils literal notranslate"><span class="pre">compute_transition_matrix_boundary</span></code></a> function.</p>
 <p>Continuing from tutorial 2 of the grid definition for the OU-process, we only need to introduce transition matrix. We will handle “death” first. The syntax for this is</p>
@@ -209,10 +209,10 @@
 </pre></div>
 </div>
 <p>Resulting in the distribution given above. As with before, adjusting for different parameter values are straight forward. As can be seen from the following plot, the distribution mirrors the steady-state of the OU-process with low death rate, but mirrors the entry more strongly with high death rates (as agents do not have enough time to approach the steady-state locations)</p>
-<a class="reference internal image-reference" href="images/afv_tutorial4_fig_2.png"><img alt="images/afv_tutorial4_fig_2.png" class="align-center" src="images/afv_tutorial4_fig_2.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="images/afv_tutorial4_fig_1.png"><img alt="images/afv_tutorial4_fig_1.png" class="align-center" src="images/afv_tutorial4_fig_1.png" style="width: 100%;" /></a>
 <a class="reference internal image-reference" href="images/afv_tutorial4_fig_3.png"><img alt="images/afv_tutorial4_fig_3.png" class="align-center" src="images/afv_tutorial4_fig_3.png" style="width: 100%;" /></a>
 <a class="reference internal image-reference" href="images/afv_tutorial4_fig_5.png"><img alt="images/afv_tutorial4_fig_5.png" class="align-center" src="images/afv_tutorial4_fig_5.png" style="width: 100%;" /></a>
-<p>Of course, this is not really an interesting economic problem. However, this tutorial shows how simple it is to work with boundary conditions with the finite volume methods.</p>
+<p>This concludes the tutorials, and should be sufficient for most economic applications. The <code class="xref mat mat-class docutils literal notranslate"><span class="pre">afv_grid</span></code> is written to abstract away all implementation details, but if you find an application where the abstraction is too restrictive, one can refer to the :ref`technical` to see the underlying implementations.</p>
 </div>
 
 
