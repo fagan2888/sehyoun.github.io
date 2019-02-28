@@ -180,7 +180,7 @@
 </style>
 <div class="section" id="grid-construction-and-basic-interactions">
 <h1>Grid Construction and Basic Interactions<a class="headerlink" href="#grid-construction-and-basic-interactions" title="Permalink to this headline">¶</a></h1>
-<p>Expected Read Time: <span class="red">XXXXX</span></p>
+<p>Expected Read Time: 3~5 minutes</p>
 <p>To implement the adaptive finite volume methods, we need to keep:</p>
 <blockquote>
 <div><ul class="simple">
@@ -255,7 +255,7 @@
      <span class="p">[]</span>     <span class="p">[]</span>
 </pre></div>
 </div>
-<p>where things correspond to (point, coordinate direction, forward=2/backward=1). For example, [2] in the (1,2,2) denotes that the neighbor forward of point 1 in the first coordinate direction is point 2. This neighbor information in <a class="reference internal" href="technical.html#afv_grid.n2n" title="afv_grid.n2n"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n2n</span></code></a> is used to build the transition matrix. Because these steps are automated, one never needs to (and probably should not) work with low-level representation like <a class="reference internal" href="technical.html#afv_grid.n2n" title="afv_grid.n2n"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n2n</span></code></a> directly.[#]_</p>
+<p>where things correspond to (point, coordinate direction, forward=2/backward=1). For example, [2] in the (1,1,2) denotes that the neighbor forward of point 1 in the first coordinate direction is point 2. This neighbor information in <a class="reference internal" href="technical.html#afv_grid.n2n" title="afv_grid.n2n"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n2n</span></code></a> is used to build the transition matrix. Because these steps are automated, one never needs to (and probably should not) work with low-level representation like <a class="reference internal" href="technical.html#afv_grid.n2n" title="afv_grid.n2n"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">n2n</span></code></a> directly.[#]_</p>
 <p>We can further split the first grid by calling</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">x_knots</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span> <span class="p">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">;</span>
 <span class="o">&gt;&gt;</span> <span class="n">x_knots</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span> <span class="p">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">;</span>
