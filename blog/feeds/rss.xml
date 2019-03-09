@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0"><channel><title>SeHyoun's Blog</title><link>https://sehyoun.com/blog/</link><description></description><lastBuildDate>Tue, 04 Sep 2018 18:25:00 -0400</lastBuildDate><item><title>Using MATLAB with Jupyter Notebook</title><link>https://sehyoun.com/blog/20180904_using-matlab-with-jupyter-notebook.html</link><description>
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;h1 id="Using-MATLAB-with-Jupyter-Notebook"&gt;Using MATLAB with Jupyter Notebook&lt;a class="anchor-link" href="#Using-MATLAB-with-Jupyter-Notebook"&gt;¶&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;(pdf of this post is available: &lt;a href="Using-MATLAB-with-Jupyter-Notebook.pdf"&gt;here&lt;/a&gt;)&lt;/p&gt;
 &lt;p&gt;This is a meta-post about blogging. I use Jupyter Notebook with Pelican to create blog posts. I might convert my codes to some other language (Julia) in the future, but I already have significant codebase built up in MATLAB that the up-front cost of making the jump is large. However, with MATLAB-Python integration it is not too painful to use them together, and using this toolchain works better (for me) than using the &lt;a href="https://www.mathworks.com/help/matlab/ref/publish.html"&gt;publish&lt;/a&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">SeHyoun Ahn</dc:creator><pubDate>Tue, 04 Sep 2018 18:25:00 -0400</pubDate><guid isPermaLink="false">tag:sehyoun.com,2018-09-04:/blog/20180904_using-matlab-with-jupyter-notebook.html</guid><category>MATLAB</category><category>Jupyter Notebook</category><category>Python</category></item></channel></rss>
